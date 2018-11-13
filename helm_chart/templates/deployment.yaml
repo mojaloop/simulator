@@ -46,11 +46,6 @@ spec:
             periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
           {{- end }}
           env:
-            - name: SWITCH_ENDPOINT
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "simulators.fullname" . }}
-                  key: SWITCH_ENDPOINT
             - name: PARTIES_ENDPOINT
               valueFrom:
                 configMapKeyRef:
@@ -66,11 +61,6 @@ spec:
                 configMapKeyRef:
                   name: {{ template "simulators.fullname" . }}
                   key: TRANSFERS_ENDPOINT
-            - name: BEARER_TOKEN
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "simulators.fullname" . }}
-                  key: BEARER_TOKEN
           resources:
       imagePullSecrets:
         - name: regcred

@@ -8,7 +8,7 @@ imageCredentials:
   name: dock-casa-secret
 
 image:
-  repository: casablanca-casa-docker-release.jfrog.io/simulators
+  repository: simulators
   tag: latest
   pullPolicy: Always
 
