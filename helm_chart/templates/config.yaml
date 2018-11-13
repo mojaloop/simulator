@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "simulators.fullname" . }}
+  labels:
+      app: {{ template "simulators.fullname" . }}
+      chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+      release: {{ .Release.Name }}
+      heritage: {{ .Release.Service }}
+data:
+  SWITCH_ENDPOINT: {{ .Values.config.SWITCH_ENDPOINT | quote }}
+  PARTIES_ENDPOINT: {{ (printf "%s%s-%s:%s" "http://" .Release.Name .Values.config.PARTIES_SERVICE_NAME .Values.config.PARTIES_SERVICE_PORT) | quote }}
+  QUOTES_ENDPOINT: {{ (printf "%s%s-%s:%s" "http://" .Release.Name .Values.config.QUOTES_SERVICE_NAME .Values.config.QUOTES_SERVICE_PORT) | quote }}
+  TRANSFERS_ENDPOINT: {{ (printf "%s%s-%s:%s" "http://" .Release.Name .Values.config.TRANSFERS_SERVICE_NAME .Values.config.TRANSFERS_SERVICE_PORT) | quote }}
+  BEARER_TOKEN: {{ .Values.config.BEARER_TOKEN | quote }}

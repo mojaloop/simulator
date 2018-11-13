@@ -1,0 +1,78 @@
+# Default values for simulators.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+imageCredentials:
+  name: dock-casa-secret
+
+image:
+  repository: casablanca-casa-docker-release.jfrog.io/simulators
+  tag: latest
+  pullPolicy: Always
+
+config:
+  SWITCH_ENDPOINT: 'http://k8s-casa-azure-dmz0-wso2-am1.mojaloop.live:8280/fsp/1.0'
+  BEARER_TOKEN: 'bbf968b0-3d25-3d23-9db6-0dbc5817aea9'
+  PARTIES_SERVICE_NAME: 'casablanca-central-directory'
+  PARTIES_SERVICE_PORT: '80'
+  QUOTES_SERVICE_NAME: 'quoting-service-api-adapter'
+  QUOTES_SERVICE_PORT: '80'
+  TRANSFERS_SERVICE_NAME: 'ml-api-adapter-service'
+  TRANSFERS_SERVICE_PORT: '8088'
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: http
+
+readinessProbe:
+  enabled: true
+  httpGet:
+    path: /payerfsp/health
+    port: 8444
+    scheme: HTTP
+  initialDelaySeconds: 120
+  periodSeconds: 15
+livenessProbe:
+  enabled: true
+  httpGet:
+    path: /payerfsp/health
+    port: 8444
+    scheme: HTTP
+  initialDelaySeconds: 90
+  periodSeconds: 15
+
+ingress:
+  enabled: true
+  annotations: {
+    "nginx.ingress.kubernetes.io/rewrite-target": "/"
+  }
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  path: /
+  hosts:
+    - casa-simulators.local
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
