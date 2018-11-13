@@ -4,9 +4,6 @@
 
 replicaCount: 1
 
-imageCredentials:
-  name: dock-casa-secret
-
 image:
   repository: simulators
   tag: latest
@@ -51,7 +48,7 @@ ingress:
     # kubernetes.io/tls-acme: "true"
   path: /
   hosts:
-    - casa-simulators.local
+    - mojaloop-simulators.local
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
