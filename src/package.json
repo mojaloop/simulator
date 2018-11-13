@@ -1,0 +1,24 @@
+{
+  "name": "sims",
+  "version": "1.0.0",
+  "description": "A super-simple fsp simulator",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "dependencies": {
+    "koa": "^2.6.1",
+    "koa-bodyparser": "^4.2.1",
+    "glob": "7.1.1",
+    "hapi": "^17.0.0",
+    "hapi-openapi": "^1.0.0",
+    "node-cache": "^4.2.0",
+    "node-fetch": "^2.2.0",
+    "five-bells-condition": "5.0.1",
+    "ilp-packet": "3.0.0",
+    "joi": "13.1.2",
+    "joi-currency-code": "1.2.1",
+    "joi-date-extensions": "1.2.0"
+  }
+}
