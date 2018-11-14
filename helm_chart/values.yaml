@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: simulators
+  repository: mojaloop/simulator
   tag: latest
   pullPolicy: Always
 
