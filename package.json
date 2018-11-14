@@ -1,6 +1,6 @@
 {
   "name": "sims",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "A super-simple fsp simulator",
   "main": "src/index.js",
   "scripts": {
@@ -20,6 +20,7 @@
     "koa": "^2.6.1",
     "koa-bodyparser": "^4.2.1",
     "node-cache": "^4.2.0",
-    "node-fetch": "^2.2.0"
+    "node-fetch": "^2.2.0",
+    "winston": "^3.1.0"
   }
 }

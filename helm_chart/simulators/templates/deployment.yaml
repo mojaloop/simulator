@@ -11,7 +11,7 @@ spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ template "simulators.name" . }}
+#      app: {{ template "simulators.name" . }}
       release: {{ .Release.Name }}
   template:
     metadata:
@@ -61,20 +61,41 @@ spec:
                 configMapKeyRef:
                   name: {{ template "simulators.fullname" . }}
                   key: TRANSFERS_ENDPOINT
+            - name: TRANSFERS_FULFILMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "simulators.fullname" . }}
+                  key: TRANSFERS_FULFILMENT
+            - name: TRANSFERS_CONDITION
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "simulators.fullname" . }}
+                  key: TRANSFERS_CONDITION
+            - name: TRANSFERS_ILPPACKET
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "simulators.fullname" . }}
+                  key: TRANSFERS_ILPPACKET
           resources:
-      imagePullSecrets:
-        - name: regcred
-{{ toYaml .Values.resources | indent 12 }}
-        - name: {{ .Values.imageCredentials.name }}
-    {{- with .Values.nodeSelector }}
-      nodeSelector:
-{{ toYaml . | indent 8 }}
-    {{- end }}
-    {{- with .Values.affinity }}
-      affinity:
-{{ toYaml . | indent 8 }}
-    {{- end }}
-    {{- with .Values.tolerations }}
-      tolerations:
-{{ toYaml . | indent 8 }}
-    {{- end }}
+            {{ toYaml .Values.resources | indent 8 }}
+#{{- if .Values.imagePullSecrets }}
+#      imagePullSecrets:
+#        {{- range $key, $value := .Values.imagePullSecrets }}
+#          {{ $key }}: {{ $value | quote }}
+#        {{- end }}
+#{{- end }}
+
+#{{- if .Values.affinity }}
+#      affinity:
+#{{ toYaml .Values.affinity | indent 8 }}
+#{{- end }}
+#
+#{{- if .Values.nodeSelector }}
+#      nodeSelector:
+#{{ toYaml .Values.nodeSelector | indent 8 }}
+#{{- end }}
+#
+#{{- if .Values.tolerations }}
+#      tolerations:
+#{{ toYaml .Values.tolerations | indent 8 }}
+#{{- end }}
