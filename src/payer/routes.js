@@ -24,77 +24,77 @@ const Handler = require('./handler')
 const tags = ['api', 'metadata']
 
 module.exports = [
-    {
-        method: 'GET',
-        path: '/payerfsp/health',
-        handler: Handler.health,
-        options: {
-            tags: tags,
-            description: 'Status of adapter',
-            id: 'payerhealth'
-        }
-    },
-    {
-        method: 'GET',
-        path: '/payerfsp/',
-        handler: Handler.metadata,
-        options: {
-            tags: tags,
-            description: 'Metadata'
-        }
-    },
-    {
-        method: 'PUT',
-        path: '/payerfsp/participants/{type}/{id}',
-        handler: Handler.putParticipantsByTypeId,
-        options: {
-            tags: tags,
-            description: 'Metadata'
-        }
-    },
-    {
-        method: 'PUT',
-        path: '/payerfsp/parties/{type}/{id}',
-        handler: Handler.putPartiesByTypeId,
-        options: {
-            tags: tags,
-            description: 'Metadata'
-        }
-    },
-    {
-        method: 'PUT',
-        path: '/payerfsp/quotes/{id}',
-        handler: Handler.putQuotesById,
-        options: {
-            tags: tags,
-            description: 'Metadata'
-        }
-    },
-    {
-        method: 'PUT',
-        path: '/payerfsp/transfers/{id}',
-        handler: Handler.putTransfersById,
-        options: {
-            tags: tags,
-            description: 'Metadata'
-        }
-    },
-    {
-        method: 'PUT',
-        path: '/payerfsp/transfers/{id}/error',
-        handler: Handler.putTransfersByIdError,
-        options: {
-            tags: tags,
-            description: 'Metadata'
-        }
-    },
-    {
-        method: 'GET',
-        path: '/payerfsp/correlationid/{id}',
-        handler: Handler.getcorrelationId,
-        options: {
-            tags: tags,
-            description: 'Get details based on correlationid'
-        }
+  {
+    method: 'GET',
+    path: '/payerfsp/health',
+    handler: Handler.health,
+    options: {
+      tags: tags,
+      description: 'Status of adapter',
+      id: 'payerhealth'
     }
+  },
+  {
+    method: 'GET',
+    path: '/payerfsp/',
+    handler: Handler.metadata,
+    options: {
+      tags: tags,
+      description: 'Metadata'
+    }
+  },
+  {
+    method: 'PUT',
+    path: '/payerfsp/participants/{type}/{id}',
+    handler: Handler.putParticipantsByTypeId,
+    options: {
+      tags: tags,
+      description: 'Metadata'
+    }
+  },
+  {
+    method: 'PUT',
+    path: '/payerfsp/parties/{type}/{id}',
+    handler: Handler.putPartiesByTypeId,
+    options: {
+      tags: tags,
+      description: 'Metadata'
+    }
+  },
+  {
+    method: 'PUT',
+    path: '/payerfsp/quotes/{id}',
+    handler: Handler.putQuotesById,
+    options: {
+      tags: tags,
+      description: 'Metadata'
+    }
+  },
+  {
+    method: 'PUT',
+    path: '/payerfsp/transfers/{id}',
+    handler: Handler.putTransfersById,
+    options: {
+      tags: tags,
+      description: 'Metadata'
+    }
+  },
+  {
+    method: 'PUT',
+    path: '/payerfsp/transfers/{id}/error',
+    handler: Handler.putTransfersByIdError,
+    options: {
+      tags: tags,
+      description: 'Metadata'
+    }
+  },
+  {
+    method: 'GET',
+    path: '/payerfsp/correlationid/{id}',
+    handler: Handler.getcorrelationId,
+    options: {
+      tags: tags,
+      description: 'Get details based on correlationid'
+    }
+  }
 ]
