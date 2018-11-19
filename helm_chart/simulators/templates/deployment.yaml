@@ -18,6 +18,11 @@ spec:
       labels:
         app: {{ template "simulators.name" . }}
         release: {{ .Release.Name }}
+      {{- if .Values.metrics.enabled }}
+      annotations:
+        prometheus.io/port: "8444"
+        prometheus.io/scrape: "true"
+      {{- end }}
     spec:
       containers:
         - name: {{ .Chart.Name }}
