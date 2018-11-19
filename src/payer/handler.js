@@ -25,6 +25,7 @@
 const NodeCache = require('node-cache')
 const myCache = new NodeCache()
 const fetch = require('node-fetch')
+const Metrics = require('../lib/metrics')
 
 const extractUrls = (request) => {
   const urls = {}
@@ -38,10 +39,6 @@ const extractUrls = (request) => {
   return urls
 }
 
-exports.health = function (request, h) {
-  return h.response({status: 'OK'}).code(200)
-}
-
 exports.metadata = function (request, h) {
   return h.response({
     directory: 'localhost',
@@ -51,40 +48,88 @@ exports.metadata = function (request, h) {
 
 //Section about /participants
 exports.putParticipantsByTypeId = function (request, h) {
+  const histTimerEnd = Metrics.getHistogram(
+    'payer_putParticipantsByTypeId',
+    'Histogram for payer.putParticipantsByTypeId',
+    ['success', 'id']
+  ).startTimer()
+
   Logger.info(`IN PAYERFSP:: PUT /payerfsp/participants/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
   myCache.set(request.params.id, request.payload)
+
+  histTimerEnd({success: true, id: request.params.id})
   return h.response().code(200)
 }
 
 //Section about /parties
 exports.putPartiesByTypeId = function (request, h) {
+  const histTimerEnd = Metrics.getHistogram(
+    'payer_putPartiesByTypeId',
+    'Histogram for payer.putPartiesByTypeId',
+    ['success', 'id']
+  ).startTimer()
+
   Logger.info(`IN PAYERFSP:: PUT /payerfsp/parties/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
   myCache.set(request.params.id, request.payload)
+
+  histTimerEnd({success: true, id: request.params.id})
   return h.response().code(200)
 }
 
 //Section about Quotes
 exports.putQuotesById = function (request, h) {
+  const histTimerEnd = Metrics.getHistogram(
+    'payer_putQuotesById',
+    'Histogram for payer.putQuotesById',
+    ['success', 'id']
+  ).startTimer()
+
   Logger.info(`IN PAYERFSP:: PUT /payerfsp/quotes/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
   myCache.set(request.params.id, request.payload)
+
+  histTimerEnd({success: true, id: request.params.id})
   return h.response().code(200)
 }
 
 //Section about Transfers
 exports.putTransfersById = function (request, h) {
+  const histTimerEnd = Metrics.getHistogram(
+    'payer_putTransfersById',
+    'Histogram for payer.putTransfersById',
+    ['success', 'id']
+  ).startTimer()
+
   Logger.info(`IN PAYERFSP:: PUT /payerfsp/transfers/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
   myCache.set(request.params.id, request.payload)
+
+  histTimerEnd({success: true, id: request.params.id})
   return h.response().code(200)
 }
 
 exports.putTransfersByIdError = function (request, h) {
+  const histTimerEnd = Metrics.getHistogram(
+    'payer_putTransfersByIdError',
+    'Histogram for payer.putTransfersByIdError',
+    ['success', 'id']
+  ).startTimer()
+
   Logger.info(`IN PAYERFSP:: PUT /payerfsp/transfers/${request.params.id}/error, PAYLOAD: [${JSON.stringify(request.payload)}]`)
   myCache.set(request.params.id, request.payload)
+
+  histTimerEnd({success: true, id: request.params.id})
   return h.response().code(200)
 }
 
 exports.getcorrelationId = function (request, h) {
+  const histTimerEnd = Metrics.getHistogram(
+    'payer_getcorrelationId',
+    'Histogram for payer.getcorrelationId',
+    ['success', 'id']
+  ).startTimer()
+
   Logger.info(`IN PAYERFSP:: PUT /payerfsp/correlationid/${request.params.id}/error, CACHE: [${JSON.stringify(myCache.get(request.params.id))}]`)
+
+  histTimerEnd({success: true, id: request.params.id})
   return h.response(myCache.get(request.params.id)).code(202)
 }
 

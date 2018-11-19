@@ -16,9 +16,9 @@ const Logger = winston.createLogger({
     winston.format.printf(info => `${info.timestamp} - ${info.level}: ${info.message}`)
   ),
   levels: {
-    info: 0,
+    error: 0,
     warn: 1,
-    error: 2,
+    info: 2,
     verbose: 3,
     debug: 4,
     silly: 5
