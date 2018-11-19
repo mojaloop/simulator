@@ -28,7 +28,6 @@ const NodeCache = require('node-cache')
 const myCache = new NodeCache()
 const fetch = require('node-fetch')
 const Logger = require('../lib/logger')
-const Metrics = require('../lib/metrics')
 
 const partiesEndpoint = process.env.PARTIES_ENDPOINT || 'http://localhost:1080'
 const quotesEndpoint = process.env.QUOTES_ENDPOINT || 'http://localhost:1080'
@@ -49,6 +48,11 @@ const extractUrls = (request) => {
   return urls
 }
 
+exports.health = function (request, h) {
+
+  return h.response({status: 'OK'}).code(200)
+}
+
 exports.metadata = function (request, h) {
   return h.response({
     directory: 'localhost',
@@ -57,28 +61,13 @@ exports.metadata = function (request, h) {
 }
 
 exports.postPartiesByTypeAndId = function (request, h) {
-  const histTimerEnd = Metrics.getHistogram(
-    'payee_postPartiesByTypeAndId',
-    'Histogram for payee.postPartiesByTypeAndId',
-    ['success', 'id']
-  ).startTimer()
-
   Logger.info('IN PAYEEFSP:: POST /payeefsp/parties/' + request.params.id, request.payload)
   myCache.set(request.params.id, request.payload)
-
-  histTimerEnd({success: true, id: request.params.id})
   return h.response().code(202)
 }
 
 exports.getPartiesByTypeAndId = function (req, h) {
   (async function () {
-
-    const histTimerEnd = Metrics.getHistogram(
-      'payee_getPartiesByTypeAndId',
-      'Histogram for payee.getPartiesByTypeAndId',
-      ['success', 'id']
-    ).startTimer()
-
     const metadata = `${req.method} ${req.path} ${req.params.id} `
     Logger.info((new Date().toISOString()), ['IN PAYEEFSP::'], `received: ${metadata}. `)
     const url = partiesEndpoint + '/parties/MSISDN/' + req.params.id
@@ -102,30 +91,18 @@ exports.getPartiesByTypeAndId = function (req, h) {
       if (!res.ok) {
         // TODO: how does one identify the failed response?
         throw new Error('Failed to send. Result:', res)
-        histTimerEnd({success: false, id: req.params.id})
       }
-
-      histTimerEnd({success: true, id: req.params.id})
 
     }
     catch (err) {
       Logger.error(err)
     }
   })()
-
   return h.response().code(202)
 }
 
 exports.postQuotes = function (req, h) {
-
   (async function () {
-
-    const histTimerEnd = Metrics.getHistogram(
-      'payee_postQuotes',
-      'Histogram for payee.postQuotes',
-      ['success', 'id']
-    ).startTimer()
-
     const metadata = `${req.method} ${req.path}`
     const quotesRequest = req.payload
     Logger.info((new Date().toISOString()), ['IN PAYEEFSP::'], `received: ${metadata}. `)
@@ -184,11 +161,10 @@ exports.postQuotes = function (req, h) {
       const res = await fetch(url, opts)
       Logger.info((new Date().toISOString()), 'response: ', res.status)
       if (!res.ok) {
-        histTimerEnd({success: false, id: req.params.id})
         // TODO: how does one identify the failed response?
         throw new Error('Failed to send. Result:', res)
       }
-      histTimerEnd({success: true, id: req.params.id})
+
     }
     catch (err) {
       Logger.error(err)
@@ -205,14 +181,7 @@ exports.postQuotes = function (req, h) {
 }
 
 exports.postTransfers = function (req, h) {
-
   (async function () {
-    const histTimerEnd = Metrics.getHistogram(
-      'payee_postTransfers',
-      'Histogram for payee.postTransfers',
-      ['success', 'id']
-    ).startTimer()
-
     const metadata = `${req.method} ${req.path} ${req.payload.transferId}`
     Logger.info(`IN PAYEEFSP:: received: ${metadata}.`)
     const url = transfersEndpoint + '/transfers/' + req.payload.transferId
@@ -241,11 +210,9 @@ exports.postTransfers = function (req, h) {
       const res = await fetch(url, opts)
       Logger.info(`response: ${res.status}`)
       if (!res.ok) {
-        histTimerEnd({success: false, id: req.params.id})
         // TODO: how does one identify the failed response?
         throw new Error('Failed to send. Result:', res)
       }
-      histTimerEnd({success: true, id: req.params.id})
 
     }
     catch (err) {
@@ -263,39 +230,18 @@ exports.postTransfers = function (req, h) {
 }
 
 exports.putTransfersById = function (request, h) {
-  const histTimerEnd = Metrics.getHistogram(
-    'payee_putTransfersById',
-    'Histogram for payee.putTransfersById',
-    ['success', 'id']
-  ).startTimer()
-
   Logger.info(`IN PAYEEFSP:: PUT /payeefsp/transfers/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
   myCache.set(request.params.id, request.payload)
-  histTimerEnd({success: true, id: request.params.id})
   return h.response().code(200)
 }
 
 exports.putTransfersByIdError = function (request, h) {
-  const histTimerEnd = Metrics.getHistogram(
-    'payee_putTransfersByIdError',
-    'Histogram for payee.putTransfersByIdError',
-    ['success', 'id']
-  ).startTimer()
-
   Logger.info(`IN PAYEEFSP:: PUT /payeefsp/transfers/${request.params.id}/error, PAYLOAD: [${JSON.stringify(request.payload)}]`)
   myCache.set(request.params.id, request.payload)
-  histTimerEnd({success: true, id: request.params.id})
   return h.response().code(200)
 }
 
 exports.getcorrelationId = function (request, h) {
-  const histTimerEnd = Metrics.getHistogram(
-    'payee_getcorrelationId',
-    'Histogram for payee.getcorrelationId',
-    ['success', 'id']
-  ).startTimer()
-
   Logger.info(`IN PAYEEFSP:: Final response for GET /payeefsp/correlationid/${request.params.id}, CACHE: [${JSON.stringify(myCache.get(request.params.id))}`)
-  histTimerEnd({success: true, id: request.params.id})
   return h.response(myCache.get(request.params.id)).code(202)
 }

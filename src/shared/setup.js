@@ -25,7 +25,6 @@
 const Hapi = require('hapi')
 const Boom = require('boom')
 const Logger = require('../lib/logger')
-const Metrics = require('../lib/metrics')
 
 const createServer = (port, modules) => {
   return (async () => {
@@ -41,13 +40,8 @@ const createServer = (port, modules) => {
     })
     Logger.info(`Registering server modules...`)
     await server.register(modules)
-
-    Logger.info(`Initializing metrics...`)
-    Metrics.setup()
-
     Logger.info(`Server starting up...`)
     await server.start()
-
     Logger.info(`Server running at: ${server.info.uri}`)
     return server
   })()

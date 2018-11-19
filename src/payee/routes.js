@@ -29,6 +29,16 @@ const Joi = BaseJoi.extend(Extension)
 module.exports = [
   {
     method: 'GET',
+    path: '/payeefsp/health',
+    handler: Handler.health,
+    options: {
+      tags: tags,
+      description: 'Status of adapter',
+      id: 'payeehealth'
+    }
+  },
+  {
+    method: 'GET',
     path: '/payeefsp/',
     handler: Handler.metadata,
     options: {
