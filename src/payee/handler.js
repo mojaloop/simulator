@@ -58,15 +58,15 @@ exports.metadata = function (request, h) {
 
 exports.postPartiesByTypeAndId = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
-    'payee_postPartiesByTypeAndId',
-    'Histogram for payee.postPartiesByTypeAndId',
-    ['success', 'source', 'destination']
+    'http_request',
+    'Histogram for http operation',
+    ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
   Logger.info('IN PAYEEFSP:: POST /payeefsp/parties/' + request.params.id, request.payload)
   myCache.set(request.params.id, request.payload)
 
-  histTimerEnd({success: true, source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination']})
+  histTimerEnd({success: true, fsp:'payee', operation: 'postPartiesByTypeAndId', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination']})
   return h.response().code(202)
 }
 
@@ -74,9 +74,9 @@ exports.getPartiesByTypeAndId = function (req, h) {
   (async function () {
 
     const histTimerEnd = Metrics.getHistogram(
-      'payee_getPartiesByTypeAndId',
-      'Histogram for payee.getPartiesByTypeAndId',
-      ['success', 'source', 'destination']
+      'http_request',
+      'Histogram for http operation',
+      ['success', 'fsp', 'operation', 'source', 'destination']
     ).startTimer()
 
     const metadata = `${req.method} ${req.path} ${req.params.id} `
@@ -101,13 +101,13 @@ exports.getPartiesByTypeAndId = function (req, h) {
       Logger.info((new Date().toISOString()), 'response: ', res.status)
       if (!res.ok) {
         // TODO: how does one identify the failed response?
-        throw new Error('Failed to send. Result:', res)
+        throw new Error(`Failed to send. Result: ${res}`)
       }
-      histTimerEnd({success: true, source: req.headers['fspiop-source'], destination: req.headers['fspiop-destination']})
+      histTimerEnd({success: true, fsp:'payee', operation: 'getPartiesByTypeAndId', source: req.headers['fspiop-source'], destination: req.headers['fspiop-destination']})
     }
     catch (err) {
       Logger.error(err)
-      histTimerEnd({success: false, source: req.headers['fspiop-source'], destination: req.headers['fspiop-destination']})
+      histTimerEnd({success: false, fsp:'payee', operation: 'getPartiesByTypeAndId', source: req.headers['fspiop-source'], destination: req.headers['fspiop-destination']})
     }
   })()
 
@@ -119,9 +119,9 @@ exports.postQuotes = function (req, h) {
   (async function () {
 
     const histTimerEnd = Metrics.getHistogram(
-      'payee_postQuotes',
-      'Histogram for payee.postQuotes',
-      ['success', 'source', 'destination']
+      'http_request',
+      'Histogram for http operation',
+      ['success', 'fsp', 'operation', 'source', 'destination']
     ).startTimer()
 
     const metadata = `${req.method} ${req.path}`
@@ -183,13 +183,13 @@ exports.postQuotes = function (req, h) {
       Logger.info((new Date().toISOString()), 'response: ', res.status)
       if (!res.ok) {
         // TODO: how does one identify the failed response?
-        throw new Error('Failed to send. Result:', res)
+        throw new Error(`Failed to send. Result: ${res}`)
       }
-      histTimerEnd({success: true, source: req.headers['fspiop-source'], destination: req.headers['fspiop-destination']})
+      histTimerEnd({success: true, fsp:'payee', operation: 'postQuotes', source: req.headers['fspiop-source'], destination: req.headers['fspiop-destination']})
     }
     catch (err) {
       Logger.error(err)
-      histTimerEnd({success: false, source: req.headers['fspiop-source'], destination: req.headers['fspiop-destination']})
+      histTimerEnd({success: false, fsp:'payee', operation: 'postQuotes', source: req.headers['fspiop-source'], destination: req.headers['fspiop-destination']})
       // TODO: what if this fails? We need to log. What happens by default?
       //const url = await rq.createErrorUrl(db, req.path, requesterName);
       // TODO: review this error message
@@ -205,9 +205,9 @@ exports.postQuotes = function (req, h) {
 exports.postTransfers = function (req, h) {
   (async function () {
     const histTimerEnd = Metrics.getHistogram(
-      'payee_postTransfers',
-      'Histogram for payee.postTransfers',
-      ['success', 'source', 'destination']
+      'http_request',
+      'Histogram for http operation',
+      ['success', 'fsp', 'operation', 'source', 'destination']
     ).startTimer()
 
     const metadata = `${req.method} ${req.path} ${req.payload.transferId}`
@@ -239,14 +239,14 @@ exports.postTransfers = function (req, h) {
       Logger.info(`response: ${res.status}`)
       if (!res.ok) {
         // TODO: how does one identify the failed response?
-        throw new Error('Failed to send. Result:', res)
+        throw new Error(`Failed to send. Result: ${res}`)
       }
-      histTimerEnd({success: true, source: req.headers['fspiop-source'], destination: req.headers['fspiop-destination']})
+      histTimerEnd({success: true, fsp:'payee', operation: 'postTransfers', source: req.headers['fspiop-source'], destination: req.headers['fspiop-destination']})
 
     }
     catch (err) {
       Logger.error(err)
-      histTimerEnd({success: false, source: req.headers['fspiop-source'], destination: req.headers['fspiop-destination']})
+      histTimerEnd({success: false, fsp:'payee', operation: 'postTransfers', source: req.headers['fspiop-source'], destination: req.headers['fspiop-destination']})
       // TODO: what if this fails? We need to log. What happens by default?
       //const url = await rq.createErrorUrl(db, req.path, requesterName);
       // TODO: review this error message
@@ -261,38 +261,38 @@ exports.postTransfers = function (req, h) {
 
 exports.putTransfersById = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
-    'payee_putTransfersById',
-    'Histogram for payee.putTransfersById',
-    ['success', 'source', 'destination']
+    'http_request',
+    'Histogram for http operation',
+    ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
   Logger.info(`IN PAYEEFSP:: PUT /payeefsp/transfers/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
   myCache.set(request.params.id, request.payload)
-  histTimerEnd({success: true, source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination']})
+  histTimerEnd({success: true, fsp:'payee', operation: 'putTransfersById', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination']})
   return h.response().code(200)
 }
 
 exports.putTransfersByIdError = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
-    'payee_putTransfersByIdError',
-    'Histogram for payee.putTransfersByIdError',
-    ['success', 'source', 'destination']
+    'http_request',
+    'Histogram for http operation',
+    ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
   Logger.info(`IN PAYEEFSP:: PUT /payeefsp/transfers/${request.params.id}/error, PAYLOAD: [${JSON.stringify(request.payload)}]`)
   myCache.set(request.params.id, request.payload)
-  histTimerEnd({success: true, source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination']})
+  histTimerEnd({success: true, fsp:'payee', operation: 'putTransfersByIdError', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination']})
   return h.response().code(200)
 }
 
 exports.getcorrelationId = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
-    'payee_getcorrelationId',
-    'Histogram for payee.getcorrelationId',
-    ['success']
+    'http_request',
+    'Histogram for http operation',
+    ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
   Logger.info(`IN PAYEEFSP:: Final response for GET /payeefsp/correlationid/${request.params.id}, CACHE: [${JSON.stringify(myCache.get(request.params.id))}`)
-  histTimerEnd({success: true})
+  histTimerEnd({success: true, fsp:'payee', operation: 'getcorrelationId'})
   return h.response(myCache.get(request.params.id)).code(202)
 }

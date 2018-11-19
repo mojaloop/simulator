@@ -49,45 +49,45 @@ exports.metadata = function (request, h) {
 //Section about /participants
 exports.putParticipantsByTypeId = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
-    'payer_putParticipantsByTypeId',
-    'Histogram for payer.putParticipantsByTypeId',
-    ['success']
+    'http_request',
+    'Histogram for http operation',
+    ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
   Logger.info(`IN PAYERFSP:: PUT /payerfsp/participants/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
   myCache.set(request.params.id, request.payload)
 
-  histTimerEnd({success: true})
+  histTimerEnd({success: true, fsp:'payer', operation: 'putParticipantsByTypeId', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination']})
   return h.response().code(200)
 }
 
 //Section about /parties
 exports.putPartiesByTypeId = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
-    'payer_putPartiesByTypeId',
-    'Histogram for payer.putPartiesByTypeId',
-    ['success']
+    'http_request',
+    'Histogram for http operation',
+    ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
   Logger.info(`IN PAYERFSP:: PUT /payerfsp/parties/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
   myCache.set(request.params.id, request.payload)
 
-  histTimerEnd({success: true})
+  histTimerEnd({success: true, fsp:'payer', operation: 'putPartiesByTypeId', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination']})
   return h.response().code(200)
 }
 
 //Section about Quotes
 exports.putQuotesById = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
-    'payer_putQuotesById',
-    'Histogram for payer.putQuotesById',
-    ['success']
+    'http_request',
+    'Histogram for http operation',
+    ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
   Logger.info(`IN PAYERFSP:: PUT /payerfsp/quotes/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
   myCache.set(request.params.id, request.payload)
 
-  histTimerEnd({success: true})
+  histTimerEnd({success: true, fsp:'payer', operation: 'putQuotesById', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination']})
   return h.response().code(200)
 }
 
@@ -102,34 +102,34 @@ exports.putTransfersById = function (request, h) {
   Logger.info(`IN PAYERFSP:: PUT /payerfsp/transfers/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
   myCache.set(request.params.id, request.payload)
 
-  histTimerEnd({success: true})
+  histTimerEnd({success: true, fsp:'payer', operation: 'putTransfersById', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination']})
   return h.response().code(200)
 }
 
 exports.putTransfersByIdError = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
-    'payer_putTransfersByIdError',
-    'Histogram for payer.putTransfersByIdError',
-    ['success']
+    'http_request',
+    'Histogram for http operation',
+    ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
   Logger.info(`IN PAYERFSP:: PUT /payerfsp/transfers/${request.params.id}/error, PAYLOAD: [${JSON.stringify(request.payload)}]`)
   myCache.set(request.params.id, request.payload)
 
-  histTimerEnd({success: true})
+  histTimerEnd({success: true, fsp:'payer', operation: 'putTransfersByIdError', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination']})
   return h.response().code(200)
 }
 
 exports.getcorrelationId = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
-    'payer_getcorrelationId',
-    'Histogram for payer.getcorrelationId',
-    ['success']
+    'http_request',
+    'Histogram for http operation',
+    ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
   Logger.info(`IN PAYERFSP:: PUT /payerfsp/correlationid/${request.params.id}/error, CACHE: [${JSON.stringify(myCache.get(request.params.id))}]`)
 
-  histTimerEnd({success: true})
+  histTimerEnd({success: true, fsp:'payer', operation: 'getcorrelationId'})
   return h.response(myCache.get(request.params.id)).code(202)
 }
 
