@@ -81,21 +81,6 @@ spec:
                 configMapKeyRef:
                   name: {{ template "simulators.fullname" . }}
                   key: LOG_LEVEL
-            - name: METRICS_DISABLED
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "simulators.fullname" . }}
-                  key: METRICS_DISABLED
-            - name: METRICS_PREFIX
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "simulators.fullname" . }}
-                  key: METRICS_PREFIX
-            - name: METRICS_TIMEOUT
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ template "simulators.fullname" . }}
-                  key: METRICS_TIMEOUT
 
           {{- if .Values.resources }}
           resources:

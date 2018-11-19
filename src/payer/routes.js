@@ -26,6 +26,16 @@ const tags = ['api', 'metadata']
 module.exports = [
   {
     method: 'GET',
+    path: '/payerfsp/health',
+    handler: Handler.health,
+    options: {
+      tags: tags,
+      description: 'Status of adapter',
+      id: 'payerhealth'
+    }
+  },
+  {
+    method: 'GET',
     path: '/payerfsp/',
     handler: Handler.metadata,
     options: {
