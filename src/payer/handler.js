@@ -51,13 +51,13 @@ exports.putParticipantsByTypeId = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
     'payer_putParticipantsByTypeId',
     'Histogram for payer.putParticipantsByTypeId',
-    ['success', 'id']
+    ['success']
   ).startTimer()
 
   Logger.info(`IN PAYERFSP:: PUT /payerfsp/participants/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
   myCache.set(request.params.id, request.payload)
 
-  histTimerEnd({success: true, id: request.params.id})
+  histTimerEnd({success: true})
   return h.response().code(200)
 }
 
@@ -66,13 +66,13 @@ exports.putPartiesByTypeId = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
     'payer_putPartiesByTypeId',
     'Histogram for payer.putPartiesByTypeId',
-    ['success', 'id']
+    ['success']
   ).startTimer()
 
   Logger.info(`IN PAYERFSP:: PUT /payerfsp/parties/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
   myCache.set(request.params.id, request.payload)
 
-  histTimerEnd({success: true, id: request.params.id})
+  histTimerEnd({success: true})
   return h.response().code(200)
 }
 
@@ -81,13 +81,13 @@ exports.putQuotesById = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
     'payer_putQuotesById',
     'Histogram for payer.putQuotesById',
-    ['success', 'id']
+    ['success']
   ).startTimer()
 
   Logger.info(`IN PAYERFSP:: PUT /payerfsp/quotes/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
   myCache.set(request.params.id, request.payload)
 
-  histTimerEnd({success: true, id: request.params.id})
+  histTimerEnd({success: true})
   return h.response().code(200)
 }
 
@@ -96,13 +96,13 @@ exports.putTransfersById = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
     'payer_putTransfersById',
     'Histogram for payer.putTransfersById',
-    ['success', 'id']
+    ['success']
   ).startTimer()
 
   Logger.info(`IN PAYERFSP:: PUT /payerfsp/transfers/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
   myCache.set(request.params.id, request.payload)
 
-  histTimerEnd({success: true, id: request.params.id})
+  histTimerEnd({success: true})
   return h.response().code(200)
 }
 
@@ -110,13 +110,13 @@ exports.putTransfersByIdError = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
     'payer_putTransfersByIdError',
     'Histogram for payer.putTransfersByIdError',
-    ['success', 'id']
+    ['success']
   ).startTimer()
 
   Logger.info(`IN PAYERFSP:: PUT /payerfsp/transfers/${request.params.id}/error, PAYLOAD: [${JSON.stringify(request.payload)}]`)
   myCache.set(request.params.id, request.payload)
 
-  histTimerEnd({success: true, id: request.params.id})
+  histTimerEnd({success: true})
   return h.response().code(200)
 }
 
@@ -124,12 +124,12 @@ exports.getcorrelationId = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
     'payer_getcorrelationId',
     'Histogram for payer.getcorrelationId',
-    ['success', 'id']
+    ['success']
   ).startTimer()
 
   Logger.info(`IN PAYERFSP:: PUT /payerfsp/correlationid/${request.params.id}/error, CACHE: [${JSON.stringify(myCache.get(request.params.id))}]`)
 
-  histTimerEnd({success: true, id: request.params.id})
+  histTimerEnd({success: true})
   return h.response(myCache.get(request.params.id)).code(202)
 }
 
