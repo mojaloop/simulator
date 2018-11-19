@@ -15,3 +15,6 @@ data:
   TRANSFERS_CONDITION: {{ .Values.config.TRANSFERS_CONDITION | quote }}
   TRANSFERS_ILPPACKET: {{ .Values.config.TRANSFERS_ILPPACKET | quote }}
   LOG_LEVEL: {{ .Values.config.LOG_LEVEL | quote }}
+  METRICS_DISABLED: {{ .Values.config.METRICS_DISABLED | quote }}
+  METRICS_PREFIX: {{ .Values.config.METRICS_PREFIX | quote }}
+  METRICS_TIMEOUT: {{ .Values.config.METRICS_TIMEOUT | quote }}

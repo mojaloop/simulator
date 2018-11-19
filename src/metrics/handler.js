@@ -16,50 +16,16 @@
  their names indented and be marked with a '-'. Email address can be added
  optionally within square brackets <email>.
  * Gates Foundation
- - Murthy Kakarlamudi murthy@modusbox.com
+
+ - Miguel de Barros <miguel.debarros@modusbox.com>
+
  --------------
  ******/
 
 'use strict'
 
-const Hapi = require('hapi')
-const Boom = require('boom')
-const Logger = require('../lib/logger')
 const Metrics = require('../lib/metrics')
 
-const createServer = (port, modules) => {
-  return (async () => {
-    const server = await new Hapi.Server({
-      port,
-      routes: {
-        validate: {
-          failAction: async (request, h, err) => {
-            throw Boom.boomify(err)
-          }
-        }
-      }
-    })
-    Logger.info(`Registering server modules...`)
-    await server.register(modules)
-
-    Logger.info(`Initializing metrics...`)
-    Metrics.setup()
-
-    Logger.info(`Server starting up...`)
-    await server.start()
-
-    Logger.info(`Server running at: ${server.info.uri}`)
-    return server
-  })()
-}
-
-// Migrator.migrate is called before connecting to the database to ensure all new tables are loaded properly.
-const initialize = async function ({service, port, modules = []}) {
-  const server = await createServer(port, modules)
-  return server
-}
-
-module.exports = {
-  initialize,
-  createServer
+exports.metrics = function (request, h) {
+  return h.response(Metrics.getMetricsForPrometheus()).code(200)
 }
