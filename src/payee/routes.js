@@ -47,72 +47,72 @@ module.exports = [
     }
   },
   {
-      method: 'POST',
-      path: '/payeefsp/parties/{type}/{id}',
-      handler: Handler.postPartiesByTypeAndId,
-      config: {
-          id: 'add_parties',
-          tags: tags,
-          auth: null,
-          description: 'Transfer API.',
-          payload: {
-              failAction: 'error',
-              output: 'data'
-          }
+    method: 'POST',
+    path: '/payeefsp/parties/{type}/{id}',
+    handler: Handler.postPartiesByTypeAndId,
+    config: {
+      id: 'add_parties',
+      tags: tags,
+      auth: null,
+      description: 'Transfer API.',
+      payload: {
+        failAction: 'error',
+        output: 'data'
       }
-  },
-  {
-      method: 'GET',
-      path: '/payeefsp/parties/{type}/{id}',
-      handler: Handler.getPartiesByTypeAndId,
-      options: {
-          tags: tags,
-          description: 'Add users to payer simulator'
-      }
-  },
-  {
-      method: 'POST',
-      path: '/payeefsp/quotes',
-      handler: Handler.postQuotes,
-      options: {
-          tags: tags,
-          description: 'Add users to payer simulator'
-      }
-  },
-  {
-      method: 'POST',
-      path: '/payeefsp/transfers',
-      handler: Handler.postTransfers,
-      options: {
-          tags: tags,
-          description: 'Add users to payer simulator'
-      }
-  },
-    {
-        method: 'PUT',
-        path: '/payeefsp/transfers/{id}',
-        handler: Handler.putTransfersById,
-        options: {
-            tags: tags,
-            description: 'Metadata'
-        }
-    },
-    {
-        method: 'PUT',
-        path: '/payeefsp/transfers/{id}/error',
-        handler: Handler.putTransfersByIdError,
-        options: {
-            tags: tags,
-            description: 'Metadata'
-        }
-    },
-    {
-        method: 'GET',
-        path: '/payeefsp/correlationid/{id}',
-        handler: Handler.getcorrelationId,
-        options: {
-            tags: tags,
-            description: 'Get details based on correlationid'
-        }
     }
+  },
+  {
+    method: 'GET',
+    path: '/payeefsp/parties/{type}/{id}',
+    handler: Handler.getPartiesByTypeAndId,
+    options: {
+      tags: tags,
+      description: 'Add users to payer simulator'
+    }
+  },
+  {
+    method: 'POST',
+    path: '/payeefsp/quotes',
+    handler: Handler.postQuotes,
+    options: {
+      tags: tags,
+      description: 'Add users to payer simulator'
+    }
+  },
+  {
+    method: 'POST',
+    path: '/payeefsp/transfers',
+    handler: Handler.postTransfers,
+    options: {
+      tags: tags,
+      description: 'Add users to payer simulator'
+    }
+  },
+  {
+    method: 'PUT',
+    path: '/payeefsp/transfers/{id}',
+    handler: Handler.putTransfersById,
+    options: {
+      tags: tags,
+      description: 'Metadata'
+    }
+  },
+  {
+    method: 'PUT',
+    path: '/payeefsp/transfers/{id}/error',
+    handler: Handler.putTransfersByIdError,
+    options: {
+      tags: tags,
+      description: 'Metadata'
+    }
+  },
+  {
+    method: 'GET',
+    path: '/payeefsp/correlationid/{id}',
+    handler: Handler.getcorrelationId,
+    options: {
+      tags: tags,
+      description: 'Get details based on correlationid'
+    }
+  }
 ]

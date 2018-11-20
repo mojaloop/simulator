@@ -22,72 +22,70 @@
 
 'use strict'
 
-const NodeCache = require("node-cache");
-const myCache = new NodeCache();
-const fetch = require('node-fetch');
-
+const NodeCache = require('node-cache')
+const myCache = new NodeCache()
+const fetch = require('node-fetch')
 
 const extractUrls = (request) => {
-    const urls = {}
-    request.server.table()[0].table.filter(route => {
-        return route.settings.id !== undefined &&
-            Array.isArray(route.settings.tags) &&
-            route.settings.tags.indexOf('api') >= 0
-    }).forEach(route => {
-        urls[route.settings.id] = `localhost${route.path.replace(/\{/g, ':').replace(/\}/g, '')}`
-    })
-    return urls
+  const urls = {}
+  request.server.table()[0].table.filter(route => {
+    return route.settings.id !== undefined &&
+      Array.isArray(route.settings.tags) &&
+      route.settings.tags.indexOf('api') >= 0
+  }).forEach(route => {
+    urls[route.settings.id] = `localhost${route.path.replace(/\{/g, ':').replace(/\}/g, '')}`
+  })
+  return urls
 }
 
 exports.health = function (request, h) {
-    return h.response({status: 'OK'}).code(200)
+  return h.response({status: 'OK'}).code(200)
 }
 
 exports.metadata = function (request, h) {
-    return h.response({
-        directory: 'localhost',
-        urls: extractUrls(request)
-    }).code(200)
+  return h.response({
+    directory: 'localhost',
+    urls: extractUrls(request)
+  }).code(200)
 }
 
 //Section about /participants
 exports.putParticipantsByTypeId = function (request, h) {
-    console.log((new Date().toISOString()),'IN PAYERFSP:: PUT /payerfsp/participants/'+request.params.id, request.payload)
-    myCache.set(request.params.id, request.payload)
-    return h.response().code(200)
+  Logger.info(`IN PAYERFSP:: PUT /payerfsp/participants/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
+  myCache.set(request.params.id, request.payload)
+  return h.response().code(200)
 }
-
 
 //Section about /parties
 exports.putPartiesByTypeId = function (request, h) {
-    console.log((new Date().toISOString()),'IN PAYERFSP:: PUT /payerfsp/parties/'+request.params.id, request.payload)
-    myCache.set(request.params.id, request.payload)
-    return h.response().code(200)
+  Logger.info(`IN PAYERFSP:: PUT /payerfsp/parties/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
+  myCache.set(request.params.id, request.payload)
+  return h.response().code(200)
 }
 
 //Section about Quotes
 exports.putQuotesById = function (request, h) {
-    console.log((new Date().toISOString()),'IN PAYERFSP:: PUT /payerfsp/quotes/'+request.params.id, request.payload)
-    myCache.set(request.params.id, request.payload)
-    return h.response().code(200)
+  Logger.info(`IN PAYERFSP:: PUT /payerfsp/quotes/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
+  myCache.set(request.params.id, request.payload)
+  return h.response().code(200)
 }
 
 //Section about Transfers
 exports.putTransfersById = function (request, h) {
-    console.log((new Date().toISOString()),'IN PAYERFSP:: PUT /payerfsp/transfers/'+request.params.id, request.payload)
-    myCache.set(request.params.id, request.payload)
-    return h.response().code(200)
+  Logger.info(`IN PAYERFSP:: PUT /payerfsp/transfers/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
+  myCache.set(request.params.id, request.payload)
+  return h.response().code(200)
 }
 
 exports.putTransfersByIdError = function (request, h) {
-    console.log((new Date().toISOString()),'IN PAYERFSP:: PUT /payerfsp/transfers/'+request.params.id+'/error', request.payload)
-    myCache.set(request.params.id, request.payload)
-    return h.response().code(200)
+  Logger.info(`IN PAYERFSP:: PUT /payerfsp/transfers/${request.params.id}/error, PAYLOAD: [${JSON.stringify(request.payload)}]`)
+  myCache.set(request.params.id, request.payload)
+  return h.response().code(200)
 }
 
 exports.getcorrelationId = function (request, h) {
-    console.log((new Date().toISOString()),'IN PAYERFSP:: Final response for GET /payerfsp/correlationid/'+request.params.id, myCache.get(request.params.id))
-    return h.response(myCache.get(request.params.id)).code(202)
+  Logger.info(`IN PAYERFSP:: PUT /payerfsp/correlationid/${request.params.id}/error, CACHE: [${JSON.stringify(myCache.get(request.params.id))}]`)
+  return h.response(myCache.get(request.params.id)).code(202)
 }
 
 

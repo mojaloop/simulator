@@ -23,11 +23,12 @@
 'use strict'
 
 const Glob = require('glob')
+const Logger = require('./lib/logger')
 
 exports.plugin = {
   name: 'api routes',
   register: function (server, options) {
     Glob.sync('*/routes.js', {cwd: __dirname, ignore: 'routes.js'})
-      .forEach(x => { console.log(x); server.route(require('./' + x));})
+      .forEach(x => { Logger.info(`Loading module: [${x}]`); server.route(require('./' + x));})
   }
 }
