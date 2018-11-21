@@ -27,44 +27,63 @@
 
 'use strict'
 
-const winston = require('winston')
+const client = require('prom-client')
+const Logger = require('./logger')
 
-let Logger
+let alreadySetup = false
+let histograms = []
+let prefix = process.env.METRICS_PREFIX || 'moja_sim_'
+let isDisabled = (process.env.METRICS_DISABLED === 'true')
+let timeout = process.env.METRICS_TIMEOUT || 5000
+let disabledMessage = 'Metrics is disabled. Please enable it via the environment var METRICS_DISABLED=\'false\'.'
 
-if(!Logger) {
-  const level = process.env.LOG_LEVEL || 'info'
-  const transportConsole = new winston.transports.Console({ level: level })
-
-  Logger = winston.createLogger({
-    format: winston.format.combine(
-      winston.format.colorize({all: true}),
-      winston.format.timestamp({
-        format: 'YYYY-MM-dd\'T\'HH:mm:ss.SSSZ'
-      }),
-      winston.format.prettyPrint(),
-      winston.format.printf(info => `${info.timestamp} - ${info.level}: ${info.message}`)
-    ),
-    levels: {
-      error: 0,
-      warn: 1,
-      info: 2,
-      perf: 3,
-      verbose: 4,
-      debug: 5,
-      silly: 6
-    },
-    transports: [
-      transportConsole
-    ],
-    exceptionHandlers: [
-      transportConsole
-    ],
-    exitOnError: false
-  })
-
-  winston.addColors({
-    perf: 'red'
-  })
+let metricOptions = {
+  timeout,
+  prefix
 }
 
-module.exports = Logger
+const setup = () => {
+  if (alreadySetup || isDisabled) {
+    if(isDisabled){
+      Logger.warn(disabledMessage)
+    }
+    return
+  }
+  client.collectDefaultMetrics(metricOptions)
+  client.register.metrics()
+  alreadySetup = true
+}
+
+const getHistogram = (name, help = null, labelNames = []) => {
+  try {
+    if (histograms[name]) {
+      return histograms[name]
+    }
+    histograms[name] = new client.Histogram({
+      name: `${prefix}${name}`,
+      help: help || `${name}_histogram`,
+      labelNames: labelNames,
+      buckets: [0.010, 0.050, 0.1, 0.5, 1, 2, 5] // this is in seconds - the startTimer().end() collects in seconds with ms precision
+    })
+    return histograms[name]
+  } catch (e) {
+    throw new Error(`Couldn't get metrics histogram for ${name}`)
+  }
+}
+
+const getMetricsForPrometheus = () => {
+  if(isDisabled) {
+    return disabledMessage
+  } else {
+    return client.register.metrics()
+  }
+}
+
+module.exports = {
+  isDisabled,
+  options: metricOptions,
+  disabledMessage: disabledMessage,
+  setup,
+  getHistogram,
+  getMetricsForPrometheus
+}

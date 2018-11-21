@@ -18,6 +18,12 @@ spec:
       labels:
         app: {{ template "simulators.name" . }}
         release: {{ .Release.Name }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
+        {{- if .Values.metrics.enabled }}
+        prometheus.io/port: "8444"
+        prometheus.io/scrape: "true"
+        {{- end }}
     spec:
       containers:
         - name: {{ .Chart.Name }}
@@ -61,6 +67,11 @@ spec:
                 configMapKeyRef:
                   name: {{ template "simulators.fullname" . }}
                   key: TRANSFERS_ENDPOINT
+            - name: TRANSFERS_FULFIL_RESPONSE_DISABLED
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "simulators.fullname" . }}
+                  key: TRANSFERS_FULFIL_RESPONSE_DISABLED
             - name: TRANSFERS_FULFILMENT
               valueFrom:
                 configMapKeyRef:
@@ -81,6 +92,21 @@ spec:
                 configMapKeyRef:
                   name: {{ template "simulators.fullname" . }}
                   key: LOG_LEVEL
+            - name: METRICS_DISABLED
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "simulators.fullname" . }}
+                  key: METRICS_DISABLED
+            - name: METRICS_PREFIX
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "simulators.fullname" . }}
+                  key: METRICS_PREFIX
+            - name: METRICS_TIMEOUT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "simulators.fullname" . }}
+                  key: METRICS_TIMEOUT
 
           {{- if .Values.resources }}
           resources:
