@@ -18,11 +18,12 @@ spec:
       labels:
         app: {{ template "simulators.name" . }}
         release: {{ .Release.Name }}
-      {{- if .Values.metrics.enabled }}
       annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
+        {{- if .Values.metrics.enabled }}
         prometheus.io/port: "8444"
         prometheus.io/scrape: "true"
-      {{- end }}
+        {{- end }}
     spec:
       containers:
         - name: {{ .Chart.Name }}
