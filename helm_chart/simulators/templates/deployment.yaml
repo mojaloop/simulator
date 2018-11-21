@@ -66,6 +66,11 @@ spec:
                 configMapKeyRef:
                   name: {{ template "simulators.fullname" . }}
                   key: TRANSFERS_ENDPOINT
+            - name: TRANSFERS_FULFIL_RESPONSE_DISABLED
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "simulators.fullname" . }}
+                  key: TRANSFERS_FULFIL_RESPONSE_DISABLED
             - name: TRANSFERS_FULFILMENT
               valueFrom:
                 configMapKeyRef:
