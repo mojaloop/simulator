@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: mojaloop/simulator
-  tag: v1.0.5-snapshot
+  tag: v1.0.6-snapshot
   pullPolicy: Always
 
 imagePullSecrets: []
