@@ -27,7 +27,7 @@ const crypto = require('crypto')
 const NodeCache = require('node-cache')
 const myCache = new NodeCache()
 const fetch = require('node-fetch')
-const Logger = require('../lib/logger')
+const Logger = require('@mojaloop/central-services-shared').Logger
 const Metrics = require('../lib/metrics')
 
 const partiesEndpoint = process.env.PARTIES_ENDPOINT || 'http://localhost:1080'
