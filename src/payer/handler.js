@@ -103,9 +103,9 @@ exports.putQuotesById = function (request, h) {
 //Section about Transfers
 exports.putTransfersById = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
-    'payer_putTransfersById',
-    'Histogram for payer.putTransfersById',
-    ['success']
+    'http_request',
+    'Histogram for http operation',
+    ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
   Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payer::putTransfersById - START`)

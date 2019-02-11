@@ -57,5 +57,4 @@ jspm_packages
 **/*.log
 
 #package-lock.json
-package-lock.json
 .history
