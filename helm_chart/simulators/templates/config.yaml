@@ -19,3 +19,4 @@ data:
   METRICS_DISABLED: {{ .Values.metrics.enabled | not | quote }}
   METRICS_PREFIX: {{ .Values.metrics.prefix | quote }}
   METRICS_TIMEOUT: {{ .Values.metrics.timeout | quote }}
+  METRICS_SERVICENAME: {{ .Values.metrics.defaultLabels.serviceName }}

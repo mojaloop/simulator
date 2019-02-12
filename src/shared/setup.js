@@ -24,7 +24,7 @@
 
 const Hapi = require('hapi')
 const Boom = require('boom')
-const Logger = require('../lib/logger')
+const Logger = require('@mojaloop/central-services-shared').Logger
 const Metrics = require('../lib/metrics')
 
 const createServer = (port, modules) => {

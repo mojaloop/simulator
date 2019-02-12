@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: mojaloop/simulator
-  tag: v1.0.6-snapshot
+  tag: v5.1.0
   pullPolicy: Always
 
 imagePullSecrets: []
@@ -14,8 +14,10 @@ imagePullSecrets: []
 
 metrics:
   enabled: true
-  prefix: 'moja_sim_'
+  prefix: moja_
   timeout: 5000
+  defaultLabels:
+    serviceName: simulator
 
 config:
   ## Add '$release' into any of the *_SERVICE_ENDPOINT values to include the release name as part of the deployment

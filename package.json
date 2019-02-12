@@ -1,6 +1,6 @@
 {
   "name": "sims",
-  "version": "4.4.0",
+  "version": "5.1.0",
   "description": "A super-simple fsp simulator",
   "main": "src/index.js",
   "scripts": {
@@ -8,20 +8,28 @@
   },
   "author": "",
   "dependencies": {
+    "@mojaloop/central-services-error-handling": "3.7.0-snapshot",
+    "@mojaloop/central-services-metrics": "5.1.0",
+    "@mojaloop/central-services-shared": "4.1.0-snapshot",
+    "blipp": "^3.1.2",
     "boom": "^7.2.2",
     "five-bells-condition": "5.0.1",
     "glob": "7.1.1",
-    "hapi": "^17.0.0",
-    "hapi-openapi": "^1.0.0",
+    "good": "8.1.1",
+    "hapi": "17.0.0",
+    "hapi-good-winston": "2.1.0",
+    "hapi-openapi": "1.0.0",
+    "hapi-swagger": "9.3.0",
     "ilp-packet": "3.0.0",
+    "inert": "^5.1.2",
     "joi": "13.1.2",
     "joi-currency-code": "1.2.1",
     "joi-date-extensions": "1.2.0",
     "koa": "^2.6.1",
-    "koa-bodyparser": "^4.2.1",
-    "node-cache": "^4.2.0",
-    "node-fetch": "^2.2.0",
-    "prom-client": "^11.2.0",
-    "winston": "^3.1.0"
+    "koa-bodyparser": "4.2.1",
+    "node-cache": "4.2.0",
+    "node-fetch": "2.2.0",
+    "prom-client": "11.2.0",
+    "vision": "5.4.4"
   }
 }

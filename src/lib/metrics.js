@@ -27,19 +27,24 @@
 
 'use strict'
 
-const client = require('prom-client')
-const Logger = require('./logger')
+// const client = require('prom-client')
+const Metrics = require('@mojaloop/central-services-metrics')
+// const Logger = require('./logger')
+const Logger = require('@mojaloop/central-services-shared').Logger
 
 let alreadySetup = false
-let histograms = []
-let prefix = process.env.METRICS_PREFIX || 'moja_sim_'
+let prefix = process.env.METRICS_PREFIX || 'moja_'
+let serviceName = process.env.METRICS_SERVICENAME || 'simulator'
 let isDisabled = (process.env.METRICS_DISABLED === 'true')
 let timeout = process.env.METRICS_TIMEOUT || 5000
 let disabledMessage = 'Metrics is disabled. Please enable it via the environment var METRICS_DISABLED=\'false\'.'
 
 let metricOptions = {
   timeout,
-  prefix
+  prefix,
+  defaultLabels: {
+      serviceName: serviceName
+  }
 }
 
 const setup = () => {
@@ -49,33 +54,36 @@ const setup = () => {
     }
     return
   }
-  client.collectDefaultMetrics(metricOptions)
-  client.register.metrics()
+  // client.collectDefaultMetrics(metricOptions)
+  // client.register.metrics()
+  //
   alreadySetup = true
+  Metrics.setup(metricOptions)
 }
 
 const getHistogram = (name, help = null, labelNames = []) => {
-  try {
-    if (histograms[name]) {
-      return histograms[name]
-    }
-    histograms[name] = new client.Histogram({
-      name: `${prefix}${name}`,
-      help: help || `${name}_histogram`,
-      labelNames: labelNames,
-      buckets: [0.010, 0.050, 0.1, 0.5, 1, 2, 5] // this is in seconds - the startTimer().end() collects in seconds with ms precision
-    })
-    return histograms[name]
-  } catch (e) {
-    throw new Error(`Couldn't get metrics histogram for ${name}`)
-  }
+  return Metrics.getHistogram(name, help, labelNames)
+  // try {
+  //   if (histograms[name]) {
+  //     return histograms[name]
+  //   }
+  //   histograms[name] = new client.Histogram({
+  //     name: `${prefix}${name}`,
+  //     help: help || `${name}_histogram`,
+  //     labelNames: labelNames,
+  //     buckets: [0.010, 0.050, 0.1, 0.5, 1, 2, 5] // this is in seconds - the startTimer().end() collects in seconds with ms precision
+  //   })
+  //   return histograms[name]
+  // } catch (e) {
+  //   throw new Error(`Couldn't get metrics histogram for ${name}`)
+  // }
 }
 
 const getMetricsForPrometheus = () => {
   if(isDisabled) {
     return disabledMessage
   } else {
-    return client.register.metrics()
+    return Metrics.getMetricsForPrometheus()
   }
 }
 
