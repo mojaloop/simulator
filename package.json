@@ -10,7 +10,7 @@
   "dependencies": {
     "@mojaloop/central-services-error-handling": "3.7.0-snapshot",
     "@mojaloop/central-services-metrics": "4.4.0",
-    "@mojaloop/central-services-shared": "4.4.1-performance",
+    "@mojaloop/central-services-shared": "4.1.0-snapshot",
     "blipp": "^3.1.2",
     "boom": "^7.2.2",
     "five-bells-condition": "5.0.1",
