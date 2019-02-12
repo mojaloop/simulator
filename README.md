@@ -26,7 +26,7 @@ Simulators that act as mock payer fsp and payee fsp which interact with the Swit
 | METRICS_DISABLED | Flag to disable the Prometheus Metric collection end-point | false |
 | METRICS_PREFIX | Prefix for all Prometheus Metrics | 'moja_sim_' |
 | METRICS_TIMEOUT | Prometheus Metric collection timeout | 5000 |
-| METRICS_SERVICENAME | Prometheus Metric serviceName label applied to all Simulator metrics | 5000 |
+| METRICS_SERVICENAME | Prometheus Metric serviceName label applied to all Simulator metrics | simulator |
 
 ## Building Docker image:
 
