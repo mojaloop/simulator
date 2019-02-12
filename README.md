@@ -17,6 +17,7 @@ Simulators that act as mock payer fsp and payee fsp which interact with the Swit
 ## Environmental Vars for Metrics configuration
 
 | Variable | Description | Default |
+|---|---|---|
 | METRICS_DISABLED | Flag to disable the Prometheus Metric collection end-point | false |
 | METRICS_PREFIX | Prefix for all Prometheus Metrics | 'moja_sim_' |
 | METRICS_TIMEOUT | Prometheus Metric collection timeout | 5000 |
