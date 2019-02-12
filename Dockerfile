@@ -1,7 +1,7 @@
 FROM node:8.11.3-alpine
 
 WORKDIR /opt/simulators
-COPY logs /opt/simulators/logs
+#COPY logs /opt/simulators/logs
 COPY src /opt/simulators/src
 COPY package.json /opt/simulators
 
