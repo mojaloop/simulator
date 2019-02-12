@@ -59,7 +59,7 @@ exports.metadata = function (request, h) {
 
 exports.postPartiesByTypeAndId = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
-    'http_request',
+    'sim_request',
     'Histogram for http operation',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
@@ -77,7 +77,7 @@ exports.postPartiesByTypeAndId = function (request, h) {
 exports.getPartiesByTypeAndId = function (req, h) {
   (async function () {
     const histTimerEnd = Metrics.getHistogram(
-      'http_request',
+      'sim_request',
       'Histogram for http operation',
       ['success', 'fsp', 'operation', 'source', 'destination']
     ).startTimer()
@@ -127,7 +127,7 @@ exports.postQuotes = function (req, h) {
   (async function () {
 
     const histTimerEnd = Metrics.getHistogram(
-      'http_request',
+      'sim_request',
       'Histogram for http operation',
       ['success', 'fsp', 'operation', 'source', 'destination']
     ).startTimer()
@@ -218,7 +218,7 @@ exports.postQuotes = function (req, h) {
 exports.postTransfers = async function (req, h) {
 
   const histTimerEnd = Metrics.getHistogram(
-    'http_request',
+    'sim_request',
     'Histogram for http operation',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
@@ -302,7 +302,7 @@ exports.postTransfers = async function (req, h) {
 
 exports.putTransfersById = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
-    'http_request',
+    'sim_request',
     'Histogram for http operation',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
@@ -319,7 +319,7 @@ exports.putTransfersById = function (request, h) {
 
 exports.putTransfersByIdError = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
-    'http_request',
+    'sim_request',
     'Histogram for http operation',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
@@ -336,7 +336,7 @@ exports.putTransfersByIdError = function (request, h) {
 
 exports.getcorrelationId = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
-    'http_request',
+    'sim_request',
     'Histogram for http operation',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()

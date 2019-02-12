@@ -33,14 +33,18 @@ const Metrics = require('@mojaloop/central-services-metrics')
 const Logger = require('@mojaloop/central-services-shared').Logger
 
 let alreadySetup = false
-let prefix = process.env.METRICS_PREFIX || 'moja_sim_'
+let prefix = process.env.METRICS_PREFIX || 'moja_'
+let serviceName = process.env.METRICS_SERVICENAME || 'simulator'
 let isDisabled = (process.env.METRICS_DISABLED === 'true')
 let timeout = process.env.METRICS_TIMEOUT || 5000
 let disabledMessage = 'Metrics is disabled. Please enable it via the environment var METRICS_DISABLED=\'false\'.'
 
 let metricOptions = {
   timeout,
-  prefix
+  prefix,
+  defaultLabels: {
+      serviceName: serviceName
+  }
 }
 
 const setup = () => {

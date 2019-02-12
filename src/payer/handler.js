@@ -49,7 +49,7 @@ exports.metadata = function (request, h) {
 //Section about /participants
 exports.putParticipantsByTypeId = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
-    'http_request',
+    'sim_request',
     'Histogram for http operation',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
@@ -67,7 +67,7 @@ exports.putParticipantsByTypeId = function (request, h) {
 //Section about /parties
 exports.putPartiesByTypeId = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
-    'http_request',
+    'sim_request',
     'Histogram for http operation',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
@@ -85,7 +85,7 @@ exports.putPartiesByTypeId = function (request, h) {
 //Section about Quotes
 exports.putQuotesById = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
-    'http_request',
+    'sim_request',
     'Histogram for http operation',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
@@ -103,7 +103,7 @@ exports.putQuotesById = function (request, h) {
 //Section about Transfers
 exports.putTransfersById = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
-    'http_request',
+    'sim_request',
     'Histogram for http operation',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
@@ -120,7 +120,7 @@ exports.putTransfersById = function (request, h) {
 
 exports.putTransfersByIdError = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
-    'http_request',
+    'sim_request',
     'Histogram for http operation',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
@@ -137,7 +137,7 @@ exports.putTransfersByIdError = function (request, h) {
 
 exports.getcorrelationId = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
-    'http_request',
+    'sim_request',
     'Histogram for http operation',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
