@@ -60,7 +60,7 @@ exports.metadata = function (request, h) {
 exports.postPartiesByTypeAndId = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
     'sim_request',
-    'Histogram for http operation',
+    'Histogram for Simulator http operations',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
@@ -78,7 +78,7 @@ exports.getPartiesByTypeAndId = function (req, h) {
   (async function () {
     const histTimerEnd = Metrics.getHistogram(
       'sim_request',
-      'Histogram for http operation',
+      'Histogram for Simulator http operations',
       ['success', 'fsp', 'operation', 'source', 'destination']
     ).startTimer()
 
@@ -128,7 +128,7 @@ exports.postQuotes = function (req, h) {
 
     const histTimerEnd = Metrics.getHistogram(
       'sim_request',
-      'Histogram for http operation',
+      'Histogram for Simulator http operations',
       ['success', 'fsp', 'operation', 'source', 'destination']
     ).startTimer()
 
@@ -219,7 +219,7 @@ exports.postTransfers = async function (req, h) {
 
   const histTimerEnd = Metrics.getHistogram(
     'sim_request',
-    'Histogram for http operation',
+    'Histogram for Simulator http operations',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
@@ -303,7 +303,7 @@ exports.postTransfers = async function (req, h) {
 exports.putTransfersById = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
     'sim_request',
-    'Histogram for http operation',
+    'Histogram for Simulator http operations',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payee::putTransfersById - START`)
@@ -320,7 +320,7 @@ exports.putTransfersById = function (request, h) {
 exports.putTransfersByIdError = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
     'sim_request',
-    'Histogram for http operation',
+    'Histogram for Simulator http operations',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
@@ -337,7 +337,7 @@ exports.putTransfersByIdError = function (request, h) {
 exports.getcorrelationId = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
     'sim_request',
-    'Histogram for http operation',
+    'Histogram for Simulator http operations',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 

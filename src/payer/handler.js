@@ -50,7 +50,7 @@ exports.metadata = function (request, h) {
 exports.putParticipantsByTypeId = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
     'sim_request',
-    'Histogram for http operation',
+    'Histogram for Simulator http operations',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
@@ -68,7 +68,7 @@ exports.putParticipantsByTypeId = function (request, h) {
 exports.putPartiesByTypeId = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
     'sim_request',
-    'Histogram for http operation',
+    'Histogram for Simulator http operations',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
@@ -86,7 +86,7 @@ exports.putPartiesByTypeId = function (request, h) {
 exports.putQuotesById = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
     'sim_request',
-    'Histogram for http operation',
+    'Histogram for Simulator http operations',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
@@ -104,7 +104,7 @@ exports.putQuotesById = function (request, h) {
 exports.putTransfersById = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
     'sim_request',
-    'Histogram for http operation',
+    'Histogram for Simulator http operations',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
@@ -121,7 +121,7 @@ exports.putTransfersById = function (request, h) {
 exports.putTransfersByIdError = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
     'sim_request',
-    'Histogram for http operation',
+    'Histogram for Simulator http operations',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
@@ -138,7 +138,7 @@ exports.putTransfersByIdError = function (request, h) {
 exports.getcorrelationId = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
     'sim_request',
-    'Histogram for http operation',
+    'Histogram for Simulator http operations',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
