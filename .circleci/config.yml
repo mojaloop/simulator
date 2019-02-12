@@ -136,7 +136,7 @@ defaults_slack_announcement: &defaults_slack_announcement
       -H 'Content-type: application/json' \
       -H 'cache-control: no-cache' \
       -d "{
-      \"text\": \"*${CIRCLE_PROJECT_REPONAME} - New release ${CIRCLE_TAG}*: ${CIRCLE_REPOSITORY_URL}/releases/tag/${CIRCLE_TAG}\"
+      \"text\": \"*${CIRCLE_PROJECT_REPONAME}* - Release \`${CIRCLE_TAG}\`: https://github.com/mojaloop/${CIRCLE_PROJECT_REPONAME}/releases/tag/${CIRCLE_TAG}\"
     }"
 
 jobs:
