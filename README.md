@@ -1,9 +1,9 @@
 # simulators
 
-[![Git Commit](https://img.shields.io/github/last-commit/mojaloop/simulators.svg?style=flat)](https://github.com/mojaloop/simulators/commits/master)
-[![Git Releases](https://img.shields.io/github/release/mojaloop/simulators.svg?style=flat)](https://github.com/mojaloop/simulators/releases)
-[![Docker pulls](https://img.shields.io/docker/pulls/mojaloop/simulators.svg?style=flat)](https://hub.docker.com/r/mojaloop/simulators)
-[![CircleCI](https://circleci.com/gh/mojaloop/simulators.svg?style=svg)](https://circleci.com/gh/mojaloop/simulators)
+[![Git Commit](https://img.shields.io/github/last-commit/mojaloop/simulator.svg?style=flat)](https://github.com/mojaloop/simulator/commits/master)
+[![Git Releases](https://img.shields.io/github/release/mojaloop/simulator.svg?style=flat)](https://github.com/mojaloop/simulator/releases)
+[![Docker pulls](https://img.shields.io/docker/pulls/mojaloop/simulator.svg?style=flat)](https://hub.docker.com/r/mojaloop/simulator)
+[![CircleCI](https://circleci.com/gh/mojaloop/simulator.svg?style=svg)](https://circleci.com/gh/mojaloop/simulator)
 
 Simulators that act as mock payer fsp and payee fsp which interact with the Switch.
 
