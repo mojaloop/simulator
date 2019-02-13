@@ -16,6 +16,7 @@
  their names indented and be marked with a '-'. Email address can be added
  optionally within square brackets <email>.
  * Gates Foundation
+ - Georgi Georgiev georgi.georgiev@modusbox.com
  - Murthy Kakarlamudi murthy@modusbox.com
  --------------
  ******/
@@ -26,6 +27,7 @@ const NodeCache = require('node-cache')
 const myCache = new NodeCache()
 const fetch = require('node-fetch')
 const Metrics = require('../lib/metrics')
+const Logger = require('@mojaloop/central-services-shared').Logger
 
 const extractUrls = (request) => {
   const urls = {}
