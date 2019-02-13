@@ -16,6 +16,7 @@
  their names indented and be marked with a '-'. Email address can be added
  optionally within square brackets <email>.
  * Gates Foundation
+ - Georgi Georgiev georgi.georgiev@modusbox.com
  - Murthy Kakarlamudi murthy@modusbox.com
  --------------
  ******/
