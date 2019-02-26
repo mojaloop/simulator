@@ -26,6 +26,5 @@
 'use strict'
 
 exports.health = function (request, h) {
-
-  return h.response({status: 'OK'}).code(200)
+  return h.response({ status: 'OK' }).code(200)
 }

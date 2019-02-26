@@ -30,7 +30,6 @@ const goodWinston = require('hapi-good-winston')
 const ErrorHandling = require('@mojaloop/central-services-error-handling')
 const Logger = require('@mojaloop/central-services-shared').Logger
 
-
 const goodWinstonOptions = {
   levels: {
     response: 'debug',
@@ -50,26 +49,26 @@ const registerPlugins = async (server) => {
   })
 
   await server.register({
-      plugin: require('good'),
-      options: {
-          ops: {
-              interval: 10000
-          },
-          reporters: {
-              // Simple and straight forward usage
-              winston: [goodWinston(Logger)],
-              // Adding some customization configuration
-              winstonWithLogLevels: [goodWinston(Logger, goodWinstonOptions)],
-              // This example simply illustrates auto loading and instantiation made by good
-              winston2: [
-                  {
-                      module: 'hapi-good-winston',
-                      name: 'goodWinston',
-                      args: [Logger, goodWinstonOptions],
-                  }
-              ]
+    plugin: require('good'),
+    options: {
+      ops: {
+        interval: 10000
+      },
+      reporters: {
+        // Simple and straight forward usage
+        winston: [goodWinston(Logger)],
+        // Adding some customization configuration
+        winstonWithLogLevels: [goodWinston(Logger, goodWinstonOptions)],
+        // This example simply illustrates auto loading and instantiation made by good
+        winston2: [
+          {
+            module: 'hapi-good-winston',
+            name: 'goodWinston',
+            args: [Logger, goodWinstonOptions]
           }
+        ]
       }
+    }
   })
 
   // await server.register({

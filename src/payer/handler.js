@@ -25,7 +25,6 @@
 
 const NodeCache = require('node-cache')
 const myCache = new NodeCache()
-const fetch = require('node-fetch')
 const Metrics = require('../lib/metrics')
 const Logger = require('@mojaloop/central-services-shared').Logger
 
@@ -48,7 +47,7 @@ exports.metadata = function (request, h) {
   }).code(200)
 }
 
-//Section about /participants
+// Section about /participants
 exports.putParticipantsByTypeId = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
     'sim_request',
@@ -62,11 +61,11 @@ exports.putParticipantsByTypeId = function (request, h) {
   myCache.set(request.params.id, request.payload)
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payer::putParticipantsByTypeId - END`)
-  histTimerEnd({success: true, fsp:'payer', operation: 'putParticipantsByTypeId', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination']})
+  histTimerEnd({ success: true, fsp: 'payer', operation: 'putParticipantsByTypeId', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
   return h.response().code(200)
 }
 
-//Section about /parties
+// Section about /parties
 exports.putPartiesByTypeId = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
     'sim_request',
@@ -80,11 +79,11 @@ exports.putPartiesByTypeId = function (request, h) {
   myCache.set(request.params.id, request.payload)
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payer::putPartiesByTypeId - END`)
-  histTimerEnd({success: true, fsp:'payer', operation: 'putPartiesByTypeId', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination']})
+  histTimerEnd({ success: true, fsp: 'payer', operation: 'putPartiesByTypeId', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
   return h.response().code(200)
 }
 
-//Section about Quotes
+// Section about Quotes
 exports.putQuotesById = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
     'sim_request',
@@ -98,11 +97,11 @@ exports.putQuotesById = function (request, h) {
   myCache.set(request.params.id, request.payload)
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payer::putQuotesById - END`)
-  histTimerEnd({success: true, fsp:'payer', operation: 'putQuotesById', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination']})
+  histTimerEnd({ success: true, fsp: 'payer', operation: 'putQuotesById', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
   return h.response().code(200)
 }
 
-//Section about Transfers
+// Section about Transfers
 exports.putTransfersById = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
     'sim_request',
@@ -116,7 +115,7 @@ exports.putTransfersById = function (request, h) {
   myCache.set(request.params.id, request.payload)
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payer::putTransfersById - END`)
-  histTimerEnd({success: true, fsp:'payer', operation: 'putTransfersById', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination']})
+  histTimerEnd({ success: true, fsp: 'payer', operation: 'putTransfersById', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
   return h.response().code(200)
 }
 
@@ -133,7 +132,7 @@ exports.putTransfersByIdError = function (request, h) {
   myCache.set(request.params.id, request.payload)
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payer::putTransfersByIdError - END`)
-  histTimerEnd({success: true, fsp:'payer', operation: 'putTransfersByIdError', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination']})
+  histTimerEnd({ success: true, fsp: 'payer', operation: 'putTransfersByIdError', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
   return h.response().code(200)
 }
 
@@ -149,11 +148,6 @@ exports.getcorrelationId = function (request, h) {
   Logger.info(`IN PAYERFSP:: PUT /payerfsp/correlationid/${request.params.id}/error, CACHE: [${JSON.stringify(myCache.get(request.params.id))}]`)
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payer::getcorrelationId - END`)
-  histTimerEnd({success: true, fsp:'payer', operation: 'getcorrelationId'})
+  histTimerEnd({ success: true, fsp: 'payer', operation: 'getcorrelationId' })
   return h.response(myCache.get(request.params.id)).code(202)
 }
-
-
-
-
-

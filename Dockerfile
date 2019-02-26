@@ -1,4 +1,4 @@
-FROM node:8.11.3-alpine
+FROM node:10.15.1-alpine
 
 WORKDIR /opt/simulators
 #COPY logs /opt/simulators/logs

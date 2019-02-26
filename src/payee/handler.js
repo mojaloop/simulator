@@ -21,9 +21,6 @@
  ******/
 
 'use strict'
-const cc = require('five-bells-condition')
-const IlpPacket = require('ilp-packet')
-const crypto = require('crypto')
 const NodeCache = require('node-cache')
 const myCache = new NodeCache()
 const fetch = require('node-fetch')
@@ -33,7 +30,7 @@ const Metrics = require('../lib/metrics')
 const partiesEndpoint = process.env.PARTIES_ENDPOINT || 'http://localhost:1080'
 const quotesEndpoint = process.env.QUOTES_ENDPOINT || 'http://localhost:1080'
 const transfersEndpoint = process.env.TRANSFERS_ENDPOINT || 'http://localhost:1080'
-const transfersFulfilResponseDisabled = (process.env.TRANSFERS_FULFIL_RESPONSE_DISABLED != undefined && process.env.TRANSFERS_FULFIL_RESPONSE_DISABLED !== 'false')
+const transfersFulfilResponseDisabled = (process.env.TRANSFERS_FULFIL_RESPONSE_DISABLED !== undefined && process.env.TRANSFERS_FULFIL_RESPONSE_DISABLED !== 'false')
 const transfersFulfilment = process.env.TRANSFERS_FULFILMENT || 'XoSz1cL0tljJSCp_VtIYmPNw-zFUgGfbUqf69AagUzY'
 const transfersCondition = process.env.TRANSFERS_CONDITION || 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
 const transfersIlpPacket = process.env.TRANSFERS_ILPPACKET || 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
@@ -70,7 +67,7 @@ exports.postPartiesByTypeAndId = function (request, h) {
   myCache.set(request.params.id, request.payload)
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payee::postPartiesByTypeAndId - END`)
-  histTimerEnd({success: true, fsp:'payee', operation: 'postPartiesByTypeAndId', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination']})
+  histTimerEnd({ success: true, fsp: 'payee', operation: 'postPartiesByTypeAndId', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
   return h.response().code(202)
 }
 
@@ -88,7 +85,6 @@ exports.getPartiesByTypeAndId = function (req, h) {
     Logger.info((new Date().toISOString()), ['IN PAYEEFSP::'], `received: ${metadata}. `)
     const url = partiesEndpoint + '/parties/MSISDN/' + req.params.id
     try {
-
       const opts = {
         method: 'PUT',
         headers: {
@@ -110,12 +106,11 @@ exports.getPartiesByTypeAndId = function (req, h) {
       }
 
       // Logger.perf(`[cid=${req.payload.transferId}, fsp=${req.headers['fspiop-source']}, source=${req.headers['fspiop-source']}, dest=${req.headers['fspiop-destination']}] ~ Simulator::api::payee::getPartiesByTypeAndId - END`)
-      histTimerEnd({success: true, fsp:'payee', operation: 'getPartiesByTypeAndId', source: req.headers['fspiop-source'], destination: req.headers['fspiop-destination']})
-    }
-    catch (err) {
+      histTimerEnd({ success: true, fsp: 'payee', operation: 'getPartiesByTypeAndId', source: req.headers['fspiop-source'], destination: req.headers['fspiop-destination'] })
+    } catch (err) {
       Logger.error(err)
       // Logger.perf(`[cid=${req.payload.transferId}, fsp=${req.headers['fspiop-source']}, source=${req.headers['fspiop-source']}, dest=${req.headers['fspiop-destination']}] ~ Simulator::api::payee::getPartiesByTypeAndId - ERROR`)
-      histTimerEnd({success: false, fsp:'payee', operation: 'getPartiesByTypeAndId', source: req.headers['fspiop-source'], destination: req.headers['fspiop-destination']})
+      histTimerEnd({ success: false, fsp: 'payee', operation: 'getPartiesByTypeAndId', source: req.headers['fspiop-source'], destination: req.headers['fspiop-destination'] })
     }
   })()
 
@@ -123,9 +118,7 @@ exports.getPartiesByTypeAndId = function (req, h) {
 }
 
 exports.postQuotes = function (req, h) {
-
   (async function () {
-
     const histTimerEnd = Metrics.getHistogram(
       'sim_request',
       'Histogram for Simulator http operations',
@@ -139,7 +132,7 @@ exports.postQuotes = function (req, h) {
     Logger.info((new Date().toISOString()), ['IN PAYEEFSP::'], `received: ${metadata}. `)
     Logger.info('incoming request: ', quotesRequest.quoteId)
 
-    //prepare response
+    // prepare response
     // const fulfillImage = new cc.PreimageSha256()
     // fulfillImage.setPreimage(new Buffer('hello world'))
     // Logger.info(fulfillImage.serializeUri())
@@ -197,26 +190,24 @@ exports.postQuotes = function (req, h) {
       }
 
       // Logger.perf(`[cid=${req.payload.transferId}, fsp=${req.headers['fspiop-source']}, source=${req.headers['fspiop-source']}, dest=${req.headers['fspiop-destination']}] ~ Simulator::api::payee::postQuotes - END`)
-      histTimerEnd({success: true, fsp:'payee', operation: 'postQuotes', source: req.headers['fspiop-source'], destination: req.headers['fspiop-destination']})
-    }
-    catch (err) {
+      histTimerEnd({ success: true, fsp: 'payee', operation: 'postQuotes', source: req.headers['fspiop-source'], destination: req.headers['fspiop-destination'] })
+    } catch (err) {
       Logger.error(err)
       // Logger.perf(`[cid=${req.payload.transferId}, fsp=${req.headers['fspiop-source']}, source=${req.headers['fspiop-source']}, dest=${req.headers['fspiop-destination']}] ~ Simulator::api::payee::postQuotes - ERROR`)
-      histTimerEnd({success: false, fsp:'payee', operation: 'postQuotes', source: req.headers['fspiop-source'], destination: req.headers['fspiop-destination']})
+      histTimerEnd({ success: false, fsp: 'payee', operation: 'postQuotes', source: req.headers['fspiop-source'], destination: req.headers['fspiop-destination'] })
       // TODO: what if this fails? We need to log. What happens by default?
-      //const url = await rq.createErrorUrl(db, req.path, requesterName);
+      // const url = await rq.createErrorUrl(db, req.path, requesterName);
       // TODO: review this error message
       // TODO: we should be able to throw an AppError somewhere, test whether the error
       // received in this handler is an AppError, then send the requester the correct
       // payload etc. based on the contents of that AppError.
-      //rq.sendError(url, asyncResponses.serverError, rq.defaultHeaders(requesterName, 'participants'), {logger});
+      // rq.sendError(url, asyncResponses.serverError, rq.defaultHeaders(requesterName, 'participants'), {logger});
     }
   })()
   return h.response().code(202)
 }
 
 exports.postTransfers = async function (req, h) {
-
   const histTimerEnd = Metrics.getHistogram(
     'sim_request',
     'Histogram for Simulator http operations',
@@ -228,10 +219,9 @@ exports.postTransfers = async function (req, h) {
   const metadata = `${req.method} ${req.path} ${req.payload.transferId}`
   Logger.info(`IN PAYEEFSP:: received: ${metadata}.`)
 
-  if(!transfersFulfilResponseDisabled) {
+  if (!transfersFulfilResponseDisabled) {
     const url = transfersEndpoint + '/transfers/' + req.payload.transferId
     try {
-
       const transfersResponse = {
         // fulfilment: "rjzWyHf4IUao60Yz98HZOIhZbqtclOgZ7WriZuq9Hn0",
         fulfilment: transfersFulfilment,
@@ -266,9 +256,7 @@ exports.postTransfers = async function (req, h) {
         source: req.headers['fspiop-source'],
         destination: req.headers['fspiop-destination']
       })
-
-    }
-    catch (err) {
+    } catch (err) {
       Logger.error(err)
       // Logger.perf(`[cid=${req.payload.transferId}, fsp=${req.headers['fspiop-source']}, source=${req.headers['fspiop-source']}, dest=${req.headers['fspiop-destination']}] ~ Simulator::api::payee::postTransfers - ERROR`)
       histTimerEnd({
@@ -279,12 +267,12 @@ exports.postTransfers = async function (req, h) {
         destination: req.headers['fspiop-destination']
       })
       // TODO: what if this fails? We need to log. What happens by default?
-      //const url = await rq.createErrorUrl(db, req.path, requesterName);
+      // const url = await rq.createErrorUrl(db, req.path, requesterName);
       // TODO: review this error message
       // TODO: we should be able to throw an AppError somewhere, test whether the error
       // received in this handler is an AppError, then send the requester the correct
       // payload etc. based on the contents of that AppError.
-      //rq.sendError(url, asyncResponses.serverError, rq.defaultHeaders(requesterName, 'participants'), {logger});
+      // rq.sendError(url, asyncResponses.serverError, rq.defaultHeaders(requesterName, 'participants'), {logger});
     }
   } else {
     // Logger.perf(`[cid=${req.payload.transferId}, fsp=${req.headers['fspiop-source']}, source=${req.headers['fspiop-source']}, dest=${req.headers['fspiop-destination']}] ~ Simulator::api::payee::postTransfers - END`)
@@ -313,7 +301,7 @@ exports.putTransfersById = function (request, h) {
   myCache.set(request.params.id, request.payload)
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payee::putTransfersById - END`)
-  histTimerEnd({success: true, fsp:'payee', operation: 'putTransfersById', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination']})
+  histTimerEnd({ success: true, fsp: 'payee', operation: 'putTransfersById', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
   return h.response().code(200)
 }
 
@@ -330,7 +318,7 @@ exports.putTransfersByIdError = function (request, h) {
   myCache.set(request.params.id, request.payload)
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payee::putTransfersByIdError - END`)
-  histTimerEnd({success: true, fsp:'payee', operation: 'putTransfersByIdError', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination']})
+  histTimerEnd({ success: true, fsp: 'payee', operation: 'putTransfersByIdError', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
   return h.response().code(200)
 }
 
@@ -346,6 +334,6 @@ exports.getcorrelationId = function (request, h) {
   Logger.info(`IN PAYEEFSP:: Final response for GET /payeefsp/correlationid/${request.params.id}, CACHE: [${JSON.stringify(myCache.get(request.params.id))}`)
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payee::getcorrelationId - END`)
-  histTimerEnd({success: true, fsp:'payee', operation: 'getcorrelationId'})
+  histTimerEnd({ success: true, fsp: 'payee', operation: 'getcorrelationId' })
   return h.response(myCache.get(request.params.id)).code(202)
 }

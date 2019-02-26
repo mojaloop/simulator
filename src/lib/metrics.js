@@ -43,13 +43,13 @@ let metricOptions = {
   timeout,
   prefix,
   defaultLabels: {
-      serviceName: serviceName
+    serviceName: serviceName
   }
 }
 
 const setup = () => {
   if (alreadySetup || isDisabled) {
-    if(isDisabled){
+    if (isDisabled) {
       Logger.warn(disabledMessage)
     }
     return
@@ -80,7 +80,7 @@ const getHistogram = (name, help = null, labelNames = []) => {
 }
 
 const getMetricsForPrometheus = () => {
-  if(isDisabled) {
+  if (isDisabled) {
     return disabledMessage
   } else {
     return Metrics.getMetricsForPrometheus()

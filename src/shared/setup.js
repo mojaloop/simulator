@@ -54,7 +54,7 @@ const createServer = (port, modules) => {
 }
 
 // Migrator.migrate is called before connecting to the database to ensure all new tables are loaded properly.
-const initialize = async function ({service, port, modules = []}) {
+const initialize = async function ({ service, port, modules = [] }) {
   const server = await createServer(port, modules)
   return server
 }
