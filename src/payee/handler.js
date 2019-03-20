@@ -23,6 +23,8 @@
 'use strict'
 const NodeCache = require('node-cache')
 const myCache = new NodeCache()
+const requests = new NodeCache()
+const callbacks = new NodeCache()
 const fetch = require('node-fetch')
 const Logger = require('@mojaloop/central-services-shared').Logger
 const Metrics = require('../lib/metrics')
@@ -83,6 +85,12 @@ exports.getPartiesByTypeAndId = function (req, h) {
 
     const metadata = `${req.method} ${req.path} ${req.params.id} `
     Logger.info((new Date().toISOString()), ['IN PAYEEFSP::'], `received: ${metadata}. `)
+    //Saving Incoming request 
+    let incomingRequest = {
+      headers: req.headers
+    }
+    requests.set(req.params.id, incomingRequest)
+
     const url = partiesEndpoint + '/parties/MSISDN/' + req.params.id
     try {
       const opts = {
@@ -131,6 +139,13 @@ exports.postQuotes = function (req, h) {
     const quotesRequest = req.payload
     Logger.info((new Date().toISOString()), ['IN PAYEEFSP::'], `received: ${metadata}. `)
     Logger.info('incoming request: ', quotesRequest.quoteId)
+
+    //Saving Incoming request 
+    let incomingRequest = {
+      headers: req.headers,
+      data: req.payload
+    }
+    requests.set(quotesRequest.quoteId, incomingRequest)
 
     // prepare response
     // const fulfillImage = new cc.PreimageSha256()
@@ -220,6 +235,13 @@ exports.postTransfers = async function (req, h) {
   Logger.info(`IN PAYEEFSP:: received: ${metadata}.`)
 
   if (!transfersFulfilResponseDisabled) {
+    //Saving Incoming request 
+    let incomingRequest = {
+      headers: req.headers,
+      data: req.payload
+    }
+    requests.set(req.payload.transferId, incomingRequest)
+
     const url = transfersEndpoint + '/transfers/' + req.payload.transferId
     try {
       const transfersResponse = {
@@ -300,6 +322,13 @@ exports.putTransfersById = function (request, h) {
 
   myCache.set(request.params.id, request.payload)
 
+  //Saving Incoming request 
+  let incomingRequest = {
+    headers: request.headers,
+    data: request.payload
+  }
+  callbacks.set(request.params.id, incomingRequest)
+
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payee::putTransfersById - END`)
   histTimerEnd({ success: true, fsp: 'payee', operation: 'putTransfersById', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
   return h.response().code(200)
@@ -316,6 +345,13 @@ exports.putTransfersByIdError = function (request, h) {
 
   Logger.info(`IN PAYEEFSP:: PUT /payeefsp/transfers/${request.params.id}/error, PAYLOAD: [${JSON.stringify(request.payload)}]`)
   myCache.set(request.params.id, request.payload)
+
+  //Saving Incoming request 
+  let incomingRequest = {
+    headers: request.headers,
+    data: request.payload
+  }
+  callbacks.set(request.params.id, incomingRequest)
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payee::putTransfersByIdError - END`)
   histTimerEnd({ success: true, fsp: 'payee', operation: 'putTransfersByIdError', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
@@ -336,4 +372,36 @@ exports.getcorrelationId = function (request, h) {
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payee::getcorrelationId - END`)
   histTimerEnd({ success: true, fsp: 'payee', operation: 'getcorrelationId' })
   return h.response(myCache.get(request.params.id)).code(202)
+}
+
+exports.getRequestById = function (request, h) {
+  const histTimerEnd = Metrics.getHistogram(
+    'sim_request',
+    'Histogram for Simulator http operations',
+    ['success', 'fsp', 'operation', 'source', 'destination']
+  ).startTimer()
+
+  Logger.info(`IN PAYEEFSP:: PUT /payeefsp/requests/${request.params.id}, CACHE: [${JSON.stringify(requests.get(request.params.id))}]`)
+  const responseData = requests.get(request.params.id)
+  requests.del(request.params.id)
+
+  histTimerEnd({ success: true, fsp: 'payee', operation: 'getRequestById' })
+
+  return h.response(responseData).code(200)
+}
+
+exports.getCallbackById = function (request, h) {
+  const histTimerEnd = Metrics.getHistogram(
+    'sim_request',
+    'Histogram for Simulator http operations',
+    ['success', 'fsp', 'operation', 'source', 'destination']
+  ).startTimer()
+
+  Logger.info(`IN PAYEEFSP:: PUT /payeefsp/callbacks/${request.params.id}, CACHE: [${JSON.stringify(callbacks.get(request.params.id))}]`)
+  const responseData = callbacks.get(request.params.id)
+  callbacks.del(request.params.id)
+
+  histTimerEnd({ success: true, fsp: 'payee', operation: 'getCallbackById' })
+
+  return h.response(responseData).code(200)
 }
