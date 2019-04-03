@@ -22,11 +22,11 @@
 
 'use strict'
 
-const Package = require('../../../package')
+const Package = require('../../package.json')
 const Inert = require('inert')
 const Vision = require('vision')
 const Blipp = require('blipp')
-const goodWinston = require('hapi-good-winston')
+const goodWinston = require('hapi-good-winston').goodWinston
 const ErrorHandling = require('@mojaloop/central-services-error-handling')
 const Logger = require('@mojaloop/central-services-shared').Logger
 
