@@ -103,21 +103,21 @@ module.exports = [
     }
   },
   {
-      method: 'GET',
-      path: '/payeefsp/requests/{id}',
-      handler: Handler.getRequestById,
-      options: {
-          tags: tags,
-          description: 'Get details based on request id'
-      }
+    method: 'GET',
+    path: '/payeefsp/requests/{id}',
+    handler: Handler.getRequestById,
+    options: {
+      tags: tags,
+      description: 'Get details based on request id'
+    }
   },
   {
-      method: 'GET',
-      path: '/payeefsp/callbacks/{id}',
-      handler: Handler.getCallbackById,
-      options: {
-          tags: tags,
-          description: 'Get details based on callback id'
-      }
+    method: 'GET',
+    path: '/payeefsp/callbacks/{id}',
+    handler: Handler.getCallbackById,
+    options: {
+      tags: tags,
+      description: 'Get details based on callback id'
+    }
   }
 ]

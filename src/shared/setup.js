@@ -44,7 +44,7 @@ const createServer = (port, modules) => {
 
     Logger.info(`Registering server plugins`)
     await require('./plugins').registerPlugins(server)
-    
+
     Logger.info(`Initializing metrics...`)
     Metrics.setup()
 

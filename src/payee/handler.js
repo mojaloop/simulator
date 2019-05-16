@@ -85,7 +85,7 @@ exports.getPartiesByTypeAndId = function (req, h) {
 
     const metadata = `${req.method} ${req.path} ${req.params.id} `
     Logger.info((new Date().toISOString()), ['IN PAYEEFSP::'], `received: ${metadata}. `)
-    //Saving Incoming request 
+    // Saving Incoming request
     let incomingRequest = {
       headers: req.headers
     }
@@ -140,7 +140,7 @@ exports.postQuotes = function (req, h) {
     Logger.info((new Date().toISOString()), ['IN PAYEEFSP::'], `received: ${metadata}. `)
     Logger.info('incoming request: ', quotesRequest.quoteId)
 
-    //Saving Incoming request 
+    // Saving Incoming request
     let incomingRequest = {
       headers: req.headers,
       data: req.payload
@@ -235,7 +235,7 @@ exports.postTransfers = async function (req, h) {
   Logger.info(`IN PAYEEFSP:: received: ${metadata}.`)
 
   if (!transfersFulfilResponseDisabled) {
-    //Saving Incoming request 
+    // Saving Incoming request
     let incomingRequest = {
       headers: req.headers,
       data: req.payload
@@ -322,7 +322,7 @@ exports.putTransfersById = function (request, h) {
 
   myCache.set(request.params.id, request.payload)
 
-  //Saving Incoming request 
+  // Saving Incoming request
   let incomingRequest = {
     headers: request.headers,
     data: request.payload
@@ -346,7 +346,7 @@ exports.putTransfersByIdError = function (request, h) {
   Logger.info(`IN PAYEEFSP:: PUT /payeefsp/transfers/${request.params.id}/error, PAYLOAD: [${JSON.stringify(request.payload)}]`)
   myCache.set(request.params.id, request.payload)
 
-  //Saving Incoming request 
+  // Saving Incoming request
   let incomingRequest = {
     headers: request.headers,
     data: request.payload
