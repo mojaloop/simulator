@@ -123,7 +123,7 @@ exports.updateParticipantsByTypeId = function (request, h) {
   return h.response().code(200)
 }
 
-exports.deleteParticipantsByTypeId = function (request, h) {
+exports.delParticipantsByTypeId = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
     'sim_request',
     'Histogram for Simulator http operations',
@@ -148,7 +148,7 @@ exports.deleteParticipantsByTypeId = function (request, h) {
   } else {
     throw new Error(`Type:${request.params.Type} not found`)
   }
-  histTimerEnd({ success: true, operation: 'deleteParticipants', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
+  histTimerEnd({ success: true, operation: 'delParticipants', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
   return h.response().code(204)
 }
 

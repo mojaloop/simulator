@@ -56,7 +56,7 @@ module.exports = [
   {
     method: 'DELETE',
     path: '/oracle/participants/{Type}/{ID}',
-    handler: Handler.deleteParticipantsByTypeId,
+    handler: Handler.delParticipantsByTypeId,
     options: {
       tags: tags,
       description: 'Delete Participants'
