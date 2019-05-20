@@ -129,7 +129,7 @@ exports.delParticipantsByTypeId = function (request, h) {
     'Histogram for Simulator http operations',
     ['success', 'operation', 'source', 'destination']
   ).startTimer()
-  Logger.debug(`deleteParticipantsByTypeId::ID=${request.params.ID}`)
+  Logger.debug(`delParticipantsByTypeId::ID=${request.params.ID}`)
   addNewRequest(request)
   let idMap
   if (participantsCache.get(request.params.Type)) {
@@ -142,7 +142,7 @@ exports.delParticipantsByTypeId = function (request, h) {
         errorCode: 2345,
         errorDescription: `ID:${request.params.ID} not found`
       }
-      histTimerEnd({ success: false, operation: 'deleteParticipants', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
+      histTimerEnd({ success: false, operation: 'delParticipants', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
       return h.response(buildErrorObject(errorObject, [])).code(400)
     }
   } else {
