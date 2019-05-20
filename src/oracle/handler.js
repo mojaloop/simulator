@@ -42,8 +42,8 @@ exports.createParticipantsByTypeAndId = function (request, h) {
     partyList: [
       {
         fspId: request.payload.fspId,
-        currency: request.payload.currency || undefined,
-        partySubIdOrType: request.payload.partySubIdOrType || undefined
+        currency: request.payload.currency,
+        partySubIdOrType: request.payload.partySubIdOrType
       }
     ]
   }
@@ -158,9 +158,7 @@ exports.createParticipantsBatch = function (request, h) {
     'Histogram for Simulator http operations',
     ['success', 'operation', 'source', 'destination']
   ).startTimer()
-  let responseObject = {
-    partyList: []
-  }
+  let failedList = []
   if (batchRequestCache.get(request.payload.requestId)) {
     let errorObject = {
       errorCode: 2345,
@@ -186,14 +184,6 @@ exports.createParticipantsBatch = function (request, h) {
           }
         ]
       }
-      let partyId = {
-        partyIdType: party.partyIdType,
-        partyIdentifier: party.partyIdentifier,
-        partySubIdOrType: party.partySubIdOrType || undefined,
-        fspId: party.fspId,
-        currency: party.currency || undefined
-      }
-      let errorInformation
       let idMap = new Map()
       if (participantsCache.get(party.partyIdType)) {
         idMap = participantsCache.get(party.partyIdType)
@@ -202,22 +192,20 @@ exports.createParticipantsBatch = function (request, h) {
             errorCode: 1234,
             errorDescription: `Participant:${party.partyIdentifier} already exists`
           }
-          errorInformation = buildErrorObject(errorObject, [{ key: party.partyIdentifier, value: party.partyIdType }])
-          responseObject.partyList.push({ partyId, errorInformation })
+          histTimerEnd({ success: false, operation: 'postParticipantsBatch', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
+          failedList.push(buildErrorObject(errorObject, []))
         } else {
           idMap.set(party.partyIdentifier, record)
           participantsCache.set(party.partyIdType, idMap)
-          responseObject.partyList.push({ partyId })
         }
       } else {
         idMap.set(party.partyIdentifier, record)
         participantsCache.set(party.partyIdType, idMap)
-        responseObject.partyList.push({ partyId })
       }
     }
   }
   histTimerEnd({ success: true, operation: 'postParticipantsBatch', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
-  return h.response(responseObject).code(201)
+  return h.response(failedList.length > 0 ? failedList : null).code(201)
 }
 
 exports.getRequestByTypeId = function (request, h) {
@@ -277,8 +265,10 @@ const addNewRequest = function (request) {
 
 const buildErrorObject = function (error, extensionList) {
   return {
-    errorCode: error.errorCode.toString(),
-    errorDescription: error.errorDescription,
-    extensionList
+    errorInformation: {
+      errorCode: error.errorCode.toString(),
+      errorDescription: error.errorDescription,
+      extensionList
+    }
   }
 }
