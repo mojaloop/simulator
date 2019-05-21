@@ -23,7 +23,7 @@
  ******/
 
 const Handler = require('./handler')
-const tags = ['oracle', 'participants']
+const tags = ['api', 'oracle']
 
 module.exports = [
   {
