@@ -34,7 +34,7 @@ exports.createParticipantsByTypeAndId = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
     'sim_request',
     'Histogram for Simulator http operations',
-    ['success', 'operation', 'source', 'destination']
+    ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
   Logger.debug(`createParticipantByTypeId::ID=${request.params.ID} payload=${request.payload}`)
   addNewRequest(request)
@@ -69,7 +69,7 @@ exports.getParticipantsByTypeId = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
     'sim_request',
     'Histogram for Simulator http operations',
-    ['success', 'operation', 'source', 'destination']
+    ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
   Logger.debug(`getParticipantsByTypeId::ID=${request.params.ID}`)
   addNewRequest(request)
@@ -93,7 +93,7 @@ exports.updateParticipantsByTypeId = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
     'sim_request',
     'Histogram for Simulator http operations',
-    ['success', 'operation', 'source', 'destination']
+    ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
   Logger.debug(`updateParticipantByTypeId::ID=${request.params.ID} payload=${request.payload}`)
   addNewRequest(request)
@@ -127,7 +127,7 @@ exports.delParticipantsByTypeId = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
     'sim_request',
     'Histogram for Simulator http operations',
-    ['success', 'operation', 'source', 'destination']
+    ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
   Logger.debug(`delParticipantsByTypeId::ID=${request.params.ID}`)
   addNewRequest(request)
@@ -156,7 +156,7 @@ exports.createParticipantsBatch = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
     'sim_request',
     'Histogram for Simulator http operations',
-    ['success', 'operation', 'source', 'destination']
+    ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
   let responseObject = {
     partyList: []
@@ -224,7 +224,7 @@ exports.getRequestByTypeId = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
     'sim_request',
     'Histogram for Simulator http operations',
-    ['success', 'operation', 'source', 'destination']
+    ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
   const responseData = requestsCache.get(request.params.ID)
   requestsCache.del(request.params.ID)
@@ -236,7 +236,7 @@ exports.getRequestById = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
     'sim_request',
     'Histogram for Simulator http operations',
-    ['success', 'operation', 'source', 'destination']
+    ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
   const responseData = batchRequestCache.get(request.params.requestId)
   requestsCache.del(request.params.requestId)
