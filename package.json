@@ -1,13 +1,14 @@
 {
   "name": "sims",
-  "version": "6.2.1",
+  "version": "6.2.2",
   "description": "A super-simple fsp simulator",
   "main": "src/index.js",
   "author": "ModusBox",
   "contributors": [
     "Georgi Georgiev <georgi.georgiev@modusbox.com>",
     "Miguel de Barros <miguel.debarros@modusbox.com>",
-    "Murthy Kakarlamudi <murthy@modusbox.com>"
+    "Murthy Kakarlamudi <murthy@modusbox.com>",
+    "Rajiv Mothilal <rajiv.mothilal@modusbox.com>"
   ],
   "repository": {
     "type": "git",
