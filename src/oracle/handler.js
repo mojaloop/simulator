@@ -239,7 +239,7 @@ exports.getRequestById = function (request, h) {
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
   const responseData = batchRequestCache.get(request.params.requestId)
-  requestsCache.del(request.params.requestId)
+  batchRequestCache.del(request.params.requestId)
   histTimerEnd({ success: true, operation: 'getRequestById' })
   return h.response(responseData).code(200)
 }
