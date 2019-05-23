@@ -28,6 +28,7 @@ const callbacks = new NodeCache()
 const fetch = require('node-fetch')
 const Logger = require('@mojaloop/central-services-shared').Logger
 const Metrics = require('../lib/metrics')
+const base64url = require('base64url')
 
 const partiesEndpoint = process.env.PARTIES_ENDPOINT || 'http://localhost:1080'
 const quotesEndpoint = process.env.QUOTES_ENDPOINT || 'http://localhost:1080'
@@ -36,6 +37,7 @@ const transfersFulfilResponseDisabled = (process.env.TRANSFERS_FULFIL_RESPONSE_D
 const transfersFulfilment = process.env.TRANSFERS_FULFILMENT || 'XoSz1cL0tljJSCp_VtIYmPNw-zFUgGfbUqf69AagUzY'
 const transfersCondition = process.env.TRANSFERS_CONDITION || 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
 const transfersIlpPacket = process.env.TRANSFERS_ILPPACKET || 'AQAAAAAAAADIEHByaXZhdGUucGF5ZWVmc3CCAiB7InRyYW5zYWN0aW9uSWQiOiIyZGY3NzRlMi1mMWRiLTRmZjctYTQ5NS0yZGRkMzdhZjdjMmMiLCJxdW90ZUlkIjoiMDNhNjA1NTAtNmYyZi00NTU2LThlMDQtMDcwM2UzOWI4N2ZmIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyNzcxMzgwMzkxMyIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTExIiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnt9fX0sImFtb3VudCI6eyJjdXJyZW5jeSI6IlVTRCIsImFtb3VudCI6IjIwMCJ9LCJ0cmFuc2FjdGlvblR5cGUiOnsic2NlbmFyaW8iOiJERVBPU0lUIiwic3ViU2NlbmFyaW8iOiJERVBPU0lUIiwiaW5pdGlhdG9yIjoiUEFZRVIiLCJpbml0aWF0b3JUeXBlIjoiQ09OU1VNRVIiLCJyZWZ1bmRJbmZvIjp7fX19'
+const signature = process.env.MOCK_JWS_SIGNATURE || 'abcJjvNrkyK2KBieDUbGfhaBUn75aDUATNF4joqA8OLs4QgSD7i6EO8BIdy6Crph3LnXnTM20Ai1Z6nt0zliS_qPPLU9_vi6qLb15FOkl64DQs9hnfoGeo2tcjZJ88gm19uLY_s27AJqC1GH1B8E2emLrwQMDMikwQcYvXoyLrL7LL3CjaLMKdzR7KTcQi1tCK4sNg0noIQLpV3eA61kess'
 
 const extractUrls = (request) => {
   const urls = {}
@@ -119,6 +121,18 @@ exports.getPartiesByTypeAndId = function (req, h) {
 
     const url = partiesEndpoint + '/parties/MSISDN/' + req.params.id
     try {
+      const protectedHeader = {
+        alg: 'RS256',
+        'FSPIOP-Source': `${req.headers['fspiop-destination']}`,
+        'FSPIOP-Destination': `${req.headers['fspiop-source']}`,
+        'FSPIOP-URI': `/parties/MSISDN/${req.params.id}`,
+        'FSPIOP-HTTP-Method': 'PUT',
+        'Date': ''
+      }
+      const fspiopSignature = {
+        signature: signature,
+        protectedHeader: `${base64url.encode(JSON.stringify(protectedHeader))}`
+      }
       const opts = {
         method: 'PUT',
         headers: {
@@ -126,7 +140,10 @@ exports.getPartiesByTypeAndId = function (req, h) {
           'Content-Type': 'application/vnd.interoperability.parties+json;version=1.0',
           'FSPIOP-Source': 'payeefsp',
           'FSPIOP-Destination': req.headers['fspiop-source'],
-          'Date': req.headers['date']
+          'Date': new Date().toUTCString(),
+          'FSPIOP-Signature': JSON.stringify(fspiopSignature),
+          'FSPIOP-HTTP-Method': 'PUT',
+          'FSPIOP-URI': `/parties/MSISDN/${req.params.id}`
         },
         rejectUnauthorized: false,
         body: JSON.stringify(myCache.get(req.params.id))
@@ -210,14 +227,28 @@ exports.postQuotes = function (req, h) {
 
     try {
       const url = quotesEndpoint + '/quotes/' + quotesRequest.quoteId
+      const protectedHeader = {
+        alg: 'RS256',
+        'FSPIOP-Source': `${req.headers['fspiop-destination']}`,
+        'FSPIOP-Destination': `${req.headers['fspiop-source']}`,
+        'FSPIOP-URI': `/quotes/${quotesRequest.quoteId}`,
+        'FSPIOP-HTTP-Method': 'PUT',
+        'Date': ''
+      }
+      const fspiopSignature = {
+        signature: signature,
+        protectedHeader: `${base64url.encode(JSON.stringify(protectedHeader))}`
+      }
       const opts = {
         method: 'PUT',
         headers: {
-          'Accept': 'application/vnd.interoperability.quotes+json;version=1',
           'Content-Type': 'application/vnd.interoperability.quotes+json;version=1.0',
           'FSPIOP-Source': 'payeefsp',
           'FSPIOP-Destination': req.headers['fspiop-source'],
-          'Date': req.headers['date']
+          'Date': new Date().toUTCString(),
+          'FSPIOP-Signature': `${JSON.stringify(fspiopSignature)}`,
+          'FSPIOP-HTTP-Method': 'PUT',
+          'FSPIOP-URI': `/quotes/${quotesRequest.quoteId}`
         },
         rejectUnauthorized: false,
         body: JSON.stringify(quotesResponse)
@@ -269,6 +300,7 @@ exports.postTransfers = async function (req, h) {
     requests.set(req.payload.transferId, incomingRequest)
 
     const url = transfersEndpoint + '/transfers/' + req.payload.transferId
+    const fspiopUriHeader = `/transfers/${req.payload.transferId}`
     try {
       const transfersResponse = {
         // fulfilment: "rjzWyHf4IUao60Yz98HZOIhZbqtclOgZ7WriZuq9Hn0",
@@ -276,15 +308,28 @@ exports.postTransfers = async function (req, h) {
         completedTimestamp: new Date().toISOString(),
         transferState: 'COMMITTED'
       }
-
+      const protectedHeader = {
+        alg: 'RS256',
+        'FSPIOP-Source': `${req.headers['fspiop-destination']}`,
+        'FSPIOP-Destination': `${req.headers['fspiop-source']}`,
+        'FSPIOP-URI': `/transfers/${req.payload.transferId}`,
+        'FSPIOP-HTTP-Method': 'PUT',
+        'Date': ''
+      }
+      const fspiopSignature = {
+        signature: signature,
+        protectedHeader: `${base64url.encode(JSON.stringify(protectedHeader))}`
+      }
       const opts = {
         method: 'PUT',
         headers: {
-          'Accept': 'application/vnd.interoperability.transfers+json;version=1',
           'Content-Type': 'application/vnd.interoperability.transfers+json;version=1.0',
-          'FSPIOP-Source': req.headers['fspiop-destination'],
+          'FSPIOP-Source': 'payeefsp',
           'FSPIOP-Destination': req.headers['fspiop-source'],
-          'Date': req.headers['date']
+          'Date': new Date().toUTCString(),
+          'FSPIOP-Signature': JSON.stringify(fspiopSignature),
+          'FSPIOP-HTTP-Method': 'PUT',
+          'FSPIOP-URI': fspiopUriHeader
         },
         rejectUnauthorized: false,
         body: JSON.stringify(transfersResponse)
@@ -294,7 +339,7 @@ exports.postTransfers = async function (req, h) {
       Logger.info(`response: ${res.status}`)
       if (!res.ok) {
         // TODO: how does one identify the failed response?
-        throw new Error(`Failed to send. Result: ${res}`)
+        throw new Error(`Failed to send. Result: ${JSON.stringify(res)}`)
       }
       // Logger.perf(`[cid=${req.payload.transferId}, fsp=${req.headers['fspiop-source']}, source=${req.headers['fspiop-source']}, dest=${req.headers['fspiop-destination']}] ~ Simulator::api::payee::postTransfers - END`)
       histTimerEnd({
