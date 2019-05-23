@@ -22,8 +22,8 @@
 
 const Handler = require('./handler')
 const tags = ['api', 'metadata']
-const BaseJoi = require('joi-currency-code')(require('joi'))
-const Extension = require('joi-date-extensions')
+const BaseJoi = require('joi-currency-code')(require('@hapi/joi'))
+const Extension = require('@hapi/joi-date')
 const Joi = BaseJoi.extend(Extension)
 const transferState = ['RECEIVED', 'RESERVED', 'COMMITTED', 'ABORTED', 'SETTLED']
 const partyIdTypeEnum = ['MSISDN', 'EMAIL', 'PERSONAL_ID', 'BUSINESS', 'DEVICE', 'ACCOUNT_ID', 'IBAN', 'ALIAS']
