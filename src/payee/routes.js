@@ -39,6 +39,15 @@ module.exports = [
     }
   },
   {
+    method: 'PUT',
+    path: '/payeefsp/participants/{type}/{id}',
+    handler: Handler.putParticipantsByTypeId,
+    options: {
+      tags: tags,
+      description: 'Callback for adding participant'
+    }
+  },
+  {
     method: 'POST',
     path: '/payeefsp/parties/{type}/{id}',
     handler: Handler.postPartiesByTypeAndId,
