@@ -101,6 +101,20 @@ exports.putPartiesByTypeId = function (request, h) {
   return h.response().code(200)
 }
 
+exports.putPartiesByTypeIdAndError = function (request, h) {
+  console.log((new Date().toISOString()), 'IN PAYERFSP:: PUT /payerfsp/parties/' + request.params.id + '/error', request.payload)
+  myCache.set(request.params.id, request.payload)
+
+  // Saving Incoming request
+  let incomingRequest = {
+    headers: request.headers,
+    data: request.payload
+  }
+  callbacks.set(request.params.id, incomingRequest)
+
+  return h.response().code(200)
+}
+
 // Section about Quotes
 exports.putQuotesById = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
@@ -124,6 +138,20 @@ exports.putQuotesById = function (request, h) {
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payer::putQuotesById - END`)
   histTimerEnd({ success: true, fsp: 'payer', operation: 'putQuotesById', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
+  return h.response().code(200)
+}
+
+exports.putQuotesByIdAndError = function (request, h) {
+  console.log((new Date().toISOString()), 'IN PAYERFSP:: PUT /payerfsp/quotes/' + request.params.id + '/error', request.payload)
+  myCache.set(request.params.id, request.payload)
+
+  // Saving Incoming request
+  let incomingRequest = {
+    headers: request.headers,
+    data: request.payload
+  }
+  callbacks.set(request.params.id, incomingRequest)
+
   return h.response().code(200)
 }
 
