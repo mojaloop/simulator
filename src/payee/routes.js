@@ -71,7 +71,6 @@ module.exports = [
       description: 'Add users to payer simulator',
       validate: {
         headers: Joi.object({
-          'accept': Joi.string().required().regex(/application\/vnd.interoperability[.]/),
           'content-type': Joi.string().required().regex(/application\/vnd.interoperability[.]/),
           'date': Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
           'x-forwarded-for': Joi.string().optional(),
