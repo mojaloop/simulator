@@ -214,7 +214,7 @@ exports.getcorrelationId = function (request, h) {
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payer::getcorrelationId - START`)
 
-  Logger.info(`IN PAYERFSP:: PUT /payerfsp/correlationid/${request.params.id}/error, CACHE: [${JSON.stringify(myCache.get(request.params.id))}]`)
+  Logger.info(`IN PAYERFSP:: PUT /payerfsp/correlationid/${request.params.id}, CACHE: [${JSON.stringify(myCache.get(request.params.id))}]`)
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payer::getcorrelationId - END`)
   histTimerEnd({ success: true, fsp: 'payer', operation: 'getcorrelationId' })
