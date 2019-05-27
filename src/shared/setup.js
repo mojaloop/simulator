@@ -26,6 +26,7 @@ const Hapi = require('hapi')
 const Boom = require('boom')
 const Logger = require('@mojaloop/central-services-shared').Logger
 const Metrics = require('../lib/metrics')
+const RequestLogger = require('../lib/requestLogger')
 
 const createServer = (port, modules) => {
   return (async () => {
@@ -38,6 +39,14 @@ const createServer = (port, modules) => {
           }
         }
       }
+    })
+    server.ext('onRequest', function (request, h) {
+      RequestLogger.logRequest(request)
+      return h.continue
+    })
+    server.ext('onPreResponse', function (request, h) {
+      RequestLogger.logResponse(request)
+      return h.continue
     })
     Logger.info(`Registering server modules...`)
     await server.register(modules)

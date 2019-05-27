@@ -119,13 +119,13 @@ exports.getPartiesByTypeAndId = function (req, h) {
     }
     requests.set(req.params.id, incomingRequest)
 
-    const url = partiesEndpoint + '/parties/MSISDN/' + req.params.id
+    const url = partiesEndpoint + `/parties/${req.params.type}/${req.params.id}`
     try {
       const protectedHeader = {
         alg: 'RS256',
         'FSPIOP-Source': `${req.headers['fspiop-destination']}`,
         'FSPIOP-Destination': `${req.headers['fspiop-source']}`,
-        'FSPIOP-URI': `/parties/MSISDN/${req.params.id}`,
+        'FSPIOP-URI': `/parties/${req.params.type}/${req.params.id}`,
         'FSPIOP-HTTP-Method': 'PUT',
         'Date': ''
       }
@@ -143,7 +143,7 @@ exports.getPartiesByTypeAndId = function (req, h) {
           'Date': new Date().toUTCString(),
           'FSPIOP-Signature': JSON.stringify(fspiopSignature),
           'FSPIOP-HTTP-Method': 'PUT',
-          'FSPIOP-URI': `/parties/MSISDN/${req.params.id}`
+          'FSPIOP-URI': `/parties/${req.params.type}/${req.params.id}`
         },
         rejectUnauthorized: false,
         body: JSON.stringify(myCache.get(req.params.id))
