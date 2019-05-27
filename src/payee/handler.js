@@ -181,7 +181,7 @@ exports.postQuotes = function (req, h) {
     const metadata = `${req.method} ${req.path}`
     const quotesRequest = req.payload
     Logger.info((new Date().toISOString()), ['IN PAYEEFSP::'], `received: ${metadata}. `)
-    Logger.info('incoming request: ', quotesRequest.quoteId)
+    Logger.info(`incoming request: ${quotesRequest.quoteId}`)
 
     // Saving Incoming request
     let incomingRequest = {
