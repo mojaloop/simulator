@@ -217,11 +217,11 @@ exports.postQuotes = function (req, h) {
         amount: quotesRequest.amount.amount,
         currency: quotesRequest.amount.currency
       },
-      testfsp4Fee: {
+      payeeFspFee: {
         amount: '1',
         currency: quotesRequest.amount.currency
       },
-      testfsp4Commission: {
+      payeeFspCommission: {
         amount: '1',
         currency: quotesRequest.amount.currency
       },
@@ -260,7 +260,7 @@ exports.postQuotes = function (req, h) {
         rejectUnauthorized: false,
         body: JSON.stringify(quotesResponse)
       }
-      Logger.info((new Date().toISOString()), `Executing PUT`, url)
+      Logger.info(`Executing PUT: [${url}], HEADERS: [${JSON.stringify(opts.headers)}], BODY: [${JSON.stringify(quotesResponse)}]`)
       const res = await fetch(url, opts)
       Logger.info((new Date().toISOString()), 'response: ', res.status)
       if (!res.ok) {
