@@ -39,6 +39,15 @@ module.exports = [
     }
   },
   {
+    method: 'GET',
+    path: '/payeefsp/quotes/{id}',
+    handler: Handler.getQuotes,
+    options: {
+      tags: tags,
+      description: 'getQuoteById'
+    }
+  },
+  {
     method: 'PUT',
     path: '/payeefsp/participants/{type}/{id}',
     handler: Handler.putParticipantsByTypeId,
