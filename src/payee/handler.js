@@ -52,10 +52,10 @@ const extractUrls = (request) => {
 }
 
 exports.metadata = function (request, h) {
-    return h.response({
-      directory: 'localhost',
-      urls: extractUrls(request)
-    }).code(200)
+  return h.response({
+    directory: 'localhost',
+    urls: extractUrls(request)
+  }).code(200)
 }
 
 // Section about /participants
@@ -167,7 +167,7 @@ exports.getPartiesByTypeAndId = function (req, h) {
 
   return h.response().code(202)
 }
-exports.getQuotes =function(req,h){
+exports.getQuotes = function (req, h) {
   (async function () {
     const histTimerEnd = Metrics.getHistogram(
       'sim_request',
@@ -178,11 +178,10 @@ exports.getQuotes =function(req,h){
     Logger.info((new Date().toISOString()), ['IN PAYEEFSP::'], `received: ${metadata}. `)
     Logger.info(`incoming request: ${req.params.id}`)
 
-    if(!requests.get(req.params.id)){
+    if (!requests.get(req.params.id)) {
       throw new Error(`QUOTEID NOT FOUND: ${req.params.id}`)
     }
     let quotesRequest = requests.get(req.params.id).data
-
 
     const quotesResponse = {
       transferAmount: {
@@ -198,7 +197,7 @@ exports.getQuotes =function(req,h){
         currency: quotesRequest.amount.currency
       },
       expiration: quotesRequest.expiration,
-      
+
       // ilpPacket: 'AQAAAAAAAABkEHByaXZhdGUucGF5ZWVmc3CCAlV7InRyYW5zYWN0aW9uSWQiOiJhYWUwYzIxMi0wOTJiLTQ5MmItYWQ2ZS1kZmJiYmJjNWRkYzIiLCJxdW90ZUlkIjoiYWFlMGMyMTItMDkyYi00OTJiLWFkNmUtZGZiYmJiYzVkZGMyIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyMjUwNDAwNDc2MiIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTA1IiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnsiZmlyc3ROYW1lIjoiTWF0cyIsImxhc3ROYW1lIjoiSGFnbWFuIn19fSwiYW1vdW50Ijp7ImN1cnJlbmN5IjoiVVNEIiwiYW1vdW50IjoiMTAwIn0sInRyYW5zYWN0aW9uVHlwZSI6eyJzY2VuYXJpbyI6IlRSQU5TRkVSIiwic3ViU2NlbmFyaW8iOiJUUkFOU0ZFUiIsImluaXRpYXRvciI6IlBBWUVSIiwiaW5pdGlhdG9yVHlwZSI6IkNPTlNVTUVSIiwicmVmdW5kSW5mbyI6e319LCJub3RlIjoiaGVqIn0=',
       ilpPacket: transfersIlpPacket,
       condition: transfersCondition
@@ -243,7 +242,7 @@ exports.getQuotes =function(req,h){
 
       // Logger.perf(`[cid=${req.payload.transferId}, fsp=${req.headers['fspiop-source']}, source=${req.headers['fspiop-source']}, dest=${req.headers['fspiop-destination']}] ~ Simulator::api::payee::postQuotes - END`)
       histTimerEnd({ success: true, fsp: 'payee', operation: 'getQuotes', source: req.headers['fspiop-source'], destination: req.headers['fspiop-destination'] })
-    }catch (err) {
+    } catch (err) {
       Logger.error(err)
       // Logger.perf(`[cid=${req.payload.transferId}, fsp=${req.headers['fspiop-source']}, source=${req.headers['fspiop-source']}, dest=${req.headers['fspiop-destination']}] ~ Simulator::api::payee::postQuotes - ERROR`)
       histTimerEnd({ success: false, fsp: 'payee', operation: 'getQuotes', source: req.headers['fspiop-source'], destination: req.headers['fspiop-destination'] })
@@ -295,8 +294,8 @@ exports.postQuotes = function (req, h) {
     //     data: Buffer.from('hello world'),
     //     expiresAt: new Date(new Date().getTime() + 10000)
     // })
-    const expirationDefault = new Date(new Date().getTime() + 10000)  
-    quotesRequest.expiration = quotesRequest.expiration || expirationDefault 
+    const expirationDefault = new Date(new Date().getTime() + 10000)
+    quotesRequest.expiration = quotesRequest.expiration || expirationDefault
     const quotesResponse = {
       transferAmount: {
         amount: quotesRequest.amount.amount,
@@ -310,7 +309,7 @@ exports.postQuotes = function (req, h) {
         amount: '1',
         currency: quotesRequest.amount.currency
       },
-      expiration: quotesRequest.expiration ,
+      expiration: quotesRequest.expiration,
       // ilpPacket: 'AQAAAAAAAABkEHByaXZhdGUucGF5ZWVmc3CCAlV7InRyYW5zYWN0aW9uSWQiOiJhYWUwYzIxMi0wOTJiLTQ5MmItYWQ2ZS1kZmJiYmJjNWRkYzIiLCJxdW90ZUlkIjoiYWFlMGMyMTItMDkyYi00OTJiLWFkNmUtZGZiYmJiYzVkZGMyIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyMjUwNDAwNDc2MiIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTA1IiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnsiZmlyc3ROYW1lIjoiTWF0cyIsImxhc3ROYW1lIjoiSGFnbWFuIn19fSwiYW1vdW50Ijp7ImN1cnJlbmN5IjoiVVNEIiwiYW1vdW50IjoiMTAwIn0sInRyYW5zYWN0aW9uVHlwZSI6eyJzY2VuYXJpbyI6IlRSQU5TRkVSIiwic3ViU2NlbmFyaW8iOiJUUkFOU0ZFUiIsImluaXRpYXRvciI6IlBBWUVSIiwiaW5pdGlhdG9yVHlwZSI6IkNPTlNVTUVSIiwicmVmdW5kSW5mbyI6e319LCJub3RlIjoiaGVqIn0=',
       ilpPacket: transfersIlpPacket,
       condition: transfersCondition
