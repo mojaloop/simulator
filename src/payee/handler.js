@@ -324,8 +324,6 @@ exports.postTransfers = async function (req, h) {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/vnd.interoperability.transfers+json;version=1.0',
-          // This appears to be causing problems for the central-ledger tests. I don't know why it was changed
-          // 'FSPIOP-Source': 'payeefsp',
           'FSPIOP-Source': req.headers['fspiop-destination'],
           'FSPIOP-Destination': req.headers['fspiop-source'],
           'Date': new Date().toUTCString(),
