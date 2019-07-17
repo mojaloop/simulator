@@ -324,7 +324,7 @@ exports.postTransfers = async function (req, h) {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/vnd.interoperability.transfers+json;version=1.0',
-          'FSPIOP-Source': 'payeefsp',
+          'FSPIOP-Source': req.headers['fspiop-destination'],
           'FSPIOP-Destination': req.headers['fspiop-source'],
           'Date': new Date().toUTCString(),
           'FSPIOP-Signature': JSON.stringify(fspiopSignature),
