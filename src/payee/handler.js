@@ -71,7 +71,7 @@ exports.putParticipantsByTypeId = function (request, h) {
   Logger.info(`IN PAYEEFSP:: PUT /payeefsp/participants/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
 
   // Saving Incoming request
-  let incomingRequest = {
+  const incomingRequest = {
     headers: request.headers,
     data: request.payload
   }
@@ -114,7 +114,7 @@ exports.getPartiesByTypeAndId = function (req, h) {
     const metadata = `${req.method} ${req.path} ${req.params.id} `
     Logger.info((new Date().toISOString()), ['IN PAYEEFSP::'], `received: ${metadata}. `)
     // Saving Incoming request
-    let incomingRequest = {
+    const incomingRequest = {
       headers: req.headers
     }
     requests.set(req.params.id, incomingRequest)
@@ -127,7 +127,7 @@ exports.getPartiesByTypeAndId = function (req, h) {
         'FSPIOP-Destination': `${req.headers['fspiop-source']}`,
         'FSPIOP-URI': `/parties/${req.params.type}/${req.params.id}`,
         'FSPIOP-HTTP-Method': 'PUT',
-        'Date': ''
+        Date: ''
       }
       const fspiopSignature = {
         signature: signature,
@@ -136,11 +136,11 @@ exports.getPartiesByTypeAndId = function (req, h) {
       const opts = {
         method: 'PUT',
         headers: {
-          'Accept': 'application/vnd.interoperability.parties+json;version=1',
+          Accept: 'application/vnd.interoperability.parties+json;version=1',
           'Content-Type': 'application/vnd.interoperability.parties+json;version=1.0',
           'FSPIOP-Source': 'payeefsp',
           'FSPIOP-Destination': req.headers['fspiop-source'],
-          'Date': new Date().toUTCString(),
+          Date: new Date().toUTCString(),
           'FSPIOP-Signature': JSON.stringify(fspiopSignature),
           'FSPIOP-HTTP-Method': 'PUT',
           'FSPIOP-URI': `/parties/${req.params.type}/${req.params.id}`
@@ -184,7 +184,7 @@ exports.postQuotes = function (req, h) {
     Logger.info(`incoming request: ${quotesRequest.quoteId}`)
 
     // Saving Incoming request
-    let incomingRequest = {
+    const incomingRequest = {
       headers: req.headers,
       data: req.payload
     }
@@ -233,7 +233,7 @@ exports.postQuotes = function (req, h) {
         'FSPIOP-Destination': `${req.headers['fspiop-source']}`,
         'FSPIOP-URI': `/quotes/${quotesRequest.quoteId}`,
         'FSPIOP-HTTP-Method': 'PUT',
-        'Date': ''
+        Date: ''
       }
       const fspiopSignature = {
         signature: signature,
@@ -245,7 +245,7 @@ exports.postQuotes = function (req, h) {
           'Content-Type': 'application/vnd.interoperability.quotes+json;version=1.0',
           'FSPIOP-Source': 'payeefsp',
           'FSPIOP-Destination': req.headers['fspiop-source'],
-          'Date': new Date().toUTCString(),
+          Date: new Date().toUTCString(),
           'FSPIOP-Signature': `${JSON.stringify(fspiopSignature)}`,
           'FSPIOP-HTTP-Method': 'PUT',
           'FSPIOP-URI': `/quotes/${quotesRequest.quoteId}`
@@ -293,7 +293,7 @@ exports.postTransfers = async function (req, h) {
 
   if (!transfersFulfilResponseDisabled) {
     // Saving Incoming request
-    let incomingRequest = {
+    const incomingRequest = {
       headers: req.headers,
       data: req.payload
     }
@@ -314,7 +314,7 @@ exports.postTransfers = async function (req, h) {
         'FSPIOP-Destination': `${req.headers['fspiop-source']}`,
         'FSPIOP-URI': `/transfers/${req.payload.transferId}`,
         'FSPIOP-HTTP-Method': 'PUT',
-        'Date': ''
+        Date: ''
       }
       const fspiopSignature = {
         signature: signature,
@@ -326,7 +326,7 @@ exports.postTransfers = async function (req, h) {
           'Content-Type': 'application/vnd.interoperability.transfers+json;version=1.0',
           'FSPIOP-Source': req.headers['fspiop-destination'],
           'FSPIOP-Destination': req.headers['fspiop-source'],
-          'Date': new Date().toUTCString(),
+          Date: new Date().toUTCString(),
           'FSPIOP-Signature': JSON.stringify(fspiopSignature),
           'FSPIOP-HTTP-Method': 'PUT',
           'FSPIOP-URI': fspiopUriHeader
@@ -394,7 +394,7 @@ exports.putTransfersById = function (request, h) {
   myCache.set(request.params.id, request.payload)
 
   // Saving Incoming request
-  let incomingRequest = {
+  const incomingRequest = {
     headers: request.headers,
     data: request.payload
   }
@@ -418,7 +418,7 @@ exports.putTransfersByIdError = function (request, h) {
   myCache.set(request.params.id, request.payload)
 
   // Saving Incoming request
-  let incomingRequest = {
+  const incomingRequest = {
     headers: request.headers,
     data: request.payload
   }

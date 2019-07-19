@@ -138,7 +138,7 @@ exports.delParticipantsByTypeId = function (request, h) {
       idMap.delete(request.params.ID)
       participantsCache.set(request.params.Type, idMap)
     } else {
-      let errorObject = {
+      const errorObject = {
         errorCode: 2345,
         errorDescription: `ID:${request.params.ID} not found`
       }
@@ -158,17 +158,17 @@ exports.createParticipantsBatch = function (request, h) {
     'Histogram for Simulator http operations',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
-  let responseObject = {
+  const responseObject = {
     partyList: []
   }
   if (batchRequestCache.get(request.payload.requestId)) {
-    let errorObject = {
+    const errorObject = {
       errorCode: 2345,
       errorDescription: `Duplicated batch requestId:${request.payload.requestId} received`
     }
     return h.response(buildErrorObject(errorObject, [])).code(400)
   } else {
-    let newRequest = {
+    const newRequest = {
       headers: request.headers,
       path: request.path,
       method: request.method,
@@ -176,7 +176,7 @@ exports.createParticipantsBatch = function (request, h) {
       payload: request.payload
     }
     batchRequestCache.set(request.payload.requestId, newRequest)
-    for (let party of request.payload.partyList) {
+    for (const party of request.payload.partyList) {
       const record = {
         partyList: [
           {
@@ -186,7 +186,7 @@ exports.createParticipantsBatch = function (request, h) {
           }
         ]
       }
-      let partyId = {
+      const partyId = {
         partyIdType: party.partyIdType,
         partyIdentifier: party.partyIdentifier,
         partySubIdOrType: party.partySubIdOrType || undefined,
@@ -198,7 +198,7 @@ exports.createParticipantsBatch = function (request, h) {
       if (participantsCache.get(party.partyIdType)) {
         idMap = participantsCache.get(party.partyIdType)
         if (idMap.get(party.partyIdentifier)) {
-          let errorObject = {
+          const errorObject = {
             errorCode: 1234,
             errorDescription: `Participant:${party.partyIdentifier} already exists`
           }
@@ -245,7 +245,7 @@ exports.getRequestById = function (request, h) {
 }
 
 const addNewRequest = function (request) {
-  let newRequest = {
+  const newRequest = {
     headers: request.headers,
     path: request.path,
     method: request.method,
@@ -253,10 +253,10 @@ const addNewRequest = function (request) {
     payload: request.payload ? request.payload : undefined
   }
   if (requestsCache.get(request.params.ID)) {
-    let incomingRequests = requestsCache.get(request.params.ID)
+    const incomingRequests = requestsCache.get(request.params.ID)
     let foundMethod = false
     let count = 0
-    for (let entry of incomingRequests) {
+    for (const entry of incomingRequests) {
       if (entry.method === newRequest.method) {
         foundMethod = true
         break

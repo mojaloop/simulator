@@ -1,0 +1,17 @@
+{
+  "1065|@mojaloop/central-services-error-handling>@modusbox/mojaloop-sdk-standard-components>request-promise-native>request-promise-core>lodash": {
+    "fix": 1
+  },
+  "1065|@mojaloop/central-services-metrics>@mojaloop/central-services-shared>async>lodash": {
+    "fix": 1
+  },
+  "1065|node-cache>lodash": {
+    "fix": 1
+  },
+  "1065|standard>eslint>lodash": {
+    "fix": 1
+  },
+  "1065|standard>eslint-plugin-import>lodash": {
+    "fix": 1
+  }
+}
