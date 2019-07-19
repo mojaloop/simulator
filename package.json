@@ -21,7 +21,7 @@
     "start": "node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "audit:resolve": "SHELL=sh resolve-audit",
-    "audit:check": "ls -a ./node_modules/.bin ; SHELL=sh check-audit"
+    "audit:check": "SHELL=sh check-audit"
   },
   "precommit": "pretest",
   "precommit.silent": true,
