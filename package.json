@@ -20,8 +20,8 @@
     "standard": "standard",
     "start": "node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "audit:resolve": "resolve-audit",
-    "audit:check": "ls -a ./node_modules/.bin && check-audit"
+    "audit:resolve": "SHELL=sh resolve-audit",
+    "audit:check": "ls -a ./node_modules/.bin ; SHELL=sh check-audit"
   },
   "precommit": "pretest",
   "precommit.silent": true,
