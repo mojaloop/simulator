@@ -72,7 +72,7 @@ exports.putParticipantsByTypeId = function (request, h) {
   Logger.info(`IN testfsp4:: PUT /testfsp4/participants/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
 
   // Saving Incoming request
-  let incomingRequest = {
+  const incomingRequest = {
     headers: request.headers,
     data: request.payload
   }
@@ -112,11 +112,11 @@ exports.getPartiesByTypeAndId = function (req, h) {
       const opts = {
         method: 'PUT',
         headers: {
-          'Accept': 'application/vnd.interoperability.parties+json;version=1',
+          Accept: 'application/vnd.interoperability.parties+json;version=1',
           'Content-Type': 'application/vnd.interoperability.parties+json;version=1.0',
           'FSPIOP-Source': 'testfsp4',
           'FSPIOP-Destination': req.headers['fspiop-source'],
-          'Date': req.headers['date']
+          Date: req.headers['date']
         },
         rejectUnauthorized: false,
         body: JSON.stringify(myCache.get(req.params.id))
@@ -147,7 +147,7 @@ exports.putPartiesByTypeId = function (request, h) {
   Logger.info(`IN testfsp4:: PUT /testfsp4/parties/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
 
   // Saving Incoming request
-  let incomingRequest = {
+  const incomingRequest = {
     headers: request.headers,
     data: request.payload
   }
@@ -165,7 +165,7 @@ exports.putPartiesByTypeIdAndError = function (request, h) {
   myCache.set(request.params.id, request.payload)
 
   // Saving Incoming request
-  let incomingRequest = {
+  const incomingRequest = {
     headers: request.headers,
     data: request.payload
   }
@@ -191,7 +191,7 @@ exports.postQuotes = function (req, h) {
     Logger.info(`incoming request: ${quotesRequest.quoteId}`)
 
     // Saving Incoming request
-    let incomingRequest = {
+    const incomingRequest = {
       headers: req.headers,
       data: req.payload
     }
@@ -240,7 +240,7 @@ exports.postQuotes = function (req, h) {
         'FSPIOP-Destination': `${req.headers['fspiop-source']}`,
         'FSPIOP-URI': `/quotes/${quotesRequest.quoteId}`,
         'FSPIOP-HTTP-Method': 'PUT',
-        'Date': ''
+        Date: ''
       }
       const fspiopSignature = {
         signature: signature,
@@ -252,7 +252,7 @@ exports.postQuotes = function (req, h) {
           'Content-Type': 'application/vnd.interoperability.quotes+json;version=1.0',
           'FSPIOP-Source': 'testfsp4',
           'FSPIOP-Destination': req.headers['fspiop-source'],
-          'Date': new Date().toUTCString(),
+          Date: new Date().toUTCString(),
           'FSPIOP-Signature': `${JSON.stringify(fspiopSignature)}`,
           'FSPIOP-HTTP-Method': 'PUT',
           'FSPIOP-URI': `/quotes/${quotesRequest.quoteId}`
@@ -298,7 +298,7 @@ exports.putQuotesById = function (request, h) {
   Logger.info(`IN testfsp4:: PUT /testfsp4/quotes/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
 
   // Saving Incoming request
-  let incomingRequest = {
+  const incomingRequest = {
     headers: request.headers,
     data: request.payload
   }
@@ -316,7 +316,7 @@ exports.putQuotesByIdAndError = function (request, h) {
   myCache.set(request.params.id, request.payload)
 
   // Saving Incoming request
-  let incomingRequest = {
+  const incomingRequest = {
     headers: request.headers,
     data: request.payload
   }
@@ -340,7 +340,7 @@ exports.postTransfers = async function (req, h) {
 
   if (!transfersFulfilResponseDisabled) {
     // Saving Incoming request
-    let incomingRequest = {
+    const incomingRequest = {
       headers: req.headers,
       data: req.payload
     }
@@ -361,7 +361,7 @@ exports.postTransfers = async function (req, h) {
         'FSPIOP-Destination': `${req.headers['fspiop-source']}`,
         'FSPIOP-URI': `/transfers/${req.payload.transferId}`,
         'FSPIOP-HTTP-Method': 'PUT',
-        'Date': ''
+        Date: ''
       }
       const fspiopSignature = {
         signature: signature,
@@ -373,7 +373,7 @@ exports.postTransfers = async function (req, h) {
           'Content-Type': 'application/vnd.interoperability.transfers+json;version=1.0',
           'FSPIOP-Source': 'testfsp4',
           'FSPIOP-Destination': req.headers['fspiop-source'],
-          'Date': new Date().toUTCString(),
+          Date: new Date().toUTCString(),
           'FSPIOP-Signature': JSON.stringify(fspiopSignature),
           'FSPIOP-HTTP-Method': 'PUT',
           'FSPIOP-URI': fspiopUriHeader
@@ -440,7 +440,7 @@ exports.putTransfersById = function (request, h) {
   Logger.info(`IN testfsp4:: PUT /testfsp4/transfers/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
 
   // Saving Incoming request
-  let incomingRequest = {
+  const incomingRequest = {
     headers: request.headers,
     data: request.payload
   }
@@ -466,7 +466,7 @@ exports.putTransfersByIdError = function (request, h) {
   myCache.set(request.params.id, request.payload)
 
   // Saving Incoming request
-  let incomingRequest = {
+  const incomingRequest = {
     headers: request.headers,
     data: request.payload
   }

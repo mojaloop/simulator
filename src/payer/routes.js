@@ -61,7 +61,7 @@ module.exports = [
         headers: Joi.object({
           'content-type': Joi.string().required().regex(/application\/vnd.interoperability[.]/),
           'content-length': Joi.number().optional().max(5242880),
-          'date': Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
+          date: Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
           'x-forwarded-for': Joi.string().optional(),
           'fspiop-source': Joi.string().required(),
           'fspiop-destination': Joi.string().required(),
@@ -108,7 +108,7 @@ module.exports = [
       validate: {
         headers: Joi.object({
           'content-type': Joi.string().required().regex(/application\/vnd.interoperability[.]/),
-          'date': Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
+          date: Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
           'x-forwarded-for': Joi.string().optional(),
           'fspiop-source': Joi.string().required(),
           'fspiop-destination': Joi.string().required(),
@@ -149,7 +149,7 @@ module.exports = [
         headers: Joi.object({
           'content-type': Joi.string().required().regex(/application\/vnd.interoperability[.]/),
           'content-length': Joi.number().max(5242880),
-          'date': Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
+          date: Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
           'x-forwarded-for': Joi.string().optional(),
           'fspiop-source': Joi.string().required(),
           'fspiop-destination': Joi.string().required(),
@@ -202,7 +202,7 @@ module.exports = [
       validate: {
         headers: Joi.object({
           'content-type': Joi.string().required().regex(/application\/vnd.interoperability[.]/),
-          'date': Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
+          date: Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
           'x-forwarded-for': Joi.string().optional(),
           'fspiop-source': Joi.string().required(),
           'fspiop-destination': Joi.string().required(),
@@ -242,7 +242,7 @@ module.exports = [
       validate: {
         headers: Joi.object({
           'content-type': Joi.string().required().regex(/application\/vnd.interoperability[.]/),
-          'date': Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
+          date: Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
           'x-forwarded-for': Joi.string().optional(),
           'fspiop-source': Joi.string().required(),
           'fspiop-destination': Joi.string().required(),
@@ -282,7 +282,7 @@ module.exports = [
       validate: {
         headers: Joi.object({
           'content-type': Joi.string().required().regex(/application\/vnd.interoperability[.]/),
-          'date': Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
+          date: Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
           'x-forwarded-for': Joi.string().optional(),
           'fspiop-source': Joi.string().required(),
           'fspiop-destination': Joi.string().required(),

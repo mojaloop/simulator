@@ -33,8 +33,8 @@ const registerPlugins = async (server) => {
     plugin: require('hapi-swagger'),
     options: {
       info: {
-        'title': 'Simulator API Documentation',
-        'version': Package.version
+        title: 'Simulator API Documentation',
+        version: Package.version
       }
     }
   })

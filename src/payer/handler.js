@@ -62,7 +62,7 @@ exports.putParticipantsByTypeId = function (request, h) {
   Logger.info(`IN PAYERFSP:: PUT /payerfsp/participants/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
 
   // Saving Incoming request
-  let incomingRequest = {
+  const incomingRequest = {
     headers: request.headers,
     data: request.payload
   }
@@ -88,7 +88,7 @@ exports.putPartiesByTypeId = function (request, h) {
   Logger.info(`IN PAYERFSP:: PUT /payerfsp/parties/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
 
   // Saving Incoming request
-  let incomingRequest = {
+  const incomingRequest = {
     headers: request.headers,
     data: request.payload
   }
@@ -106,7 +106,7 @@ exports.putPartiesByTypeIdAndError = function (request, h) {
   myCache.set(request.params.id, request.payload)
 
   // Saving Incoming request
-  let incomingRequest = {
+  const incomingRequest = {
     headers: request.headers,
     data: request.payload
   }
@@ -128,7 +128,7 @@ exports.putQuotesById = function (request, h) {
   Logger.info(`IN PAYERFSP:: PUT /payerfsp/quotes/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
 
   // Saving Incoming request
-  let incomingRequest = {
+  const incomingRequest = {
     headers: request.headers,
     data: request.payload
   }
@@ -146,7 +146,7 @@ exports.putQuotesByIdAndError = function (request, h) {
   myCache.set(request.params.id, request.payload)
 
   // Saving Incoming request
-  let incomingRequest = {
+  const incomingRequest = {
     headers: request.headers,
     data: request.payload
   }
@@ -168,7 +168,7 @@ exports.putTransfersById = function (request, h) {
   Logger.info(`IN PAYERFSP:: PUT /payerfsp/transfers/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
 
   // Saving Incoming request
-  let incomingRequest = {
+  const incomingRequest = {
     headers: request.headers,
     data: request.payload
   }
@@ -194,7 +194,7 @@ exports.putTransfersByIdError = function (request, h) {
   myCache.set(request.params.id, request.payload)
 
   // Saving Incoming request
-  let incomingRequest = {
+  const incomingRequest = {
     headers: request.headers,
     data: request.payload
   }
