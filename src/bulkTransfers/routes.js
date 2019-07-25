@@ -61,6 +61,12 @@ module.exports = [
           bulkQuoteId: Joi.string().guid().required().description('Id of bulk transfer').label('@ Bulk Transfer Id must be in a valid GUID format. @'),
           payeeFsp: Joi.string().required().min(1).max(32).description('Financial Service Provider of Payee').label('@ A valid Payee FSP number must be supplied. @'),
           payerFsp: Joi.string().required().min(1).max(32).description('Financial Service Provider of Payer').label('@ A valid Payer FSP number must be supplied. @'),
+          extensionList: Joi.object().keys({
+            extension: Joi.array().items(Joi.object().keys({
+              key: Joi.string().required().min(1).max(32).description('Key').label('Supplied key fails to match the required format.'),
+              value: Joi.string().required().min(1).max(128).description('Value').label('Supplied key value fails to match the required format.')
+            })).required().min(1).max(16).description('extension')
+          }).optional().description('Extension list'),
           individualTransfers: Joi.array().required().items({
             transferId: Joi.string().guid().required().description('Id of transfer').label('Transfer Id must be in a valid GUID format.'),
             transferAmount: Joi.object().keys({
@@ -115,6 +121,16 @@ module.exports = [
           individualTransferResults: Joi.array().required().items({
             transferId: Joi.string().guid().required().description('Id of transfer').label('Transfer Id must be in a valid GUID format.'),
             fulfilment: Joi.string().regex(/^[A-Za-z0-9-_]{43}$/).max(48).description('fulfilment of the transfer').label('@ Invalid transfer fulfilment description. @'),
+            errorInformation: Joi.object().keys({
+              errorDescription: Joi.string().required(),
+              errorCode: Joi.string().required().regex(/^[0-9]{4}/),
+              extensionList: Joi.object().keys({
+                extension: Joi.array().items(Joi.object().keys({
+                  key: Joi.string().required().min(1).max(32).description('Key').label('@ Supplied key fails to match the required format. @'),
+                  value: Joi.string().required().min(1).max(128).description('Value').label('@ Supplied key value fails to match the required format. @')
+                })).required().min(1).max(16).description('extension')
+              }).optional().description('Extension list')
+            }).description('Error information'),
             extensionList: Joi.object().keys({
               extension: Joi.array().items(Joi.object().keys({
                 key: Joi.string().required().min(1).max(32).description('Key').label('Supplied key fails to match the required format.'),
