@@ -22,8 +22,8 @@
 
 'use strict'
 
-const Hapi = require('hapi')
-const Boom = require('boom')
+const Hapi = require('@hapi/hapi')
+const Boom = require('@hapi/boom')
 const Logger = require('@mojaloop/central-services-shared').Logger
 const Metrics = require('../lib/metrics')
 const RequestLogger = require('../lib/requestLogger')
