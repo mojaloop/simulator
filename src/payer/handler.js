@@ -85,7 +85,7 @@ exports.putPartiesByTypeId = function (request, h) {
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payer::putPartiesByTypeId - START`)
 
-  Logger.info(`IN PAYERFSP:: PUT /payerfsp/parties/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
+  Logger.info(`IN PAYERFSP:: PUT /payerfsp/parties/${request.params.type}/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
 
   // Saving Incoming request
   const incomingRequest = {
@@ -102,7 +102,7 @@ exports.putPartiesByTypeId = function (request, h) {
 }
 
 exports.putPartiesByTypeIdAndError = function (request, h) {
-  console.log((new Date().toISOString()), 'IN PAYERFSP:: PUT /payerfsp/parties/' + request.params.id + '/error', request.payload)
+  console.log((new Date().toISOString()), `IN PAYERFSP:: PUT /payerfsp/parties//${request.params.type}/${request.params.id}/error`, request.payload)
   myCache.set(request.params.id, request.payload)
 
   // Saving Incoming request
