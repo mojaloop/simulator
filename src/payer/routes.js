@@ -97,7 +97,7 @@ module.exports = [
   },
   {
     method: 'PUT',
-    path: '/payerfsp/parties/{id}/error',
+    path: '/payerfsp/parties/{type}/{id}/error',
     handler: Handler.putPartiesByTypeIdAndError,
     options: {
       tags: tags,
