@@ -116,12 +116,12 @@ exports.getPartiesByTypeAndId = function (req, h) {
           'Content-Type': 'application/vnd.interoperability.parties+json;version=1.0',
           'FSPIOP-Source': 'testfsp2',
           'FSPIOP-Destination': req.headers['fspiop-source'],
-          Date: req.headers['date']
+          Date: req.headers.date
         },
         rejectUnauthorized: false,
         body: JSON.stringify(myCache.get(req.params.id))
       }
-      console.log((new Date().toISOString()), `Executing PUT`, url)
+      console.log((new Date().toISOString()), 'Executing PUT', url)
       const res = await fetch(url, opts)
       console.log((new Date().toISOString()), 'response: ', res.status)
       if (!res.ok) {
