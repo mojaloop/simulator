@@ -52,7 +52,7 @@
   },
   "devDependencies": {
     "pre-commit": "1.2.2",
-    "standard": "13.1.0",
+    "standard": "14.0.0",
     "npm-audit-resolver": "1.5.0"
   }
 }
