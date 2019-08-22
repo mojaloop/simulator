@@ -31,7 +31,7 @@
     "@hapi/boom": "7.4.2",
     "@mojaloop/central-services-error-handling": "7.1.2",
     "@mojaloop/central-services-metrics": "5.2.0",
-    "@mojaloop/central-services-shared": "6.4.1",
+    "@mojaloop/central-services-shared": "7.4.2",
     "base64url": "3.0.1",
     "blipp": "4.0.0",
     "five-bells-condition": "5.0.1",
