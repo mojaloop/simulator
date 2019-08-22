@@ -26,7 +26,7 @@ const tags = ['api', 'metadata']
 const BaseJoi = require('joi-currency-code')(require('@hapi/joi'))
 const Extension = require('@hapi/joi-date')
 const Joi = BaseJoi.extend(Extension)
-const transferState = ['RECEIVED', 'RESERVED', 'COMPLETED', 'ABORTED', 'SETTLED']
+const transferState = ['RECEIVED', 'PENDING', 'ACCEPTED', 'PROCESSING', 'COMPLETED', 'REJECTED']
 
 module.exports = [
   {
