@@ -37,7 +37,7 @@
     "five-bells-condition": "5.0.1",
     "glob": "7.1.4",
     "@hapi/good": "8.2.0",
-    "@hapi/hapi": "18.3.1",
+    "@hapi/hapi": "18.3.2",
     "hapi-good-winston": "3.0.0",
     "hapi-openapi": "1.2.2",
     "hapi-swagger": "10.0.2",
