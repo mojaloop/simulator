@@ -143,7 +143,9 @@ exports.getPartiesByTypeAndId = function (req, h) {
           Date: new Date().toUTCString(),
           'FSPIOP-Signature': JSON.stringify(fspiopSignature),
           'FSPIOP-HTTP-Method': 'PUT',
-          'FSPIOP-URI': `/parties/${req.params.type}/${req.params.id}`
+          'FSPIOP-URI': `/parties/${req.params.type}/${req.params.id}`,
+          traceparent: req.headers.traceparent ? req.headers.traceparent : undefined,
+          tracestate: req.headers.tracestate ? req.headers.tracestate : undefined
         },
         rejectUnauthorized: false,
         body: JSON.stringify(myCache.get(req.params.id))
@@ -248,7 +250,9 @@ exports.postQuotes = function (req, h) {
           Date: new Date().toUTCString(),
           'FSPIOP-Signature': `${JSON.stringify(fspiopSignature)}`,
           'FSPIOP-HTTP-Method': 'PUT',
-          'FSPIOP-URI': `/quotes/${quotesRequest.quoteId}`
+          'FSPIOP-URI': `/quotes/${quotesRequest.quoteId}`,
+          traceparent: req.headers.traceparent ? req.headers.traceparent : undefined,
+          tracestate: req.headers.tracestate ? req.headers.tracestate : undefined
         },
         rejectUnauthorized: false,
         body: JSON.stringify(quotesResponse)
@@ -329,7 +333,9 @@ exports.postTransfers = async function (req, h) {
           Date: new Date().toUTCString(),
           'FSPIOP-Signature': JSON.stringify(fspiopSignature),
           'FSPIOP-HTTP-Method': 'PUT',
-          'FSPIOP-URI': fspiopUriHeader
+          'FSPIOP-URI': fspiopUriHeader,
+          traceparent: req.headers.traceparent ? req.headers.traceparent : undefined,
+          tracestate: req.headers.tracestate ? req.headers.tracestate : undefined
         },
         rejectUnauthorized: false,
         body: JSON.stringify(transfersResponse)

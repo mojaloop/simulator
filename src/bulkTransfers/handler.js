@@ -94,7 +94,9 @@ exports.postBulkTransfers = async function (req, h) {
           Date: new Date().toUTCString(),
           'FSPIOP-Signature': JSON.stringify(fspiopSignature),
           'FSPIOP-HTTP-Method': 'PUT',
-          'FSPIOP-URI': fspiopUriHeader
+          'FSPIOP-URI': fspiopUriHeader,
+          traceparent: req.headers.traceparent ? req.headers.traceparent : undefined,
+          tracestate: req.headers.tracestate ? req.headers.tracestate : undefined
         },
         rejectUnauthorized: false,
         body: JSON.stringify(bulkTransferResponse)
