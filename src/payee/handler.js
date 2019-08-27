@@ -150,7 +150,7 @@ exports.getPartiesByTypeAndId = function (req, h) {
         rejectUnauthorized: false,
         body: JSON.stringify(myCache.get(req.params.id))
       }
-      Logger.info((new Date().toISOString()), `Executing PUT`, url)
+      Logger.info((new Date().toISOString()), 'Executing PUT', url)
       const res = await fetch(url, opts)
       Logger.info((new Date().toISOString()), 'response: ', res.status)
       if (!res.ok) {
@@ -257,7 +257,7 @@ exports.postQuotes = function (req, h) {
         rejectUnauthorized: false,
         body: JSON.stringify(quotesResponse)
       }
-      Logger.info((new Date().toISOString()), `Executing PUT`, url)
+      Logger.info((new Date().toISOString()), 'Executing PUT', url)
       const res = await fetch(url, opts)
       Logger.info((new Date().toISOString()), 'response: ', res.status)
       if (!res.ok) {
