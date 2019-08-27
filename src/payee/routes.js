@@ -79,7 +79,9 @@ module.exports = [
           'fspiop-encryption': Joi.string().optional(),
           'fspiop-signature': Joi.string().optional(),
           'fspiop-uri': Joi.string().optional(),
-          'fspiop-http-method': Joi.string().optional()
+          'fspiop-http-method': Joi.string().optional(),
+          traceparent: Joi.string().optional(),
+          tracestate: Joi.string().optional()
         }).unknown(false).options({ stripUnknown: true }),
         failAction: (request, h, err) => { throw err }
       }
@@ -107,7 +109,9 @@ module.exports = [
           'fspiop-encryption': Joi.string().optional(),
           'fspiop-signature': Joi.string().optional(),
           'fspiop-uri': Joi.string().optional(),
-          'fspiop-http-method': Joi.string().optional()
+          'fspiop-http-method': Joi.string().optional(),
+          traceparent: Joi.string().optional(),
+          tracestate: Joi.string().optional()
         }).unknown(false).options({ stripUnknown: true }),
         payload: {
           quoteId: Joi.string().guid().required().description('Id of quote').label('@ Quote Id must be in a valid GUID format. @'),
@@ -205,7 +209,9 @@ module.exports = [
           'fspiop-encryption': Joi.string().optional(),
           'fspiop-signature': Joi.string().optional(),
           'fspiop-uri': Joi.string().optional(),
-          'fspiop-http-method': Joi.string().optional()
+          'fspiop-http-method': Joi.string().optional(),
+          traceparent: Joi.string().optional(),
+          tracestate: Joi.string().optional()
         }).unknown(false).options({ stripUnknown: true }),
         payload: {
           transferId: Joi.string().guid().required().description('Id of transfer').label('@ Transfer Id must be in a valid GUID format. @'),
@@ -251,7 +257,9 @@ module.exports = [
           'fspiop-encryption': Joi.string().optional(),
           'fspiop-signature': Joi.string().optional(),
           'fspiop-uri': Joi.string().optional(),
-          'fspiop-http-method': Joi.string().optional()
+          'fspiop-http-method': Joi.string().optional(),
+          traceparent: Joi.string().optional(),
+          tracestate: Joi.string().optional()
         }).unknown(false).options({ stripUnknown: true }),
         params: {
           id: Joi.string().required().description('path')
@@ -291,7 +299,9 @@ module.exports = [
           'fspiop-encryption': Joi.string().optional(),
           'fspiop-signature': Joi.string().optional(),
           'fspiop-uri': Joi.string().optional(),
-          'fspiop-http-method': Joi.string().optional()
+          'fspiop-http-method': Joi.string().optional(),
+          traceparent: Joi.string().optional(),
+          tracestate: Joi.string().optional()
         }).unknown(false).options({ stripUnknown: true }),
         params: {
           id: Joi.string().required().description('path')
