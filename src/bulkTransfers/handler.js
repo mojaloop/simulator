@@ -26,7 +26,8 @@ const NodeCache = require('node-cache')
 const myCache = new NodeCache()
 const requests = new NodeCache()
 const callbacks = new NodeCache()
-const fetch = require('node-fetch')
+const request = require('axios')
+const https = require('https')
 const Logger = require('@mojaloop/central-services-shared').Logger
 const Metrics = require('../lib/metrics')
 const base64url = require('base64url')
@@ -95,16 +96,22 @@ exports.postBulkTransfers = async function (req, h) {
           'FSPIOP-Signature': JSON.stringify(fspiopSignature),
           'FSPIOP-HTTP-Method': 'PUT',
           'FSPIOP-URI': fspiopUriHeader,
-          traceparent: req.headers.traceparent ? req.headers.traceparent : undefined,
-          tracestate: req.headers.tracestate ? req.headers.tracestate : undefined
+          traceparent: req.headers.traceparent ? req.headers.traceparent : '',
+          tracestate: req.headers.tracestate ? req.headers.tracestate : ''
         },
-        rejectUnauthorized: false,
-        body: JSON.stringify(bulkTransferResponse)
+        transformRequest: [(data, headers) => {
+          delete headers.common.Accept
+          return data
+        }],
+        httpsAgent: new https.Agent({
+          rejectUnauthorized: false
+        }),
+        data: JSON.stringify(bulkTransferResponse)
       }
       Logger.info(`Executing PUT: [${url}], HEADERS: [${JSON.stringify(opts.headers)}], BODY: [${JSON.stringify(bulkTransferResponse)}]`)
-      const res = await fetch(url, opts)
+      const res = await request(url, opts)
       Logger.info(`response: ${res.status}`)
-      if (!res.ok) {
+      if (res.status !== 202) {
         // TODO: how does one identify the failed response?
         throw new Error(`Failed to send. Result: ${JSON.stringify(res)}`)
       }
