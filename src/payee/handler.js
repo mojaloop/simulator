@@ -264,7 +264,6 @@ exports.postQuotes = function (req, h) {
         },
         transformRequest: [(data, headers) => {
           delete headers.common.Accept
-
           return data
         }],
         httpsAgent: new https.Agent({
