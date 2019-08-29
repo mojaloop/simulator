@@ -17,6 +17,7 @@
  optionally within square brackets <email>.
  * Gates Foundation
  - Sridevi Miriyala sridevi.miriyala@modusbox.com
+ - Steven Oderayi <steven.oderayi@modusbox.com>
  --------------
  ******/
 
