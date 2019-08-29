@@ -148,7 +148,6 @@ exports.getPartiesByTypeAndId = function (req, h) {
           traceparent: req.headers.traceparent ? req.headers.traceparent : '',
           tracestate: req.headers.tracestate ? req.headers.tracestate : ''
         },
-        rejectUnauthorized: false,
         transformRequest: [(data, headers) => {
           delete headers.common.Accept
           return data
