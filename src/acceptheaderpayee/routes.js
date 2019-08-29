@@ -52,7 +52,6 @@ module.exports = [
     path: '/acceptheaderpayeefsp/parties/{type}/{id}',
     handler: Handler.postPartiesByTypeAndId,
     config: {
-      // id: 'add_parties',
       tags: tags,
       auth: null,
       description: 'Transfer API.',
@@ -189,7 +188,6 @@ module.exports = [
     path: '/acceptheaderpayeefsp/transfers',
     handler: Handler.postTransfers,
     config: {
-      // id: 'transfers',
       tags: tags,
       auth: null,
       description: 'Transfer API.',
@@ -240,9 +238,7 @@ module.exports = [
     path: '/acceptheaderpayeefsp/transfers/{id}',
     handler: Handler.putTransfersById,
     config: {
-      // id: 'transfer_fulfilment',
       tags: tags,
-      // auth: Auth.strategy(),
       description: 'Fulfil a transfer',
       payload: {
         failAction: 'error'
@@ -283,7 +279,6 @@ module.exports = [
     path: '/acceptheaderpayeefsp/transfers/{id}/error',
     handler: Handler.putTransfersByIdError,
     options: {
-      // id: 'transfer_abort',
       tags: tags,
       description: 'Abort a transfer',
       payload: {
