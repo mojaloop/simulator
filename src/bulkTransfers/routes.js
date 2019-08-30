@@ -26,7 +26,7 @@ const tags = ['api', 'metadata']
 const BaseJoi = require('joi-currency-code')(require('@hapi/joi'))
 const Extension = require('@hapi/joi-date')
 const Joi = BaseJoi.extend(Extension)
-const transferState = ['RECEIVED', 'RESERVED', 'COMPLETED', 'ABORTED', 'SETTLED']
+const transferState = ['RECEIVED', 'PENDING', 'ACCEPTED', 'PROCESSING', 'COMPLETED', 'REJECTED']
 
 module.exports = [
   {
@@ -54,7 +54,9 @@ module.exports = [
           'fspiop-encryption': Joi.string().optional(),
           'fspiop-signature': Joi.string().optional(),
           'fspiop-uri': Joi.string().optional(),
-          'fspiop-http-method': Joi.string().optional()
+          'fspiop-http-method': Joi.string().optional(),
+          traceparent: Joi.string().optional(),
+          tracestate: Joi.string().optional()
         }).unknown(false).options({ stripUnknown: true }),
         payload: {
           bulkTransferId: Joi.string().guid().required().description('Id of bulk transfer').label('@ Bulk Transfer Id must be in a valid GUID format. @'),
@@ -110,7 +112,9 @@ module.exports = [
           'fspiop-encryption': Joi.string().optional(),
           'fspiop-signature': Joi.string().optional(),
           'fspiop-uri': Joi.string().optional(),
-          'fspiop-http-method': Joi.string().optional()
+          'fspiop-http-method': Joi.string().optional(),
+          traceparent: Joi.string().optional(),
+          tracestate: Joi.string().optional()
         }).unknown(false).options({ stripUnknown: true }),
         params: {
           id: Joi.string().required().description('path')
@@ -169,7 +173,9 @@ module.exports = [
           'fspiop-encryption': Joi.string().optional(),
           'fspiop-signature': Joi.string().optional(),
           'fspiop-uri': Joi.string().optional(),
-          'fspiop-http-method': Joi.string().optional()
+          'fspiop-http-method': Joi.string().optional(),
+          traceparent: Joi.string().optional(),
+          tracestate: Joi.string().optional()
         }).unknown(false).options({ stripUnknown: true }),
         params: {
           id: Joi.string().required().description('path')

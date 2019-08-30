@@ -4,7 +4,7 @@ const Logger = require('@mojaloop/central-services-shared').Logger
 const Util = require('util')
 
 const logRequest = function (request) {
-  const traceId = request.headers.traceid
+  const traceId = request.headers.traceparent ? request.headers.traceparent.split('-')[1] : undefined
   if (request.path.indexOf('health') > -1 || request.path.indexOf('metrics') > -1) {
     Logger.debug(`L1p-Trace-Id=${traceId} - Method: ${request.method} Path: ${request.path} Query: ${JSON.stringify(request.query)}`)
     Logger.debug(`L1p-Trace-Id=${traceId} - Headers: ${JSON.stringify(request.headers)}`)
@@ -21,7 +21,7 @@ const logRequest = function (request) {
 }
 
 const logResponse = function (request) {
-  const traceId = request.headers.traceid
+  const traceId = request.headers.traceparent ? request.headers.traceparent.split('-')[1] : undefined
   if (request.response) {
     let response
     try {

@@ -68,7 +68,9 @@ module.exports = [
           'fspiop-encryption': Joi.string().optional(),
           'fspiop-signature': Joi.string().optional(),
           'fspiop-uri': Joi.string().optional(),
-          'fspiop-http-method': Joi.string().optional()
+          'fspiop-http-method': Joi.string().optional(),
+          traceparent: Joi.string().optional(),
+          tracestate: Joi.string().optional()
         }).unknown(false).options({ stripUnknown: true }),
         payload: {
           party: Joi.object().keys({
@@ -115,7 +117,9 @@ module.exports = [
           'fspiop-encryption': Joi.string().optional(),
           'fspiop-signature': Joi.string().optional(),
           'fspiop-uri': Joi.string().optional(),
-          'fspiop-http-method': Joi.string().optional()
+          'fspiop-http-method': Joi.string().optional(),
+          traceparent: Joi.string().optional(),
+          tracestate: Joi.string().optional()
         }).unknown(false).options({ stripUnknown: true }),
         params: {
           id: Joi.string().required().description('path')
@@ -156,7 +160,9 @@ module.exports = [
           'fspiop-encryption': Joi.string().optional(),
           'fspiop-signature': Joi.string().optional(),
           'fspiop-uri': Joi.string().optional(),
-          'fspiop-http-method': Joi.string().optional()
+          'fspiop-http-method': Joi.string().optional(),
+          traceparent: Joi.string().optional(),
+          tracestate: Joi.string().optional()
         }).unknown(false).options({ stripUnknown: true }),
         payload: {
           transferAmount: Joi.object().keys({
@@ -209,7 +215,9 @@ module.exports = [
           'fspiop-encryption': Joi.string().optional(),
           'fspiop-signature': Joi.string().optional(),
           'fspiop-uri': Joi.string().optional(),
-          'fspiop-http-method': Joi.string().optional()
+          'fspiop-http-method': Joi.string().optional(),
+          traceparent: Joi.string().optional(),
+          tracestate: Joi.string().optional()
         }).unknown(false).options({ stripUnknown: true }),
         params: {
           id: Joi.string().required().description('path')
@@ -249,7 +257,9 @@ module.exports = [
           'fspiop-encryption': Joi.string().optional(),
           'fspiop-signature': Joi.string().optional(),
           'fspiop-uri': Joi.string().optional(),
-          'fspiop-http-method': Joi.string().optional()
+          'fspiop-http-method': Joi.string().optional(),
+          traceparent: Joi.string().optional(),
+          tracestate: Joi.string().optional()
         }).unknown(false).options({ stripUnknown: true }),
         params: {
           id: Joi.string().required().description('path')
@@ -289,7 +299,9 @@ module.exports = [
           'fspiop-encryption': Joi.string().optional(),
           'fspiop-signature': Joi.string().optional(),
           'fspiop-uri': Joi.string().optional(),
-          'fspiop-http-method': Joi.string().optional()
+          'fspiop-http-method': Joi.string().optional(),
+          traceparent: Joi.string().optional(),
+          tracestate: Joi.string().optional()
         }).unknown(false).options({ stripUnknown: true }),
         params: {
           id: Joi.string().required().description('path')
