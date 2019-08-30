@@ -29,6 +29,7 @@ const callbacks = new NodeCache()
 const request = require('axios')
 const https = require('https')
 const Logger = require('@mojaloop/central-services-shared').Logger
+const Enums = require('@mojaloop/central-services-shared').Enum
 const Metrics = require('../lib/metrics')
 const base64url = require('base64url')
 
@@ -96,8 +97,8 @@ exports.postBulkTransfers = async function (req, h) {
           'FSPIOP-Signature': JSON.stringify(fspiopSignature),
           'FSPIOP-HTTP-Method': 'PUT',
           'FSPIOP-URI': fspiopUriHeader,
-          traceparent: req.headers.traceparent ? req.headers.traceparent : '',
-          tracestate: req.headers.tracestate ? req.headers.tracestate : ''
+          traceparent: req.headers.traceparent || '',
+          tracestate: req.headers.tracestate || ''
         },
         transformRequest: [(data, headers) => {
           delete headers.common.Accept
@@ -111,7 +112,7 @@ exports.postBulkTransfers = async function (req, h) {
       Logger.info(`Executing PUT: [${url}], HEADERS: [${JSON.stringify(opts.headers)}], BODY: [${JSON.stringify(bulkTransferResponse)}]`)
       const res = await request(url, opts)
       Logger.info(`response: ${res.status}`)
-      if (res.status !== 202) {
+      if (res.status !== Enums.Http.ReturnCodes.ACCEPTED.CODE) {
         // TODO: how does one identify the failed response?
         throw new Error(`Failed to send. Result: ${JSON.stringify(res)}`)
       }
@@ -152,7 +153,7 @@ exports.postBulkTransfers = async function (req, h) {
     })
   }
 
-  return h.response().code(202)
+  return h.response().code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
 }
 
 exports.putBulkTransfersById = function (request, h) {
@@ -182,7 +183,7 @@ exports.putBulkTransfersById = function (request, h) {
     source: request.headers['fspiop-source'],
     destination: request.headers['fspiop-destination']
   })
-  return h.response().code(200)
+  return h.response().code(Enums.Http.ReturnCodes.OK.CODE)
 }
 
 exports.putBulkTransfersByIdError = function (request, h) {
@@ -212,7 +213,7 @@ exports.putBulkTransfersByIdError = function (request, h) {
     source: request.headers['fspiop-source'],
     destination: request.headers['fspiop-destination']
   })
-  return h.response().code(200)
+  return h.response().code(Enums.Http.ReturnCodes.OK.CODE)
 }
 
 exports.getCorrelationId = function (request, h) {
@@ -228,7 +229,7 @@ exports.getCorrelationId = function (request, h) {
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payee::getcorrelationId - END`)
   histTimerEnd({ success: true, fsp: 'payee', operation: 'getBulkCorrelationId' })
-  return h.response(myCache.get(request.params.id)).code(202)
+  return h.response(myCache.get(request.params.id)).code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
 }
 
 exports.getRequestById = function (request, h) {
@@ -244,7 +245,7 @@ exports.getRequestById = function (request, h) {
 
   histTimerEnd({ success: true, fsp: 'payee', operation: 'getBulkRequestById' })
 
-  return h.response(responseData).code(200)
+  return h.response(responseData).code(Enums.Http.ReturnCodes.OK.CODE)
 }
 
 exports.getCallbackById = function (request, h) {
@@ -260,5 +261,5 @@ exports.getCallbackById = function (request, h) {
 
   histTimerEnd({ success: true, fsp: 'payee', operation: 'getBulkCallbackById' })
 
-  return h.response(responseData).code(200)
+  return h.response(responseData).code(Enums.Http.ReturnCodes.OK.CODE)
 }

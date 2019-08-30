@@ -25,6 +25,8 @@
 
 'use strict'
 
+const Enums = require('@mojaloop/central-services-shared').Enum
+
 exports.health = function (request, h) {
-  return h.response({ status: 'OK' }).code(200)
+  return h.response({ status: 'OK' }).code(Enums.Http.ReturnCodes.OK.CODE)
 }

@@ -35,7 +35,11 @@ Simulators that act as mock payer fsp and payee fsp which interact with the Swit
 
 ## Run in Docker (in Dev)
 
-`$ docker-compose up` or `$docker-compose up --build` to rebuild if source code has been modified.
+`$ docker-compose up` 
+
+ or (to rebuild the docker image if source code has been modified)
+
+`$ docker-compose up --build` 
 
 ## Auditing Dependencies
 
