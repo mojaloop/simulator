@@ -122,6 +122,7 @@ module.exports = [
           tracestate: Joi.string().optional()
         }).unknown(false).options({ stripUnknown: true }),
         params: {
+          type: Joi.string().required().description('path'),
           id: Joi.string().required().description('path')
         },
         payload: {
