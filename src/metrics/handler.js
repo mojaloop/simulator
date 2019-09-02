@@ -25,7 +25,8 @@
 'use strict'
 
 const Metrics = require('../lib/metrics')
+const Enums = require('@mojaloop/central-services-shared').Enum
 
 exports.metrics = function (request, h) {
-  return h.response(Metrics.getMetricsForPrometheus()).code(200)
+  return h.response(Metrics.getMetricsForPrometheus()).code(Enums.Http.ReturnCodes.OK.CODE)
 }

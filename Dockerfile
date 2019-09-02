@@ -2,7 +2,7 @@ FROM node:10.15.3-alpine
 WORKDIR /opt/simulator
 
 RUN apk --no-cache add --virtual native-deps \
-  g++ gcc libgcc libstdc++ linux-headers make python 
+  g++ gcc libgcc libstdc++ linux-headers make python bash
 
 COPY package*.json /opt/simulator/
 

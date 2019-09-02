@@ -31,7 +31,15 @@ Simulators that act as mock payer fsp and payee fsp which interact with the Swit
 
 ## Building Docker image:
 
-`$ VER=v1.0.6-snapshot; docker build -t mojaloop/simulator:$VER .; docker push mojaloop/simulator:$VER`            
+`$ VER=v1.0.6-snapshot; docker build -t mojaloop/simulator:$VER .; docker push mojaloop/simulator:$VER`    
+
+## Run in Docker (in Dev)
+
+`$ docker-compose up` 
+
+ or (to rebuild the docker image if source code has been modified)
+
+`$ docker-compose up --build` 
 
 ## Auditing Dependencies
 

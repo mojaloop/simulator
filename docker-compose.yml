@@ -1,0 +1,19 @@
+version: "3.7"
+
+services:
+  simulator:
+    build:
+      context: .
+    container_name: simulator
+    ports:
+      - "8444:8444"
+    environment:
+      - LOG_LEVEL=info
+      - TRANSFERS_ENDPOINT=http://172.17.0.1:3000
+      - TRANSFERS_FULFIL_RESPONSE_DISABLED=false
+      - QUOTES_ENDPOINT=http://172.17.0.1:3002
+    healthcheck:
+      test: ["CMD", "sh", "-c" ,"apk --no-cache add curl", ";", "curl", "http://localhost:8444/health"]
+      timeout: 20s
+      retries: 10
+      interval: 30s
