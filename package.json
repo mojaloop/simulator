@@ -42,7 +42,7 @@
     "hapi-good-winston": "3.0.0",
     "hapi-openapi": "1.2.2",
     "hapi-swagger": "10.1.0",
-    "ilp-packet": "3.0.8",
+    "ilp-packet": "3.0.9",
     "joi-currency-code": "2.0.2",
     "node-cache": "4.2.1",
     "node-fetch": "2.6.0",
