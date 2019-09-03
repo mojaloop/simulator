@@ -16,7 +16,7 @@
  their names indented and be marked with a '-'. Email address can be added
  optionally within square brackets <email>.
  * Gates Foundation
- - Murthy Kakarlamudi murthy@modusbox.com
+ - Steven Oderayi <steven.oderayi@modusbox.com>
  --------------
  ******/
 
@@ -31,7 +31,7 @@ const partyIdTypeEnum = ['MSISDN', 'EMAIL', 'PERSONAL_ID', 'BUSINESS', 'DEVICE',
 module.exports = [
   {
     method: 'GET',
-    path: '/payeefsp/',
+    path: '/acceptheaderpayeefsp/',
     handler: Handler.metadata,
     options: {
       tags: tags,
@@ -39,17 +39,8 @@ module.exports = [
     }
   },
   {
-    method: 'GET',
-    path: '/payeefsp/quotes/{id}',
-    handler: Handler.getQuotes,
-    options: {
-      tags: tags,
-      description: 'getQuoteById'
-    }
-  },
-  {
     method: 'PUT',
-    path: '/payeefsp/participants/{type}/{id}',
+    path: '/acceptheaderpayeefsp/participants/{type}/{id}',
     handler: Handler.putParticipantsByTypeId,
     options: {
       tags: tags,
@@ -58,10 +49,9 @@ module.exports = [
   },
   {
     method: 'POST',
-    path: '/payeefsp/parties/{type}/{id}',
+    path: '/acceptheaderpayeefsp/parties/{type}/{id}',
     handler: Handler.postPartiesByTypeAndId,
     config: {
-      id: 'add_parties',
       tags: tags,
       auth: null,
       description: 'Transfer API.',
@@ -73,7 +63,7 @@ module.exports = [
   },
   {
     method: 'GET',
-    path: '/payeefsp/parties/{type}/{id}',
+    path: '/acceptheaderpayeefsp/parties/{type}/{id}',
     handler: Handler.getPartiesByTypeAndId,
     options: {
       tags: tags,
@@ -98,7 +88,7 @@ module.exports = [
   },
   {
     method: 'POST',
-    path: '/payeefsp/quotes',
+    path: '/acceptheaderpayeefsp/quotes',
     handler: Handler.postQuotes,
     options: {
       tags: tags,
@@ -195,10 +185,9 @@ module.exports = [
   },
   {
     method: 'POST',
-    path: '/payeefsp/transfers',
+    path: '/acceptheaderpayeefsp/transfers',
     handler: Handler.postTransfers,
     config: {
-      id: 'transfers',
       tags: tags,
       auth: null,
       description: 'Transfer API.',
@@ -246,12 +235,10 @@ module.exports = [
   },
   {
     method: 'PUT',
-    path: '/payeefsp/transfers/{id}',
+    path: '/acceptheaderpayeefsp/transfers/{id}',
     handler: Handler.putTransfersById,
     config: {
-      id: 'transfer_fulfilment',
       tags: tags,
-      // auth: Auth.strategy(),
       description: 'Fulfil a transfer',
       payload: {
         failAction: 'error'
@@ -289,10 +276,9 @@ module.exports = [
   },
   {
     method: 'PUT',
-    path: '/payeefsp/transfers/{id}/error',
+    path: '/acceptheaderpayeefsp/transfers/{id}/error',
     handler: Handler.putTransfersByIdError,
     options: {
-      id: 'transfer_abort',
       tags: tags,
       description: 'Abort a transfer',
       payload: {
@@ -332,7 +318,7 @@ module.exports = [
   },
   {
     method: 'GET',
-    path: '/payeefsp/correlationid/{id}',
+    path: '/acceptheaderpayeefsp/correlationid/{id}',
     handler: Handler.getcorrelationId,
     options: {
       tags: tags,
@@ -341,7 +327,7 @@ module.exports = [
   },
   {
     method: 'GET',
-    path: '/payeefsp/requests/{id}',
+    path: '/acceptheaderpayeefsp/requests/{id}',
     handler: Handler.getRequestById,
     options: {
       tags: tags,
@@ -350,7 +336,7 @@ module.exports = [
   },
   {
     method: 'GET',
-    path: '/payeefsp/callbacks/{id}',
+    path: '/acceptheaderpayeefsp/callbacks/{id}',
     handler: Handler.getCallbackById,
     options: {
       tags: tags,

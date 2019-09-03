@@ -17,6 +17,7 @@
  optionally within square brackets <email>.
  * Gates Foundation
  - Murthy Kakarlamudi murthy@modusbox.com
+ - Steven Oderayi <steven.oderayi@modusbox.com>
  --------------
  ******/
 
@@ -25,8 +26,10 @@ const NodeCache = require('node-cache')
 const myCache = new NodeCache()
 const requests = new NodeCache()
 const callbacks = new NodeCache()
-const fetch = require('node-fetch')
+const request = require('axios')
+const https = require('https')
 const Logger = require('@mojaloop/central-services-shared').Logger
+const Enums = require('@mojaloop/central-services-shared').Enum
 const Metrics = require('../lib/metrics')
 const base64url = require('base64url')
 
@@ -55,7 +58,7 @@ exports.metadata = function (request, h) {
   return h.response({
     directory: 'localhost',
     urls: extractUrls(request)
-  }).code(200)
+  }).code(Enums.Http.ReturnCodes.OK.CODE)
 }
 
 // Section about /participants
@@ -71,7 +74,7 @@ exports.putParticipantsByTypeId = function (request, h) {
   Logger.info(`IN PAYEEFSP:: PUT /payeefsp/participants/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
 
   // Saving Incoming request
-  let incomingRequest = {
+  const incomingRequest = {
     headers: request.headers,
     data: request.payload
   }
@@ -81,7 +84,7 @@ exports.putParticipantsByTypeId = function (request, h) {
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payer::putParticipantsByTypeId - END`)
   histTimerEnd({ success: true, fsp: 'payee', operation: 'putParticipantsByTypeId', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
-  return h.response().code(200)
+  return h.response().code(Enums.Http.ReturnCodes.OK.CODE)
 }
 
 exports.postPartiesByTypeAndId = function (request, h) {
@@ -98,7 +101,7 @@ exports.postPartiesByTypeAndId = function (request, h) {
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payee::postPartiesByTypeAndId - END`)
   histTimerEnd({ success: true, fsp: 'payee', operation: 'postPartiesByTypeAndId', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
-  return h.response().code(202)
+  return h.response().code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
 }
 
 exports.getPartiesByTypeAndId = function (req, h) {
@@ -114,7 +117,7 @@ exports.getPartiesByTypeAndId = function (req, h) {
     const metadata = `${req.method} ${req.path} ${req.params.id} `
     Logger.info((new Date().toISOString()), ['IN PAYEEFSP::'], `received: ${metadata}. `)
     // Saving Incoming request
-    let incomingRequest = {
+    const incomingRequest = {
       headers: req.headers
     }
     requests.set(req.params.id, incomingRequest)
@@ -127,7 +130,7 @@ exports.getPartiesByTypeAndId = function (req, h) {
         'FSPIOP-Destination': `${req.headers['fspiop-source']}`,
         'FSPIOP-URI': `/parties/${req.params.type}/${req.params.id}`,
         'FSPIOP-HTTP-Method': 'PUT',
-        'Date': ''
+        Date: ''
       }
       const fspiopSignature = {
         signature: signature,
@@ -136,22 +139,30 @@ exports.getPartiesByTypeAndId = function (req, h) {
       const opts = {
         method: 'PUT',
         headers: {
-          'Accept': 'application/vnd.interoperability.parties+json;version=1',
           'Content-Type': 'application/vnd.interoperability.parties+json;version=1.0',
           'FSPIOP-Source': 'payeefsp',
           'FSPIOP-Destination': req.headers['fspiop-source'],
-          'Date': new Date().toUTCString(),
+          Date: new Date().toUTCString(),
           'FSPIOP-Signature': JSON.stringify(fspiopSignature),
           'FSPIOP-HTTP-Method': 'PUT',
-          'FSPIOP-URI': `/parties/${req.params.type}/${req.params.id}`
+          'FSPIOP-URI': `/parties/${req.params.type}/${req.params.id}`,
+          traceparent: req.headers.traceparent || '',
+          tracestate: req.headers.tracestate || ''
         },
-        rejectUnauthorized: false,
-        body: JSON.stringify(myCache.get(req.params.id))
+        transformRequest: [(data, headers) => {
+          delete headers.common.Accept
+          return data
+        }],
+        httpsAgent: new https.Agent({
+          rejectUnauthorized: false
+        }),
+        data: JSON.stringify(myCache.get(req.params.id))
       }
-      Logger.info((new Date().toISOString()), `Executing PUT`, url)
-      const res = await fetch(url, opts)
+
+      Logger.info((new Date().toISOString()), 'Executing PUT', url)
+      const res = await request(url, opts)
       Logger.info((new Date().toISOString()), 'response: ', res.status)
-      if (!res.ok) {
+      if (res.status !== Enums.Http.ReturnCodes.ACCEPTED.CODE) {
         // TODO: how does one identify the failed response?
         throw new Error(`Failed to send. Result: ${res}`)
       }
@@ -165,7 +176,7 @@ exports.getPartiesByTypeAndId = function (req, h) {
     }
   })()
 
-  return h.response().code(202)
+  return h.response().code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
 }
 exports.getQuotes = function (req, h) {
   (async function () {
@@ -274,7 +285,7 @@ exports.postQuotes = function (req, h) {
     Logger.info(`incoming request: ${quotesRequest.quoteId}`)
 
     // Saving Incoming request
-    let incomingRequest = {
+    const incomingRequest = {
       headers: req.headers,
       data: req.payload
     }
@@ -324,7 +335,7 @@ exports.postQuotes = function (req, h) {
         'FSPIOP-Destination': `${req.headers['fspiop-source']}`,
         'FSPIOP-URI': `/quotes/${quotesRequest.quoteId}`,
         'FSPIOP-HTTP-Method': 'PUT',
-        'Date': ''
+        Date: ''
       }
       const fspiopSignature = {
         signature: signature,
@@ -336,18 +347,26 @@ exports.postQuotes = function (req, h) {
           'Content-Type': 'application/vnd.interoperability.quotes+json;version=1.0',
           'FSPIOP-Source': 'payeefsp',
           'FSPIOP-Destination': req.headers['fspiop-source'],
-          'Date': new Date().toUTCString(),
+          Date: new Date().toUTCString(),
           'FSPIOP-Signature': `${JSON.stringify(fspiopSignature)}`,
           'FSPIOP-HTTP-Method': 'PUT',
-          'FSPIOP-URI': `/quotes/${quotesRequest.quoteId}`
+          'FSPIOP-URI': `/quotes/${quotesRequest.quoteId}`,
+          traceparent: req.headers.traceparent || '',
+          tracestate: req.headers.tracestate || ''
         },
-        rejectUnauthorized: false,
-        body: JSON.stringify(quotesResponse)
+        transformRequest: [(data, headers) => {
+          delete headers.common.Accept
+          return data
+        }],
+        httpsAgent: new https.Agent({
+          rejectUnauthorized: false
+        }),
+        data: JSON.stringify(quotesResponse)
       }
-      Logger.info((new Date().toISOString()), `Executing PUT`, url)
-      const res = await fetch(url, opts)
+      Logger.info((new Date().toISOString()), 'Executing PUT', url)
+      const res = await request(url, opts)
       Logger.info((new Date().toISOString()), 'response: ', res.status)
-      if (!res.ok) {
+      if (res.status !== Enums.Http.ReturnCodes.ACCEPTED.CODE) {
         // TODO: how does one identify the failed response?
         throw new Error(`Failed to send. Result: ${res}`)
       }
@@ -367,7 +386,7 @@ exports.postQuotes = function (req, h) {
       // rq.sendError(url, asyncResponses.serverError, rq.defaultHeaders(requesterName, 'participants'), {logger});
     }
   })()
-  return h.response().code(202)
+  return h.response().code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
 }
 
 exports.postTransfers = async function (req, h) {
@@ -384,7 +403,7 @@ exports.postTransfers = async function (req, h) {
 
   if (!transfersFulfilResponseDisabled) {
     // Saving Incoming request
-    let incomingRequest = {
+    const incomingRequest = {
       headers: req.headers,
       data: req.payload
     }
@@ -405,7 +424,7 @@ exports.postTransfers = async function (req, h) {
         'FSPIOP-Destination': `${req.headers['fspiop-source']}`,
         'FSPIOP-URI': `/transfers/${req.payload.transferId}`,
         'FSPIOP-HTTP-Method': 'PUT',
-        'Date': ''
+        Date: ''
       }
       const fspiopSignature = {
         signature: signature,
@@ -415,20 +434,29 @@ exports.postTransfers = async function (req, h) {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/vnd.interoperability.transfers+json;version=1.0',
-          'FSPIOP-Source': 'payeefsp',
+          'FSPIOP-Source': req.headers['fspiop-destination'],
           'FSPIOP-Destination': req.headers['fspiop-source'],
-          'Date': new Date().toUTCString(),
+          Date: new Date().toUTCString(),
           'FSPIOP-Signature': JSON.stringify(fspiopSignature),
           'FSPIOP-HTTP-Method': 'PUT',
-          'FSPIOP-URI': fspiopUriHeader
+          'FSPIOP-URI': fspiopUriHeader,
+          traceparent: req.headers.traceparent || '',
+          tracestate: req.headers.tracestate || ''
         },
-        rejectUnauthorized: false,
-        body: JSON.stringify(transfersResponse)
+        transformRequest: [(data, headers) => {
+          delete headers.common.Accept
+          return data
+        }],
+        httpsAgent: new https.Agent({
+          rejectUnauthorized: false
+        }),
+        data: JSON.stringify(transfersResponse)
       }
+
       Logger.info(`Executing PUT: [${url}], HEADERS: [${JSON.stringify(opts.headers)}], BODY: [${JSON.stringify(transfersResponse)}]`)
-      const res = await fetch(url, opts)
+      const res = await request(url, opts)
       Logger.info(`response: ${res.status}`)
-      if (!res.ok) {
+      if (res.status !== Enums.Http.ReturnCodes.ACCEPTED.CODE) {
         // TODO: how does one identify the failed response?
         throw new Error(`Failed to send. Result: ${JSON.stringify(res)}`)
       }
@@ -469,7 +497,7 @@ exports.postTransfers = async function (req, h) {
     })
   }
 
-  return h.response().code(202)
+  return h.response().code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
 }
 
 exports.putTransfersById = function (request, h) {
@@ -485,7 +513,7 @@ exports.putTransfersById = function (request, h) {
   myCache.set(request.params.id, request.payload)
 
   // Saving Incoming request
-  let incomingRequest = {
+  const incomingRequest = {
     headers: request.headers,
     data: request.payload
   }
@@ -493,7 +521,7 @@ exports.putTransfersById = function (request, h) {
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payee::putTransfersById - END`)
   histTimerEnd({ success: true, fsp: 'payee', operation: 'putTransfersById', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
-  return h.response().code(200)
+  return h.response().code(Enums.Http.ReturnCodes.OK.CODE)
 }
 
 exports.putTransfersByIdError = function (request, h) {
@@ -509,7 +537,7 @@ exports.putTransfersByIdError = function (request, h) {
   myCache.set(request.params.id, request.payload)
 
   // Saving Incoming request
-  let incomingRequest = {
+  const incomingRequest = {
     headers: request.headers,
     data: request.payload
   }
@@ -517,7 +545,7 @@ exports.putTransfersByIdError = function (request, h) {
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payee::putTransfersByIdError - END`)
   histTimerEnd({ success: true, fsp: 'payee', operation: 'putTransfersByIdError', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
-  return h.response().code(200)
+  return h.response().code(Enums.Http.ReturnCodes.OK.CODE)
 }
 
 exports.getcorrelationId = function (request, h) {
@@ -533,7 +561,7 @@ exports.getcorrelationId = function (request, h) {
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payee::getcorrelationId - END`)
   histTimerEnd({ success: true, fsp: 'payee', operation: 'getcorrelationId' })
-  return h.response(myCache.get(request.params.id)).code(202)
+  return h.response(myCache.get(request.params.id)).code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
 }
 
 exports.getRequestById = function (request, h) {
@@ -549,7 +577,7 @@ exports.getRequestById = function (request, h) {
 
   histTimerEnd({ success: true, fsp: 'payee', operation: 'getRequestById' })
 
-  return h.response(responseData).code(200)
+  return h.response(responseData).code(Enums.Http.ReturnCodes.OK.CODE)
 }
 
 exports.getCallbackById = function (request, h) {
@@ -565,5 +593,5 @@ exports.getCallbackById = function (request, h) {
 
   histTimerEnd({ success: true, fsp: 'payee', operation: 'getCallbackById' })
 
-  return h.response(responseData).code(200)
+  return h.response(responseData).code(Enums.Http.ReturnCodes.OK.CODE)
 }

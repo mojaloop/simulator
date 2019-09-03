@@ -61,14 +61,16 @@ module.exports = [
         headers: Joi.object({
           'content-type': Joi.string().required().regex(/application\/vnd.interoperability[.]/),
           'content-length': Joi.number().optional().max(5242880),
-          'date': Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
+          date: Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
           'x-forwarded-for': Joi.string().optional(),
           'fspiop-source': Joi.string().required(),
           'fspiop-destination': Joi.string().required(),
           'fspiop-encryption': Joi.string().optional(),
           'fspiop-signature': Joi.string().optional(),
           'fspiop-uri': Joi.string().optional(),
-          'fspiop-http-method': Joi.string().optional()
+          'fspiop-http-method': Joi.string().optional(),
+          traceparent: Joi.string().optional(),
+          tracestate: Joi.string().optional()
         }).unknown(false).options({ stripUnknown: true }),
         payload: {
           party: Joi.object().keys({
@@ -97,7 +99,7 @@ module.exports = [
   },
   {
     method: 'PUT',
-    path: '/payerfsp/parties/{id}/error',
+    path: '/payerfsp/parties/{type}/{id}/error',
     handler: Handler.putPartiesByTypeIdAndError,
     options: {
       tags: tags,
@@ -108,16 +110,19 @@ module.exports = [
       validate: {
         headers: Joi.object({
           'content-type': Joi.string().required().regex(/application\/vnd.interoperability[.]/),
-          'date': Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
+          date: Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
           'x-forwarded-for': Joi.string().optional(),
           'fspiop-source': Joi.string().required(),
           'fspiop-destination': Joi.string().required(),
           'fspiop-encryption': Joi.string().optional(),
           'fspiop-signature': Joi.string().optional(),
           'fspiop-uri': Joi.string().optional(),
-          'fspiop-http-method': Joi.string().optional()
+          'fspiop-http-method': Joi.string().optional(),
+          traceparent: Joi.string().optional(),
+          tracestate: Joi.string().optional()
         }).unknown(false).options({ stripUnknown: true }),
         params: {
+          type: Joi.string().required().description('path'),
           id: Joi.string().required().description('path')
         },
         payload: {
@@ -149,14 +154,16 @@ module.exports = [
         headers: Joi.object({
           'content-type': Joi.string().required().regex(/application\/vnd.interoperability[.]/),
           'content-length': Joi.number().max(5242880),
-          'date': Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
+          date: Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
           'x-forwarded-for': Joi.string().optional(),
           'fspiop-source': Joi.string().required(),
           'fspiop-destination': Joi.string().required(),
           'fspiop-encryption': Joi.string().optional(),
           'fspiop-signature': Joi.string().optional(),
           'fspiop-uri': Joi.string().optional(),
-          'fspiop-http-method': Joi.string().optional()
+          'fspiop-http-method': Joi.string().optional(),
+          traceparent: Joi.string().optional(),
+          tracestate: Joi.string().optional()
         }).unknown(false).options({ stripUnknown: true }),
         payload: {
           transferAmount: Joi.object().keys({
@@ -202,14 +209,16 @@ module.exports = [
       validate: {
         headers: Joi.object({
           'content-type': Joi.string().required().regex(/application\/vnd.interoperability[.]/),
-          'date': Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
+          date: Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
           'x-forwarded-for': Joi.string().optional(),
           'fspiop-source': Joi.string().required(),
           'fspiop-destination': Joi.string().required(),
           'fspiop-encryption': Joi.string().optional(),
           'fspiop-signature': Joi.string().optional(),
           'fspiop-uri': Joi.string().optional(),
-          'fspiop-http-method': Joi.string().optional()
+          'fspiop-http-method': Joi.string().optional(),
+          traceparent: Joi.string().optional(),
+          tracestate: Joi.string().optional()
         }).unknown(false).options({ stripUnknown: true }),
         params: {
           id: Joi.string().required().description('path')
@@ -242,14 +251,16 @@ module.exports = [
       validate: {
         headers: Joi.object({
           'content-type': Joi.string().required().regex(/application\/vnd.interoperability[.]/),
-          'date': Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
+          date: Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
           'x-forwarded-for': Joi.string().optional(),
           'fspiop-source': Joi.string().required(),
           'fspiop-destination': Joi.string().required(),
           'fspiop-encryption': Joi.string().optional(),
           'fspiop-signature': Joi.string().optional(),
           'fspiop-uri': Joi.string().optional(),
-          'fspiop-http-method': Joi.string().optional()
+          'fspiop-http-method': Joi.string().optional(),
+          traceparent: Joi.string().optional(),
+          tracestate: Joi.string().optional()
         }).unknown(false).options({ stripUnknown: true }),
         params: {
           id: Joi.string().required().description('path')
@@ -282,14 +293,16 @@ module.exports = [
       validate: {
         headers: Joi.object({
           'content-type': Joi.string().required().regex(/application\/vnd.interoperability[.]/),
-          'date': Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
+          date: Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
           'x-forwarded-for': Joi.string().optional(),
           'fspiop-source': Joi.string().required(),
           'fspiop-destination': Joi.string().required(),
           'fspiop-encryption': Joi.string().optional(),
           'fspiop-signature': Joi.string().optional(),
           'fspiop-uri': Joi.string().optional(),
-          'fspiop-http-method': Joi.string().optional()
+          'fspiop-http-method': Joi.string().optional(),
+          traceparent: Joi.string().optional(),
+          tracestate: Joi.string().optional()
         }).unknown(false).options({ stripUnknown: true }),
         params: {
           id: Joi.string().required().description('path')

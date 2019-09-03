@@ -22,8 +22,8 @@
 
 'use strict'
 
-const Hapi = require('hapi')
-const Boom = require('boom')
+const Hapi = require('@hapi/hapi')
+const Boom = require('@hapi/boom')
 const Logger = require('@mojaloop/central-services-shared').Logger
 const Metrics = require('../lib/metrics')
 const RequestLogger = require('../lib/requestLogger')
@@ -48,16 +48,16 @@ const createServer = (port, modules) => {
       RequestLogger.logResponse(request)
       return h.continue
     })
-    Logger.info(`Registering server modules...`)
+    Logger.info('Registering server modules...')
     await server.register(modules)
 
-    Logger.info(`Registering server plugins`)
+    Logger.info('Registering server plugins')
     await require('./plugins').registerPlugins(server)
 
-    Logger.info(`Initializing metrics...`)
+    Logger.info('Initializing metrics...')
     Metrics.setup()
 
-    Logger.info(`Server starting up...`)
+    Logger.info('Server starting up...')
     await server.start()
 
     Logger.info(`Server running at: ${server.info.uri}`)
