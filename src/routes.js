@@ -23,7 +23,7 @@
 'use strict'
 
 const Glob = require('glob')
-const Logger = require('@mojaloop/central-services-shared').Logger
+const Logger = require('@mojaloop/central-services-logger')
 
 exports.plugin = {
   name: 'api routes',
