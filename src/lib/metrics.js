@@ -30,7 +30,7 @@
 // const client = require('prom-client')
 const Metrics = require('@mojaloop/central-services-metrics')
 // const Logger = require('./logger')
-const Logger = require('@mojaloop/central-services-shared').Logger
+const Logger = require('@mojaloop/central-services-logger')
 
 let alreadySetup = false
 const prefix = process.env.METRICS_PREFIX || 'moja_'
