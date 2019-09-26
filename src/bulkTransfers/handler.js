@@ -97,8 +97,8 @@ exports.postBulkTransfers = async function (req, h) {
           'FSPIOP-Signature': JSON.stringify(fspiopSignature),
           'FSPIOP-HTTP-Method': 'PUT',
           'FSPIOP-URI': fspiopUriHeader,
-          traceparent: req.headers.traceparent || '',
-          tracestate: req.headers.tracestate || ''
+          traceparent: req.headers.traceparent ? req.headers.traceparent : undefined,
+          tracestate: req.headers.tracestate ? req.headers.tracestate : undefined
         },
         transformRequest: [(data, headers) => {
           delete headers.common.Accept

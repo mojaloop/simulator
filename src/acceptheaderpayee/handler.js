@@ -137,8 +137,8 @@ exports.getPartiesByTypeAndId = function (req, h) {
           'FSPIOP-Signature': JSON.stringify(fspiopSignature),
           'FSPIOP-HTTP-Method': 'PUT',
           'FSPIOP-URI': `/parties/${req.params.type}/${req.params.id}`,
-          traceparent: req.headers.traceparent || '',
-          tracestate: req.headers.tracestate || ''
+          traceparent: req.headers.traceparent ? req.headers.traceparent : undefined,
+          tracestate: req.headers.tracestate ? req.headers.tracestate : undefined
         },
         httpsAgent: new https.Agent({
           rejectUnauthorized: false
@@ -226,8 +226,8 @@ exports.postQuotes = function (req, h) {
           'FSPIOP-Signature': `${JSON.stringify(fspiopSignature)}`,
           'FSPIOP-HTTP-Method': 'PUT',
           'FSPIOP-URI': `/quotes/${quotesRequest.quoteId}`,
-          traceparent: req.headers.traceparent || '',
-          tracestate: req.headers.tracestate || ''
+          traceparent: req.headers.traceparent ? req.headers.traceparent : undefined,
+          tracestate: req.headers.tracestate ? req.headers.tracestate : undefined
         },
         httpsAgent: new https.Agent({
           rejectUnauthorized: false
@@ -308,8 +308,8 @@ exports.postTransfers = async function (req, h) {
           'FSPIOP-Signature': JSON.stringify(fspiopSignature),
           'FSPIOP-HTTP-Method': 'PUT',
           'FSPIOP-URI': fspiopUriHeader,
-          traceparent: req.headers.traceparent || '',
-          tracestate: req.headers.tracestate || ''
+          traceparent: req.headers.traceparent ? req.headers.traceparent : undefined,
+          tracestate: req.headers.tracestate ? req.headers.tracestate : undefined
         },
         httpsAgent: new https.Agent({
           rejectUnauthorized: false

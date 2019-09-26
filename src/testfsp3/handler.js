@@ -119,8 +119,8 @@ exports.getPartiesByTypeAndId = function (req, h) {
           'FSPIOP-Source': 'testfsp3',
           'FSPIOP-Destination': req.headers['fspiop-source'],
           Date: req.headers.date,
-          traceparent: req.headers.traceparent || '',
-          tracestate: req.headers.tracestate || ''
+          traceparent: req.headers.traceparent ? req.headers.traceparent : undefined,
+          tracestate: req.headers.tracestate ? req.headers.tracestate : undefined
         },
         transformRequest: [(data, headers) => {
           delete headers.common.Accept
@@ -266,8 +266,8 @@ exports.postQuotes = function (req, h) {
           'FSPIOP-Signature': `${JSON.stringify(fspiopSignature)}`,
           'FSPIOP-HTTP-Method': 'PUT',
           'FSPIOP-URI': `/quotes/${quotesRequest.quoteId}`,
-          traceparent: req.headers.traceparent || '',
-          tracestate: req.headers.tracestate || ''
+          traceparent: req.headers.traceparent ? req.headers.traceparent : undefined,
+          tracestate: req.headers.tracestate ? req.headers.tracestate : undefined
         },
         transformRequest: [(data, headers) => {
           delete headers.common.Accept
@@ -395,8 +395,8 @@ exports.postTransfers = async function (req, h) {
           'FSPIOP-Signature': JSON.stringify(fspiopSignature),
           'FSPIOP-HTTP-Method': 'PUT',
           'FSPIOP-URI': fspiopUriHeader,
-          traceparent: req.headers.traceparent || '',
-          tracestate: req.headers.tracestate || ''
+          traceparent: req.headers.traceparent ? req.headers.traceparent : undefined,
+          tracestate: req.headers.tracestate ? req.headers.tracestate : undefined
         },
         transformRequest: [(data, headers) => {
           delete headers.common.Accept
