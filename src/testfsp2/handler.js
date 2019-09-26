@@ -27,9 +27,9 @@ const NodeCache = require('node-cache')
 const myCache = new NodeCache()
 const requests = new NodeCache()
 const callbacks = new NodeCache()
-const request = require('axios')
+const request = require('../lib/sendRequest')
 const https = require('https')
-const Logger = require('@mojaloop/central-services-shared').Logger
+const Logger = require('@mojaloop/central-services-logger')
 const Enums = require('@mojaloop/central-services-shared').Enum
 const Metrics = require('../lib/metrics')
 const base64url = require('base64url')
@@ -119,8 +119,8 @@ exports.getPartiesByTypeAndId = function (req, h) {
           'FSPIOP-Source': 'testfsp2',
           'FSPIOP-Destination': req.headers['fspiop-source'],
           Date: req.headers.date,
-          traceparent: req.headers.traceparent || '',
-          tracestate: req.headers.tracestate || ''
+          traceparent: req.headers.traceparent ? req.headers.traceparent : undefined,
+          tracestate: req.headers.tracestate ? req.headers.tracestate : undefined
         },
         transformRequest: [(data, headers) => {
           delete headers.common.Accept
@@ -131,9 +131,9 @@ exports.getPartiesByTypeAndId = function (req, h) {
         }),
         data: JSON.stringify(myCache.get(req.params.id))
       }
-      console.log((new Date().toISOString()), 'Executing PUT', url)
+      // console.log((new Date().toISOString()), 'Executing PUT', url)
       const res = await request(url, opts)
-      console.log((new Date().toISOString()), 'response: ', res.status)
+      // console.log((new Date().toISOString()), 'response: ', res.status)
       if (res.status !== Enums.Http.ReturnCodes.ACCEPTED.CODE) {
         // TODO: how does one identify the failed response?
         throw new Error('Failed to send. Result:', res)
@@ -266,8 +266,8 @@ exports.postQuotes = function (req, h) {
           'FSPIOP-Signature': `${JSON.stringify(fspiopSignature)}`,
           'FSPIOP-HTTP-Method': 'PUT',
           'FSPIOP-URI': `/quotes/${quotesRequest.quoteId}`,
-          traceparent: req.headers.traceparent || '',
-          tracestate: req.headers.tracestate || ''
+          traceparent: req.headers.traceparent ? req.headers.traceparent : undefined,
+          tracestate: req.headers.tracestate ? req.headers.tracestate : undefined
         },
         transformRequest: [(data, headers) => {
           delete headers.common.Accept
@@ -278,9 +278,9 @@ exports.postQuotes = function (req, h) {
         }),
         data: JSON.stringify(quotesResponse)
       }
-      Logger.info(`Executing PUT: [${url}], HEADERS: [${JSON.stringify(opts.headers)}], BODY: [${JSON.stringify(quotesResponse)}]`)
+      // Logger.info(`Executing PUT: [${url}], HEADERS: [${JSON.stringify(opts.headers)}], BODY: [${JSON.stringify(quotesResponse)}]`)
       const res = await request(url, opts)
-      Logger.info((new Date().toISOString()), 'response: ', res.status)
+      // Logger.info((new Date().toISOString()), 'response: ', res.status)
       if (res.status !== Enums.Http.ReturnCodes.ACCEPTED.CODE) {
         // TODO: how does one identify the failed response?
         throw new Error(`Failed to send. Result: ${res}`)
@@ -395,8 +395,8 @@ exports.postTransfers = async function (req, h) {
           'FSPIOP-Signature': JSON.stringify(fspiopSignature),
           'FSPIOP-HTTP-Method': 'PUT',
           'FSPIOP-URI': fspiopUriHeader,
-          traceparent: req.headers.traceparent || '',
-          tracestate: req.headers.tracestate || ''
+          traceparent: req.headers.traceparent ? req.headers.traceparent : undefined,
+          tracestate: req.headers.tracestate ? req.headers.tracestate : undefined
         },
         transformRequest: [(data, headers) => {
           delete headers.common.Accept
@@ -407,9 +407,9 @@ exports.postTransfers = async function (req, h) {
         }),
         data: JSON.stringify(transfersResponse)
       }
-      Logger.info(`Executing PUT: [${url}], HEADERS: [${JSON.stringify(opts.headers)}], BODY: [${JSON.stringify(transfersResponse)}]`)
+      // Logger.info(`Executing PUT: [${url}], HEADERS: [${JSON.stringify(opts.headers)}], BODY: [${JSON.stringify(transfersResponse)}]`)
       const res = await request(url, opts)
-      Logger.info(`response: ${res.status}`)
+      // Logger.info(`response: ${res.status}`)
       if (res.status !== Enums.Http.ReturnCodes.ACCEPTED.CODE) {
         // TODO: how does one identify the failed response?
         throw new Error(`Failed to send. Result: ${JSON.stringify(res)}`)

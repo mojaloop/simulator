@@ -26,7 +26,7 @@ const NodeCache = require('node-cache')
 const myCache = new NodeCache()
 const requests = new NodeCache()
 const callbacks = new NodeCache()
-const Logger = require('@mojaloop/central-services-shared').Logger
+const Logger = require('@mojaloop/central-services-logger')
 const Enums = require('@mojaloop/central-services-shared').Enum
 const Metrics = require('../lib/metrics')
 
