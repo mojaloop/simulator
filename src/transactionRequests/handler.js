@@ -27,7 +27,8 @@ const NodeCache = require('node-cache')
 const participantsCache = new NodeCache()
 const requestsCache = new NodeCache()
 const batchRequestCache = new NodeCache()
-const Logger = require('@mojaloop/central-services-shared').Logger
+const Logger = require('@mojaloop/central-services-logger')
+const Enums = require('@mojaloop/central-services-shared').Enum
 const Metrics = require('../lib/metrics')
 
 exports.createParticipantsByTypeAndId = function (request, h) {
@@ -86,7 +87,7 @@ exports.getParticipantsByTypeId = function (request, h) {
     response = []
   }
   histTimerEnd({ success: true, operation: 'getParticipants', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
-  return h.response(response).code(200)
+  return h.response(response).code(Enums.Http.ReturnCodes.OK.CODE)
 }
 
 exports.updateParticipantsByTypeId = function (request, h) {
@@ -120,7 +121,7 @@ exports.updateParticipantsByTypeId = function (request, h) {
     throw new Error(`Type:${request.params.Type} not found`)
   }
   histTimerEnd({ success: true, operation: 'putParticipants', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
-  return h.response().code(200)
+  return h.response().code(Enums.Http.ReturnCodes.OK.CODE)
 }
 
 exports.delParticipantsByTypeId = function (request, h) {
@@ -229,7 +230,7 @@ exports.getRequestByTypeId = function (request, h) {
   const responseData = requestsCache.get(request.params.ID)
   requestsCache.del(request.params.ID)
   histTimerEnd({ success: true, operation: 'getRequestByTypeId' })
-  return h.response(responseData).code(200)
+  return h.response(responseData).code(Enums.Http.ReturnCodes.OK.CODE)
 }
 
 exports.getRequestById = function (request, h) {
@@ -241,7 +242,7 @@ exports.getRequestById = function (request, h) {
   const responseData = batchRequestCache.get(request.params.requestId)
   batchRequestCache.del(request.params.requestId)
   histTimerEnd({ success: true, operation: 'getRequestById' })
-  return h.response(responseData).code(200)
+  return h.response(responseData).code(Enums.Http.ReturnCodes.OK.CODE)
 }
 
 const addNewRequest = function (request) {

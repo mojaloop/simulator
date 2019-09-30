@@ -24,7 +24,7 @@
 
 const Package = require('../../package.json')
 const Inert = require('@hapi/inert')
-const Vision = require('vision')
+const Vision = require('@hapi/vision')
 const Blipp = require('blipp')
 const ErrorHandling = require('@mojaloop/central-services-error-handling')
 

@@ -28,7 +28,8 @@ const myCache = new NodeCache()
 const requests = new NodeCache()
 const callbacks = new NodeCache()
 const Metrics = require('../lib/metrics')
-const Logger = require('@mojaloop/central-services-shared').Logger
+const Logger = require('@mojaloop/central-services-logger')
+const Enums = require('@mojaloop/central-services-shared').Enum
 
 const extractUrls = (request) => {
   const urls = {}
@@ -46,7 +47,7 @@ exports.metadata = function (request, h) {
   return h.response({
     directory: 'localhost',
     urls: extractUrls(request)
-  }).code(200)
+  }).code(Enums.Http.ReturnCodes.OK.CODE)
 }
 
 // Section about /participants
@@ -72,7 +73,7 @@ exports.putParticipantsByTypeId = function (request, h) {
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payer::putParticipantsByTypeId - END`)
   histTimerEnd({ success: true, fsp: 'payer', operation: 'putParticipantsByTypeId', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
-  return h.response().code(200)
+  return h.response().code(Enums.Http.ReturnCodes.OK.CODE)
 }
 
 // Section about /parties
@@ -98,7 +99,7 @@ exports.putPartiesByTypeId = function (request, h) {
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payer::putPartiesByTypeId - END`)
   histTimerEnd({ success: true, fsp: 'payer', operation: 'putPartiesByTypeId', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
-  return h.response().code(200)
+  return h.response().code(Enums.Http.ReturnCodes.OK.CODE)
 }
 
 exports.putPartiesByTypeIdAndError = function (request, h) {
@@ -112,7 +113,7 @@ exports.putPartiesByTypeIdAndError = function (request, h) {
   }
   callbacks.set(request.params.id, incomingRequest)
 
-  return h.response().code(200)
+  return h.response().code(Enums.Http.ReturnCodes.OK.CODE)
 }
 
 // Section about Quotes
@@ -138,7 +139,7 @@ exports.putQuotesById = function (request, h) {
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payer::putQuotesById - END`)
   histTimerEnd({ success: true, fsp: 'payer', operation: 'putQuotesById', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
-  return h.response().code(200)
+  return h.response().code(Enums.Http.ReturnCodes.OK.CODE)
 }
 
 exports.putQuotesByIdAndError = function (request, h) {
@@ -152,7 +153,7 @@ exports.putQuotesByIdAndError = function (request, h) {
   }
   callbacks.set(request.params.id, incomingRequest)
 
-  return h.response().code(200)
+  return h.response().code(Enums.Http.ReturnCodes.OK.CODE)
 }
 
 // Section about Transfers
@@ -178,7 +179,7 @@ exports.putTransfersById = function (request, h) {
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payer::putTransfersById - END`)
   histTimerEnd({ success: true, fsp: 'payer', operation: 'putTransfersById', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
-  return h.response().code(200)
+  return h.response().code(Enums.Http.ReturnCodes.OK.CODE)
 }
 
 exports.putTransfersByIdError = function (request, h) {
@@ -202,7 +203,7 @@ exports.putTransfersByIdError = function (request, h) {
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payer::putTransfersByIdError - END`)
   histTimerEnd({ success: true, fsp: 'payer', operation: 'putTransfersByIdError', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
-  return h.response().code(200)
+  return h.response().code(Enums.Http.ReturnCodes.OK.CODE)
 }
 
 exports.getcorrelationId = function (request, h) {
@@ -218,7 +219,7 @@ exports.getcorrelationId = function (request, h) {
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payer::getcorrelationId - END`)
   histTimerEnd({ success: true, fsp: 'payer', operation: 'getcorrelationId' })
-  return h.response(myCache.get(request.params.id)).code(202)
+  return h.response(myCache.get(request.params.id)).code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
 }
 
 exports.getRequestById = function (request, h) {
@@ -234,7 +235,7 @@ exports.getRequestById = function (request, h) {
 
   histTimerEnd({ success: true, fsp: 'payer', operation: 'getRequestById' })
 
-  return h.response(responseData).code(200)
+  return h.response(responseData).code(Enums.Http.ReturnCodes.OK.CODE)
 }
 
 exports.getCallbackById = function (request, h) {
@@ -250,5 +251,5 @@ exports.getCallbackById = function (request, h) {
 
   histTimerEnd({ success: true, fsp: 'payer', operation: 'getCallbackById' })
 
-  return h.response(responseData).code(200)
+  return h.response(responseData).code(Enums.Http.ReturnCodes.OK.CODE)
 }
