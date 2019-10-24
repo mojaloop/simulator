@@ -7,4 +7,5 @@ module.exports = async (url, opts) => {
   const optionsWithCleanHeaders = Object.assign({}, opts, { headers: pickBy(opts.headers, identity) })
   const res = await request(url, optionsWithCleanHeaders)
   Logger.info((new Date().toISOString()), 'response: ', res.status)
+  return res
 }
