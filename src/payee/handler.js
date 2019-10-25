@@ -27,7 +27,7 @@ const correlationCache = new NodeCache()
 const requestCache = new NodeCache()
 const quoteCache = new NodeCache()
 const callbackCache = new NodeCache()
-const request = require('../lib/sendRequest')
+const sendRequest = require('../lib/sendRequest')
 const https = require('https')
 const Logger = require('@mojaloop/central-services-logger')
 const Enums = require('@mojaloop/central-services-shared').Enum
@@ -105,7 +105,7 @@ exports.postPartiesByTypeAndId = function (request, h) {
   return h.response().code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
 }
 
-exports.getPartiesByTypeAndId = function (req, h) {
+exports.getPartiesByTypeAndId = function (request, h) {
   (async function () {
     const histTimerEnd = Metrics.getHistogram(
       'sim_request',
@@ -113,23 +113,23 @@ exports.getPartiesByTypeAndId = function (req, h) {
       ['success', 'fsp', 'operation', 'source', 'destination']
     ).startTimer()
 
-    // Logger.perf(`[cid=${req.payload.transferId}, fsp=${req.headers['fspiop-source']}, source=${req.headers['fspiop-source']}, dest=${req.headers['fspiop-destination']}] ~ Simulator::api::payee::getPartiesByTypeAndId - START`)
+    // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payee::getPartiesByTypeAndId - START`)
 
-    const metadata = `${req.method} ${req.path} ${req.params.id} `
+    const metadata = `${request.method} ${request.path} ${request.params.id} `
     Logger.info((new Date().toISOString()), ['IN PAYEEFSP::'], `received: ${metadata}. `)
     // Saving Incoming request
     const incomingRequest = {
-      headers: req.headers
+      headers: request.headers
     }
-    requestCache.set(req.params.id, incomingRequest)
+    requestCache.set(request.params.id, incomingRequest)
 
-    const url = partiesEndpoint + `/parties/${req.params.type}/${req.params.id}`
+    const url = partiesEndpoint + `/parties/${request.params.type}/${request.params.id}`
     try {
       const protectedHeader = {
         alg: 'RS256',
-        'FSPIOP-Source': `${req.headers['fspiop-destination']}`,
-        'FSPIOP-Destination': `${req.headers['fspiop-source']}`,
-        'FSPIOP-URI': `/parties/${req.params.type}/${req.params.id}`,
+        'FSPIOP-Source': `${request.headers['fspiop-destination']}`,
+        'FSPIOP-Destination': `${request.headers['fspiop-source']}`,
+        'FSPIOP-URI': `/parties/${request.params.type}/${request.params.id}`,
         'FSPIOP-HTTP-Method': 'PUT',
         Date: ''
       }
@@ -142,13 +142,13 @@ exports.getPartiesByTypeAndId = function (req, h) {
         headers: {
           'Content-Type': 'application/vnd.interoperability.parties+json;version=1.0',
           'FSPIOP-Source': 'payeefsp',
-          'FSPIOP-Destination': req.headers['fspiop-source'],
+          'FSPIOP-Destination': request.headers['fspiop-source'],
           Date: new Date().toUTCString(),
           'FSPIOP-Signature': JSON.stringify(fspiopSignature),
           'FSPIOP-HTTP-Method': 'PUT',
-          'FSPIOP-URI': `/parties/${req.params.type}/${req.params.id}`,
-          traceparent: req.headers.traceparent ? req.headers.traceparent : undefined,
-          tracestate: req.headers.tracestate ? req.headers.tracestate : undefined
+          'FSPIOP-URI': `/parties/${request.params.type}/${request.params.id}`,
+          traceparent: request.headers.traceparent ? request.headers.traceparent : undefined,
+          tracestate: request.headers.tracestate ? request.headers.tracestate : undefined
         },
         transformRequest: [(data, headers) => {
           delete headers.common.Accept
@@ -157,30 +157,30 @@ exports.getPartiesByTypeAndId = function (req, h) {
         httpsAgent: new https.Agent({
           rejectUnauthorized: false
         }),
-        data: JSON.stringify(correlationCache.get(req.params.id))
+        data: JSON.stringify(correlationCache.get(request.params.id))
       }
 
       // Logger.info((new Date().toISOString()), 'Executing PUT', url)
-      const res = await request(url, opts)
+      const res = await sendRequest(url, opts)
       // Logger.info((new Date().toISOString()), 'response: ', res.status)
       if (res.status !== Enums.Http.ReturnCodes.ACCEPTED.CODE) {
         // TODO: how does one identify the failed response?
         throw new Error(`Failed to send. Result: ${res}`)
       }
 
-      // Logger.perf(`[cid=${req.payload.transferId}, fsp=${req.headers['fspiop-source']}, source=${req.headers['fspiop-source']}, dest=${req.headers['fspiop-destination']}] ~ Simulator::api::payee::getPartiesByTypeAndId - END`)
-      histTimerEnd({ success: true, fsp: 'payee', operation: 'getPartiesByTypeAndId', source: req.headers['fspiop-source'], destination: req.headers['fspiop-destination'] })
+      // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payee::getPartiesByTypeAndId - END`)
+      histTimerEnd({ success: true, fsp: 'payee', operation: 'getPartiesByTypeAndId', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
     } catch (err) {
       Logger.error(err)
-      // Logger.perf(`[cid=${req.payload.transferId}, fsp=${req.headers['fspiop-source']}, source=${req.headers['fspiop-source']}, dest=${req.headers['fspiop-destination']}] ~ Simulator::api::payee::getPartiesByTypeAndId - ERROR`)
-      histTimerEnd({ success: false, fsp: 'payee', operation: 'getPartiesByTypeAndId', source: req.headers['fspiop-source'], destination: req.headers['fspiop-destination'] })
+      // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payee::getPartiesByTypeAndId - ERROR`)
+      histTimerEnd({ success: false, fsp: 'payee', operation: 'getPartiesByTypeAndId', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
     }
   })()
 
   return h.response().code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
 }
 
-exports.postQuotes = function (req, h) {
+exports.postQuotes = function (request, h) {
   (async function () {
     const histTimerEnd = Metrics.getHistogram(
       'sim_request',
@@ -188,16 +188,16 @@ exports.postQuotes = function (req, h) {
       ['success', 'fsp', 'operation', 'source', 'destination']
     ).startTimer()
 
-    // Logger.perf(`[cid=${req.payload.transferId}, fsp=${req.headers['fspiop-source']}, source=${req.headers['fspiop-source']}, dest=${req.headers['fspiop-destination']}] ~ Simulator::api::payee::postQuotes - START`)
+    // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payee::postQuotes - START`)
 
-    const metadata = `${req.method} ${req.path}`
-    const quoteRequest = req.payload
+    const metadata = `${request.method} ${request.path}`
+    const quoteRequest = request.payload
     Logger.info((new Date().toISOString()), ['IN PAYEEFSP::'], `received: ${metadata}. `)
     Logger.info(`incoming request: ${quoteRequest.quoteId}`)
 
     // Saving Incoming request
     const incomingRequest = {
-      headers: req.headers,
+      headers: request.headers,
       data: quoteRequest
     }
     requestCache.set(quoteRequest.quoteId, incomingRequest)
@@ -243,8 +243,8 @@ exports.postQuotes = function (req, h) {
       const url = quotesEndpoint + '/quotes/' + quoteRequest.quoteId
       const protectedHeader = {
         alg: 'RS256',
-        'FSPIOP-Source': `${req.headers['fspiop-destination']}`,
-        'FSPIOP-Destination': `${req.headers['fspiop-source']}`,
+        'FSPIOP-Source': `${request.headers['fspiop-destination']}`,
+        'FSPIOP-Destination': `${request.headers['fspiop-source']}`,
         'FSPIOP-URI': `/quotes/${quoteRequest.quoteId}`,
         'FSPIOP-HTTP-Method': 'PUT',
         Date: ''
@@ -258,13 +258,13 @@ exports.postQuotes = function (req, h) {
         headers: {
           'Content-Type': 'application/vnd.interoperability.quotes+json;version=1.0',
           'FSPIOP-Source': 'payeefsp',
-          'FSPIOP-Destination': req.headers['fspiop-source'],
+          'FSPIOP-Destination': request.headers['fspiop-source'],
           Date: new Date().toUTCString(),
           'FSPIOP-Signature': `${JSON.stringify(fspiopSignature)}`,
           'FSPIOP-HTTP-Method': 'PUT',
           'FSPIOP-URI': `/quotes/${quoteRequest.quoteId}`,
-          traceparent: req.headers.traceparent ? req.headers.traceparent : undefined,
-          tracestate: req.headers.tracestate ? req.headers.tracestate : undefined
+          traceparent: request.headers.traceparent ? request.headers.traceparent : undefined,
+          tracestate: request.headers.tracestate ? request.headers.tracestate : undefined
         },
         transformRequest: [(data, headers) => {
           delete headers.common.Accept
@@ -276,21 +276,21 @@ exports.postQuotes = function (req, h) {
         data: JSON.stringify(quotesResponse)
       }
       // Logger.info((new Date().toISOString()), 'Executing PUT', url)
-      const res = await request(url, opts)
+      const res = await sendRequest(url, opts)
       // Logger.info((new Date().toISOString()), 'response: ', res.status)
       if (res.status !== Enums.Http.ReturnCodes.ACCEPTED.CODE) {
         // TODO: how does one identify the failed response?
         throw new Error(`Failed to send. Result: ${res}`)
       }
 
-      // Logger.perf(`[cid=${req.payload.transferId}, fsp=${req.headers['fspiop-source']}, source=${req.headers['fspiop-source']}, dest=${req.headers['fspiop-destination']}] ~ Simulator::api::payee::postQuotes - END`)
-      histTimerEnd({ success: true, fsp: 'payee', operation: 'postQuotes', source: req.headers['fspiop-source'], destination: req.headers['fspiop-destination'] })
+      // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payee::postQuotes - END`)
+      histTimerEnd({ success: true, fsp: 'payee', operation: 'postQuotes', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
     } catch (err) {
       Logger.error(err)
-      // Logger.perf(`[cid=${req.payload.transferId}, fsp=${req.headers['fspiop-source']}, source=${req.headers['fspiop-source']}, dest=${req.headers['fspiop-destination']}] ~ Simulator::api::payee::postQuotes - ERROR`)
-      histTimerEnd({ success: false, fsp: 'payee', operation: 'postQuotes', source: req.headers['fspiop-source'], destination: req.headers['fspiop-destination'] })
+      // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payee::postQuotes - ERROR`)
+      histTimerEnd({ success: false, fsp: 'payee', operation: 'postQuotes', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
       // TODO: what if this fails? We need to log. What happens by default?
-      // const url = await rq.createErrorUrl(db, req.path, requesterName);
+      // const url = await rq.createErrorUrl(db, request.path, requesterName);
       // TODO: review this error message
       // TODO: we should be able to throw an AppError somewhere, test whether the error
       // received in this handler is an AppError, then send the requester the correct
@@ -301,28 +301,28 @@ exports.postQuotes = function (req, h) {
   return h.response().code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
 }
 
-exports.postTransfers = async function (req, h) {
+exports.postTransfers = async function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
     'sim_request',
     'Histogram for Simulator http operations',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
-  Logger.debug(`[cid=${req.payload.transferId}, fsp=${req.headers['fspiop-source']}, source=${req.headers['fspiop-source']}, dest=${req.headers['fspiop-destination']}] ~ Simulator::api::payee::postTransfers - START`)
+  Logger.debug(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payee::postTransfers - START`)
 
-  const metadata = `${req.method} ${req.path} ${req.payload.transferId}`
+  const metadata = `${request.method} ${request.path} ${request.payload.transferId}`
   Logger.info(`IN PAYEEFSP:: received: ${metadata}.`)
 
   if (!transfersFulfilResponseDisabled) {
     // Saving Incoming request
     const incomingRequest = {
-      headers: req.headers,
-      data: req.payload
+      headers: request.headers,
+      data: request.payload
     }
-    requestCache.set(req.payload.transferId, incomingRequest)
+    requestCache.set(request.payload.transferId, incomingRequest)
 
-    const url = transfersEndpoint + '/transfers/' + req.payload.transferId
-    const fspiopUriHeader = `/transfers/${req.payload.transferId}`
+    const url = transfersEndpoint + '/transfers/' + request.payload.transferId
+    const fspiopUriHeader = `/transfers/${request.payload.transferId}`
     try {
       const transfersResponse = {
         // fulfilment: "rjzWyHf4IUao60Yz98HZOIhZbqtclOgZ7WriZuq9Hn0",
@@ -332,9 +332,9 @@ exports.postTransfers = async function (req, h) {
       }
       const protectedHeader = {
         alg: 'RS256',
-        'FSPIOP-Source': `${req.headers['fspiop-destination']}`,
-        'FSPIOP-Destination': `${req.headers['fspiop-source']}`,
-        'FSPIOP-URI': `/transfers/${req.payload.transferId}`,
+        'FSPIOP-Source': `${request.headers['fspiop-destination']}`,
+        'FSPIOP-Destination': `${request.headers['fspiop-source']}`,
+        'FSPIOP-URI': `/transfers/${request.payload.transferId}`,
         'FSPIOP-HTTP-Method': 'PUT',
         Date: ''
       }
@@ -346,14 +346,14 @@ exports.postTransfers = async function (req, h) {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/vnd.interoperability.transfers+json;version=1.0',
-          'FSPIOP-Source': req.headers['fspiop-destination'],
-          'FSPIOP-Destination': req.headers['fspiop-source'],
+          'FSPIOP-Source': request.headers['fspiop-destination'],
+          'FSPIOP-Destination': request.headers['fspiop-source'],
           Date: new Date().toUTCString(),
           'FSPIOP-Signature': JSON.stringify(fspiopSignature),
           'FSPIOP-HTTP-Method': 'PUT',
           'FSPIOP-URI': fspiopUriHeader,
-          traceparent: req.headers.traceparent ? req.headers.traceparent : undefined,
-          tracestate: req.headers.tracestate ? req.headers.tracestate : undefined
+          traceparent: request.headers.traceparent ? request.headers.traceparent : undefined,
+          tracestate: request.headers.tracestate ? request.headers.tracestate : undefined
         },
         transformRequest: [(data, headers) => {
           delete headers.common.Accept
@@ -366,32 +366,32 @@ exports.postTransfers = async function (req, h) {
       }
 
       // Logger.info(`Executing PUT: [${url}], HEADERS: [${JSON.stringify(opts.headers)}], BODY: [${JSON.stringify(transfersResponse)}]`)
-      const res = await request(url, opts)
+      const res = await sendRequest(url, opts)
       // Logger.info(`response: ${res.status}`)
       if (res.status !== Enums.Http.ReturnCodes.ACCEPTED.CODE) {
         // TODO: how does one identify the failed response?
         throw new Error(`Failed to send. Result: ${JSON.stringify(res)}`)
       }
-      // Logger.perf(`[cid=${req.payload.transferId}, fsp=${req.headers['fspiop-source']}, source=${req.headers['fspiop-source']}, dest=${req.headers['fspiop-destination']}] ~ Simulator::api::payee::postTransfers - END`)
+      // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payee::postTransfers - END`)
       histTimerEnd({
         success: true,
         fsp: 'payee',
         operation: 'postTransfers',
-        source: req.headers['fspiop-source'],
-        destination: req.headers['fspiop-destination']
+        source: request.headers['fspiop-source'],
+        destination: request.headers['fspiop-destination']
       })
     } catch (err) {
       Logger.error(err)
-      // Logger.perf(`[cid=${req.payload.transferId}, fsp=${req.headers['fspiop-source']}, source=${req.headers['fspiop-source']}, dest=${req.headers['fspiop-destination']}] ~ Simulator::api::payee::postTransfers - ERROR`)
+      // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payee::postTransfers - ERROR`)
       histTimerEnd({
         success: false,
         fsp: 'payee',
         operation: 'postTransfers',
-        source: req.headers['fspiop-source'],
-        destination: req.headers['fspiop-destination']
+        source: request.headers['fspiop-source'],
+        destination: request.headers['fspiop-destination']
       })
       // TODO: what if this fails? We need to log. What happens by default?
-      // const url = await rq.createErrorUrl(db, req.path, requesterName);
+      // const url = await rq.createErrorUrl(db, request.path, requesterName);
       // TODO: review this error message
       // TODO: we should be able to throw an AppError somewhere, test whether the error
       // received in this handler is an AppError, then send the requester the correct
@@ -399,13 +399,13 @@ exports.postTransfers = async function (req, h) {
       // rq.sendError(url, asyncResponses.serverError, rq.defaultHeaders(requesterName, 'participants'), {logger});
     }
   } else {
-    // Logger.perf(`[cid=${req.payload.transferId}, fsp=${req.headers['fspiop-source']}, source=${req.headers['fspiop-source']}, dest=${req.headers['fspiop-destination']}] ~ Simulator::api::payee::postTransfers - END`)
+    // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payee::postTransfers - END`)
     histTimerEnd({
       success: true,
       fsp: 'payee',
       operation: 'postTransfers',
-      source: req.headers['fspiop-source'],
-      destination: req.headers['fspiop-destination']
+      source: request.headers['fspiop-source'],
+      destination: request.headers['fspiop-destination']
     })
   }
 
@@ -478,18 +478,72 @@ exports.getcorrelationId = function (request, h) {
 }
 
 exports.getQuotesById = function (request, h) {
-  const histTimerEnd = Metrics.getHistogram(
-    'sim_request',
-    'Histogram for Simulator http operations',
-    ['success', 'fsp', 'operation', 'source', 'destination']
-  ).startTimer()
-
   const responseData = quoteCache.get(request.params.id)
   Logger.info(`IN PAYEEFSP:: PUT callback for GET /payeefsp/quotes/${request.params.id}, CACHE: [${JSON.stringify(responseData)}`)
   quoteCache.del(request.params.id)
 
-  histTimerEnd({ success: true, fsp: 'payee', operation: 'getQuotesById' })
-  return h.response(responseData).code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
+  if (responseData) {
+    setImmediate(async () => {
+      const histTimerEnd = Metrics.getHistogram(
+        'sim_request',
+        'Histogram for Simulator http operations',
+        ['success', 'fsp', 'operation', 'source', 'destination']
+      ).startTimer()
+
+      try {
+        const url = quotesEndpoint + '/quotes/' + request.params.id
+        const protectedHeader = {
+          alg: 'RS256',
+          'FSPIOP-Source': `${request.headers['fspiop-destination']}`,
+          'FSPIOP-Destination': `${request.headers['fspiop-source']}`,
+          'FSPIOP-URI': `/quotes/${request.params.id}`,
+          'FSPIOP-HTTP-Method': 'PUT',
+          Date: ''
+        }
+        const fspiopSignature = {
+          signature: signature,
+          protectedHeader: `${base64url.encode(JSON.stringify(protectedHeader))}`
+        }
+        const opts = {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/vnd.interoperability.quotes+json;version=1.0',
+            'FSPIOP-Source': 'payeefsp',
+            'FSPIOP-Destination': request.headers['fspiop-source'],
+            Date: new Date().toUTCString(),
+            'FSPIOP-Signature': `${JSON.stringify(fspiopSignature)}`,
+            'FSPIOP-HTTP-Method': 'PUT',
+            'FSPIOP-URI': `/quotes/${request.params.id}`,
+            traceparent: request.headers.traceparent ? request.headers.traceparent : undefined,
+            tracestate: request.headers.tracestate ? request.headers.tracestate : undefined
+          },
+          transformRequest: [(data, headers) => {
+            delete headers.common.Accept
+            return data
+          }],
+          httpsAgent: new https.Agent({
+            rejectUnauthorized: false
+          }),
+          data: JSON.stringify(responseData)
+        }
+        // Logger.info((new Date().toISOString()), 'Executing PUT', url)
+        const res = await sendRequest(url, opts)
+        if (res.status !== Enums.Http.ReturnCodes.ACCEPTED.CODE) {
+          throw new Error(`Failed to send. Result: ${res}`)
+        }
+
+        histTimerEnd({ success: true, fsp: 'payee', operation: 'getQuotes', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
+      } catch (err) {
+        Logger.error(err)
+        histTimerEnd({ success: false, fsp: 'payee', operation: 'getQuotes', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
+      }
+    })
+  }
+  if (responseData) {
+    return h.response().code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
+  } else {
+    return h.response().code(Enums.Http.ReturnCodes.NOTFOUND.CODE)
+  }
 }
 
 exports.getRequestById = function (request, h) {
