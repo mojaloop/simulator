@@ -93,7 +93,7 @@ module.exports = [
     handler: Handler.postQuotes,
     options: {
       tags: tags,
-      description: 'Add users to payer simulator',
+      description: 'Metadata',
       payload: {
         failAction: 'error'
       },
@@ -182,7 +182,35 @@ module.exports = [
         failAction: (request, h, err) => { throw err }
       }
     }
-
+  },
+  {
+    method: 'GET',
+    path: '/payeefsp/quotes/{id}',
+    handler: Handler.getQuotesById,
+    options: {
+      tags: tags,
+      description: 'Metadata',
+      validate: {
+        headers: Joi.object({
+          'content-type': Joi.string().required().regex(/application\/vnd.interoperability[.]/),
+          'content-length': Joi.number().max(5242880),
+          date: Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
+          'x-forwarded-for': Joi.string().optional(),
+          'fspiop-source': Joi.string().required(),
+          'fspiop-destination': Joi.string().required(),
+          'fspiop-encryption': Joi.string().optional(),
+          'fspiop-signature': Joi.string().optional(),
+          'fspiop-uri': Joi.string().optional(),
+          'fspiop-http-method': Joi.string().optional(),
+          traceparent: Joi.string().optional(),
+          tracestate: Joi.string().optional()
+        }).unknown(false).options({ stripUnknown: true }),
+        params: {
+          id: Joi.string().required().description('path')
+        },
+        failAction: (request, h, err) => { throw err }
+      }
+    }
   },
   {
     method: 'POST',

@@ -25,6 +25,7 @@
 const NodeCache = require('node-cache')
 const correlationCache = new NodeCache()
 const requestCache = new NodeCache()
+const quoteCache = new NodeCache()
 const callbackCache = new NodeCache()
 const request = require('../lib/sendRequest')
 const https = require('https')
@@ -190,16 +191,16 @@ exports.postQuotes = function (req, h) {
     // Logger.perf(`[cid=${req.payload.transferId}, fsp=${req.headers['fspiop-source']}, source=${req.headers['fspiop-source']}, dest=${req.headers['fspiop-destination']}] ~ Simulator::api::payee::postQuotes - START`)
 
     const metadata = `${req.method} ${req.path}`
-    const quotesRequest = req.payload
+    const quoteRequest = req.payload
     Logger.info((new Date().toISOString()), ['IN PAYEEFSP::'], `received: ${metadata}. `)
-    Logger.info(`incoming request: ${quotesRequest.quoteId}`)
+    Logger.info(`incoming request: ${quoteRequest.quoteId}`)
 
     // Saving Incoming request
     const incomingRequest = {
       headers: req.headers,
-      data: req.payload
+      data: quoteRequest
     }
-    requestCache.set(quotesRequest.quoteId, incomingRequest)
+    requestCache.set(quoteRequest.quoteId, incomingRequest)
 
     // prepare response
     // const fulfillImage = new cc.PreimageSha256()
@@ -218,16 +219,16 @@ exports.postQuotes = function (req, h) {
 
     const quotesResponse = {
       transferAmount: {
-        amount: quotesRequest.amount.amount,
-        currency: quotesRequest.amount.currency
+        amount: quoteRequest.amount.amount,
+        currency: quoteRequest.amount.currency
       },
       payeeFspFee: {
         amount: '1',
-        currency: quotesRequest.amount.currency
+        currency: quoteRequest.amount.currency
       },
       payeeFspCommission: {
         amount: '1',
-        currency: quotesRequest.amount.currency
+        currency: quoteRequest.amount.currency
       },
       expiration: new Date(new Date().getTime() + 10000),
       // ilpPacket: 'AQAAAAAAAABkEHByaXZhdGUucGF5ZWVmc3CCAlV7InRyYW5zYWN0aW9uSWQiOiJhYWUwYzIxMi0wOTJiLTQ5MmItYWQ2ZS1kZmJiYmJjNWRkYzIiLCJxdW90ZUlkIjoiYWFlMGMyMTItMDkyYi00OTJiLWFkNmUtZGZiYmJiYzVkZGMyIiwicGF5ZWUiOnsicGFydHlJZEluZm8iOnsicGFydHlJZFR5cGUiOiJNU0lTRE4iLCJwYXJ0eUlkZW50aWZpZXIiOiIyMjUwNDAwNDc2MiIsImZzcElkIjoicGF5ZWVmc3AifSwicGVyc29uYWxJbmZvIjp7ImNvbXBsZXhOYW1lIjp7fX19LCJwYXllciI6eyJwYXJ0eUlkSW5mbyI6eyJwYXJ0eUlkVHlwZSI6Ik1TSVNETiIsInBhcnR5SWRlbnRpZmllciI6IjI3NzEzODAzOTA1IiwiZnNwSWQiOiJwYXllcmZzcCJ9LCJwZXJzb25hbEluZm8iOnsiY29tcGxleE5hbWUiOnsiZmlyc3ROYW1lIjoiTWF0cyIsImxhc3ROYW1lIjoiSGFnbWFuIn19fSwiYW1vdW50Ijp7ImN1cnJlbmN5IjoiVVNEIiwiYW1vdW50IjoiMTAwIn0sInRyYW5zYWN0aW9uVHlwZSI6eyJzY2VuYXJpbyI6IlRSQU5TRkVSIiwic3ViU2NlbmFyaW8iOiJUUkFOU0ZFUiIsImluaXRpYXRvciI6IlBBWUVSIiwiaW5pdGlhdG9yVHlwZSI6IkNPTlNVTUVSIiwicmVmdW5kSW5mbyI6e319LCJub3RlIjoiaGVqIn0=',
@@ -236,13 +237,15 @@ exports.postQuotes = function (req, h) {
       // condition: '_EVkxF7q3V-XDfIztgcHEa3iTqKHt_zKMV5Yjre_Y_o'
     }
 
+    quoteCache.set(quoteRequest.quoteId, quotesResponse)
+
     try {
-      const url = quotesEndpoint + '/quotes/' + quotesRequest.quoteId
+      const url = quotesEndpoint + '/quotes/' + quoteRequest.quoteId
       const protectedHeader = {
         alg: 'RS256',
         'FSPIOP-Source': `${req.headers['fspiop-destination']}`,
         'FSPIOP-Destination': `${req.headers['fspiop-source']}`,
-        'FSPIOP-URI': `/quotes/${quotesRequest.quoteId}`,
+        'FSPIOP-URI': `/quotes/${quoteRequest.quoteId}`,
         'FSPIOP-HTTP-Method': 'PUT',
         Date: ''
       }
@@ -259,7 +262,7 @@ exports.postQuotes = function (req, h) {
           Date: new Date().toUTCString(),
           'FSPIOP-Signature': `${JSON.stringify(fspiopSignature)}`,
           'FSPIOP-HTTP-Method': 'PUT',
-          'FSPIOP-URI': `/quotes/${quotesRequest.quoteId}`,
+          'FSPIOP-URI': `/quotes/${quoteRequest.quoteId}`,
           traceparent: req.headers.traceparent ? req.headers.traceparent : undefined,
           tracestate: req.headers.tracestate ? req.headers.tracestate : undefined
         },
@@ -466,11 +469,27 @@ exports.getcorrelationId = function (request, h) {
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payee::getcorrelationId - START`)
 
-  Logger.info(`IN PAYEEFSP:: Final response for GET /payeefsp/correlationid/${request.params.id}, CACHE: [${JSON.stringify(correlationCache.get(request.params.id))}`)
+  const responseData = correlationCache.get(request.params.id)
+  Logger.info(`IN PAYEEFSP:: Final response for GET /payeefsp/correlationid/${request.params.id}, CACHE: [${JSON.stringify(responseData)}`)
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payee::getcorrelationId - END`)
   histTimerEnd({ success: true, fsp: 'payee', operation: 'getcorrelationId' })
-  return h.response(correlationCache.get(request.params.id)).code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
+  return h.response(responseData).code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
+}
+
+exports.getQuotesById = function (request, h) {
+  const histTimerEnd = Metrics.getHistogram(
+    'sim_request',
+    'Histogram for Simulator http operations',
+    ['success', 'fsp', 'operation', 'source', 'destination']
+  ).startTimer()
+
+  const responseData = quoteCache.get(request.params.id)
+  Logger.info(`IN PAYEEFSP:: PUT callback for GET /payeefsp/quotes/${request.params.id}, CACHE: [${JSON.stringify(responseData)}`)
+  quoteCache.del(request.params.id)
+
+  histTimerEnd({ success: true, fsp: 'payee', operation: 'getQuotesById' })
+  return h.response(responseData).code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
 }
 
 exports.getRequestById = function (request, h) {
@@ -480,8 +499,8 @@ exports.getRequestById = function (request, h) {
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
-  Logger.info(`IN PAYEEFSP:: PUT /payeefsp/requests/${request.params.id}, CACHE: [${JSON.stringify(requestCache.get(request.params.id))}]`)
   const responseData = requestCache.get(request.params.id)
+  Logger.info(`IN PAYEEFSP:: PUT /payeefsp/requests/${request.params.id}, CACHE: [${JSON.stringify(responseData)}]`)
   requestCache.del(request.params.id)
 
   histTimerEnd({ success: true, fsp: 'payee', operation: 'getRequestById' })
@@ -496,8 +515,8 @@ exports.getCallbackById = function (request, h) {
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
-  Logger.info(`IN PAYEEFSP:: PUT /payeefsp/callbacks/${request.params.id}, CACHE: [${JSON.stringify(callbackCache.get(request.params.id))}]`)
   const responseData = callbackCache.get(request.params.id)
+  Logger.info(`IN PAYEEFSP:: PUT /payeefsp/callbacks/${request.params.id}, CACHE: [${JSON.stringify(responseData)}]`)
   callbackCache.del(request.params.id)
 
   histTimerEnd({ success: true, fsp: 'payee', operation: 'getCallbackById' })
