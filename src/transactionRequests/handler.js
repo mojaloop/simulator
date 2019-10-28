@@ -24,8 +24,8 @@
 
 'use strict'
 const NodeCache = require('node-cache')
-const participantsCache = new NodeCache()
-const requestsCache = new NodeCache()
+const participantCache = new NodeCache()
+const requestCache = new NodeCache()
 const batchRequestCache = new NodeCache()
 const Logger = require('@mojaloop/central-services-logger')
 const Enums = require('@mojaloop/central-services-shared').Enum
@@ -49,17 +49,17 @@ exports.createParticipantsByTypeAndId = function (request, h) {
     ]
   }
   let idMap = new Map()
-  if (participantsCache.get(request.params.Type)) {
-    idMap = participantsCache.get(request.params.Type)
+  if (participantCache.get(request.params.Type)) {
+    idMap = participantCache.get(request.params.Type)
     if (idMap.get(request.params.ID)) {
       throw new Error(`ID:${request.params.ID} already exists`)
     } else {
       idMap.set(request.params.ID, record)
-      participantsCache.set(request.params.Type, idMap)
+      participantCache.set(request.params.Type, idMap)
     }
   } else {
     idMap.set(request.params.ID, record)
-    participantsCache.set(request.params.Type, idMap)
+    participantCache.set(request.params.Type, idMap)
   }
 
   histTimerEnd({ success: true, operation: 'postParticipants', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
@@ -76,8 +76,8 @@ exports.getParticipantsByTypeId = function (request, h) {
   addNewRequest(request)
   let idMap = new Map()
   let response
-  if (participantsCache.get(request.params.Type)) {
-    idMap = participantsCache.get(request.params.Type)
+  if (participantCache.get(request.params.Type)) {
+    idMap = participantCache.get(request.params.Type)
     if (idMap.get(request.params.ID)) {
       response = idMap.get(request.params.ID)
     } else {
@@ -99,8 +99,8 @@ exports.updateParticipantsByTypeId = function (request, h) {
   Logger.debug(`updateParticipantByTypeId::ID=${request.params.ID} payload=${request.payload}`)
   addNewRequest(request)
   let idMap
-  if (participantsCache.get(request.params.Type)) {
-    idMap = participantsCache.get(request.params.Type)
+  if (participantCache.get(request.params.Type)) {
+    idMap = participantCache.get(request.params.Type)
     if (idMap.get(request.params.ID)) {
       const currentRecord = idMap.get(request.params.ID)
       if (request.payload.fspId && currentRecord.partyList[0].fspId !== request.payload.fspId) {
@@ -113,7 +113,7 @@ exports.updateParticipantsByTypeId = function (request, h) {
         currentRecord.partyList[0].partySubIdOrType = request.payload.partySubIdOrType
       }
       idMap.set(request.params.ID, currentRecord)
-      participantsCache.set(request.params.Type, idMap)
+      participantCache.set(request.params.Type, idMap)
     } else {
       throw new Error(`ID:${request.params.ID} not found`)
     }
@@ -133,11 +133,11 @@ exports.delParticipantsByTypeId = function (request, h) {
   Logger.debug(`delParticipantsByTypeId::ID=${request.params.ID}`)
   addNewRequest(request)
   let idMap
-  if (participantsCache.get(request.params.Type)) {
-    idMap = participantsCache.get(request.params.Type)
+  if (participantCache.get(request.params.Type)) {
+    idMap = participantCache.get(request.params.Type)
     if (idMap.get(request.params.ID)) {
       idMap.delete(request.params.ID)
-      participantsCache.set(request.params.Type, idMap)
+      participantCache.set(request.params.Type, idMap)
     } else {
       const errorObject = {
         errorCode: 2345,
@@ -196,8 +196,8 @@ exports.createParticipantsBatch = function (request, h) {
       }
       let errorInformation
       let idMap = new Map()
-      if (participantsCache.get(party.partyIdType)) {
-        idMap = participantsCache.get(party.partyIdType)
+      if (participantCache.get(party.partyIdType)) {
+        idMap = participantCache.get(party.partyIdType)
         if (idMap.get(party.partyIdentifier)) {
           const errorObject = {
             errorCode: 1234,
@@ -207,12 +207,12 @@ exports.createParticipantsBatch = function (request, h) {
           responseObject.partyList.push({ partyId, errorInformation })
         } else {
           idMap.set(party.partyIdentifier, record)
-          participantsCache.set(party.partyIdType, idMap)
+          participantCache.set(party.partyIdType, idMap)
           responseObject.partyList.push({ partyId })
         }
       } else {
         idMap.set(party.partyIdentifier, record)
-        participantsCache.set(party.partyIdType, idMap)
+        participantCache.set(party.partyIdType, idMap)
         responseObject.partyList.push({ partyId })
       }
     }
@@ -227,8 +227,8 @@ exports.getRequestByTypeId = function (request, h) {
     'Histogram for Simulator http operations',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
-  const responseData = requestsCache.get(request.params.ID)
-  requestsCache.del(request.params.ID)
+  const responseData = requestCache.get(request.params.ID)
+  requestCache.del(request.params.ID)
   histTimerEnd({ success: true, operation: 'getRequestByTypeId' })
   return h.response(responseData).code(Enums.Http.ReturnCodes.OK.CODE)
 }
@@ -253,8 +253,8 @@ const addNewRequest = function (request) {
     params: request.params,
     payload: request.payload ? request.payload : undefined
   }
-  if (requestsCache.get(request.params.ID)) {
-    const incomingRequests = requestsCache.get(request.params.ID)
+  if (requestCache.get(request.params.ID)) {
+    const incomingRequests = requestCache.get(request.params.ID)
     let foundMethod = false
     let count = 0
     for (const entry of incomingRequests) {
@@ -270,9 +270,9 @@ const addNewRequest = function (request) {
       incomingRequests.splice(count, 1)
       incomingRequests.push(newRequest)
     }
-    requestsCache.set(request.params.ID, incomingRequests)
+    requestCache.set(request.params.ID, incomingRequests)
   } else {
-    requestsCache.set(request.params.ID, [newRequest])
+    requestCache.set(request.params.ID, [newRequest])
   }
 }
 

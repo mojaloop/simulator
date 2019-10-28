@@ -165,6 +165,9 @@ module.exports = [
           traceparent: Joi.string().optional(),
           tracestate: Joi.string().optional()
         }).unknown(false).options({ stripUnknown: true }),
+        params: {
+          id: Joi.string().required().description('path')
+        },
         payload: {
           transferAmount: Joi.object().keys({
             currency: Joi.string().required().currency().description('Currency of the transfer').label('@ Currency needs to be a valid ISO 4217 currency code. @'),
