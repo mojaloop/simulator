@@ -23,9 +23,9 @@
 
 'use strict'
 const NodeCache = require('node-cache')
-const myCache = new NodeCache()
-const requests = new NodeCache()
-const callbacks = new NodeCache()
+const correlationCache = new NodeCache()
+const requestCache = new NodeCache()
+const callbackCache = new NodeCache()
 const request = require('../lib/sendRequest')
 const https = require('https')
 const Logger = require('@mojaloop/central-services-logger')
@@ -56,7 +56,7 @@ exports.postBulkTransfers = async function (req, h) {
       headers: req.headers,
       data: req.payload
     }
-    requests.set(req.payload.bulkTransferId, incomingRequest)
+    requestCache.set(req.payload.bulkTransferId, incomingRequest)
 
     const url = transfersEndpoint + '/bulkTransfers/' + req.payload.bulkTransferId
     const fspiopUriHeader = `/bulkTransfers/${req.payload.bulkTransferId}`
@@ -166,14 +166,14 @@ exports.putBulkTransfersById = function (request, h) {
 
   Logger.info(`IN Bulk Transfer:: PUT /bulkTransfers/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
 
-  myCache.set(request.params.id, request.payload)
+  correlationCache.set(request.params.id, request.payload)
 
   // Saving Incoming request
   const incomingRequest = {
     headers: request.headers,
     data: request.payload
   }
-  callbacks.set(request.params.id, incomingRequest)
+  callbackCache.set(request.params.id, incomingRequest)
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payee::putTransfersById - END`)
   histTimerEnd({
@@ -196,14 +196,14 @@ exports.putBulkTransfersByIdError = function (request, h) {
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payee::putTransfersByIdError - START`)
 
   Logger.info(`IN Bulk Transfers :: PUT /bulkTransfers/${request.params.id}/error, PAYLOAD: [${JSON.stringify(request.payload)}]`)
-  myCache.set(request.params.id, request.payload)
+  correlationCache.set(request.params.id, request.payload)
 
   // Saving Incoming request
   const incomingRequest = {
     headers: request.headers,
     data: request.payload
   }
-  callbacks.set(request.params.id, incomingRequest)
+  callbackCache.set(request.params.id, incomingRequest)
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payee::putTransfersByIdError - END`)
   histTimerEnd({
@@ -225,11 +225,11 @@ exports.getCorrelationId = function (request, h) {
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payee::getcorrelationId - START`)
 
-  Logger.info(`IN bulk transfers:: Final response for GET /bulkTransfers/correlationid/${request.params.id}, CACHE: [${JSON.stringify(myCache.get(request.params.id))}`)
+  Logger.info(`IN bulk transfers:: Final response for GET /bulkTransfers/correlationid/${request.params.id}, CACHE: [${JSON.stringify(correlationCache.get(request.params.id))}`)
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payee::getcorrelationId - END`)
   histTimerEnd({ success: true, fsp: 'payee', operation: 'getBulkCorrelationId' })
-  return h.response(myCache.get(request.params.id)).code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
+  return h.response(correlationCache.get(request.params.id)).code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
 }
 
 exports.getRequestById = function (request, h) {
@@ -239,9 +239,9 @@ exports.getRequestById = function (request, h) {
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
-  Logger.info(`IN Bulk Transfers :: PUT /bulkTransfers/requests/${request.params.id}, CACHE: [${JSON.stringify(requests.get(request.params.id))}]`)
-  const responseData = requests.get(request.params.id)
-  requests.del(request.params.id)
+  Logger.info(`IN Bulk Transfers :: PUT /bulkTransfers/requests/${request.params.id}, CACHE: [${JSON.stringify(requestCache.get(request.params.id))}]`)
+  const responseData = requestCache.get(request.params.id)
+  requestCache.del(request.params.id)
 
   histTimerEnd({ success: true, fsp: 'payee', operation: 'getBulkRequestById' })
 
@@ -255,9 +255,9 @@ exports.getCallbackById = function (request, h) {
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
-  Logger.info(`IN Bulk Transfers :: PUT /bulkTransfers/callbacks/${request.params.id}, CACHE: [${JSON.stringify(callbacks.get(request.params.id))}]`)
-  const responseData = callbacks.get(request.params.id)
-  callbacks.del(request.params.id)
+  Logger.info(`IN Bulk Transfers :: PUT /bulkTransfers/callbacks/${request.params.id}, CACHE: [${JSON.stringify(callbackCache.get(request.params.id))}]`)
+  const responseData = callbackCache.get(request.params.id)
+  callbackCache.del(request.params.id)
 
   histTimerEnd({ success: true, fsp: 'payee', operation: 'getBulkCallbackById' })
 

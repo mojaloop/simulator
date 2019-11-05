@@ -1,6 +1,6 @@
 {
   "name": "sims",
-  "version": "8.3.0",
+  "version": "8.3.1",
   "description": "A super-simple fsp simulator",
   "main": "src/index.js",
   "author": "ModusBox",
@@ -34,26 +34,26 @@
     "@hapi/joi": "15.1.1",
     "@hapi/joi-date": "1.3.0",
     "@hapi/vision": "5.5.4",
-    "@mojaloop/central-services-error-handling": "8.2.1",
+    "@mojaloop/central-services-error-handling": "8.3.0",
     "@mojaloop/central-services-logger": "8.1.2",
-    "@mojaloop/central-services-metrics": "5.2.0",
-    "@mojaloop/central-services-shared": "8.3.1",
+    "@mojaloop/central-services-metrics": "8.3.0",
+    "@mojaloop/central-services-shared": "8.3.3",
     "axios": "0.19.0",
     "base64url": "3.0.1",
     "blipp": "4.0.1",
     "five-bells-condition": "5.0.1",
-    "glob": "7.1.4",
+    "glob": "7.1.5",
     "hapi-good-winston": "3.0.0",
-    "hapi-openapi": "1.2.3",
+    "hapi-openapi": "1.2.4",
     "hapi-swagger": "10.2.0",
     "ilp-packet": "3.0.9",
     "joi-currency-code": "2.0.2",
-    "node-cache": "4.2.1",
+    "node-cache": "5.0.0",
     "prom-client": "11.5.3"
   },
   "devDependencies": {
     "pre-commit": "1.2.2",
     "standard": "14.3.1",
-    "npm-audit-resolver": "2.0.1"
+    "npm-audit-resolver": "2.1.0"
   }
 }

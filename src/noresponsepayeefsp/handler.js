@@ -23,9 +23,9 @@
 'use strict'
 
 const NodeCache = require('node-cache')
-const myCache = new NodeCache()
-const requests = new NodeCache()
-const callbacks = new NodeCache()
+const correlationCache = new NodeCache()
+const requestCache = new NodeCache()
+const callbackCache = new NodeCache()
 const Logger = require('@mojaloop/central-services-logger')
 const Enums = require('@mojaloop/central-services-shared').Enum
 const Metrics = require('../lib/metrics')
@@ -67,9 +67,9 @@ exports.putTransfersById = function (request, h) {
     headers: request.headers,
     data: request.payload
   }
-  callbacks.set(request.params.id, incomingRequest)
+  callbackCache.set(request.params.id, incomingRequest)
 
-  myCache.set(request.params.id, request.payload)
+  correlationCache.set(request.params.id, request.payload)
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payer::putTransfersById - END`)
   histTimerEnd({ success: true, fsp: 'payer', operation: 'putTransfersById', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
@@ -86,14 +86,14 @@ exports.putTransfersByIdError = function (request, h) {
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payer::putTransfersByIdError - START`)
 
   Logger.info(`IN noresponsepayeefsp:: PUT /noresponsepayeefsp/transfers/${request.params.id}/error, PAYLOAD: [${JSON.stringify(request.payload)}]`)
-  myCache.set(request.params.id, request.payload)
+  correlationCache.set(request.params.id, request.payload)
 
   // Saving Incoming request
   const incomingRequest = {
     headers: request.headers,
     data: request.payload
   }
-  callbacks.set(request.params.id, incomingRequest)
+  callbackCache.set(request.params.id, incomingRequest)
 
   // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payer::putTransfersByIdError - END`)
   histTimerEnd({ success: true, fsp: 'payer', operation: 'putTransfersByIdError', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
@@ -107,9 +107,9 @@ exports.getRequestById = function (request, h) {
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
-  Logger.info(`IN noresponsepayeefsp:: PUT /noresponsepayeefsp/requests/${request.params.id}, CACHE: [${JSON.stringify(requests.get(request.params.id))}]`)
-  const responseData = requests.get(request.params.id)
-  requests.del(request.params.id)
+  Logger.info(`IN noresponsepayeefsp:: PUT /noresponsepayeefsp/requests/${request.params.id}, CACHE: [${JSON.stringify(requestCache.get(request.params.id))}]`)
+  const responseData = requestCache.get(request.params.id)
+  requestCache.del(request.params.id)
 
   histTimerEnd({ success: true, fsp: 'payer', operation: 'getRequestById' })
 
@@ -123,9 +123,9 @@ exports.getCallbackById = function (request, h) {
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
-  Logger.info(`IN noresponsepayeefsp:: PUT /noresponsepayeefsp/callbacks/${request.params.id}, CACHE: [${JSON.stringify(callbacks.get(request.params.id))}]`)
-  const responseData = callbacks.get(request.params.id)
-  callbacks.del(request.params.id)
+  Logger.info(`IN noresponsepayeefsp:: PUT /noresponsepayeefsp/callbacks/${request.params.id}, CACHE: [${JSON.stringify(callbackCache.get(request.params.id))}]`)
+  const responseData = callbackCache.get(request.params.id)
+  callbackCache.del(request.params.id)
 
   histTimerEnd({ success: true, fsp: 'payer', operation: 'getCallbackById' })
 
