@@ -18,7 +18,8 @@
  * Gates Foundation
 
  * Rajiv Mothilal <rajiv.mothilal@modusbox.com>
-
+ * Steven Oderayi <steven.oderayi@modusbox.com>
+ *
  --------------
  ******/
 
@@ -49,6 +50,7 @@ exports.createParticipantsByTypeAndId = function (request, h) {
     ]
   }
   let idMap = new Map()
+
   if (participantCache.get(request.params.Type)) {
     idMap = participantCache.get(request.params.Type)
     if (idMap.get(request.params.ID)) {
@@ -80,6 +82,15 @@ exports.getParticipantsByTypeId = function (request, h) {
     idMap = participantCache.get(request.params.Type)
     if (idMap.get(request.params.ID)) {
       response = idMap.get(request.params.ID)
+      const currency = request.query.currency || undefined
+      const partySubIdOrType = request.query.partySubIdOrType || undefined
+      if (currency && partySubIdOrType) {
+        response = response.partyList.filter(party => party.partySubIdOrType === partySubIdOrType && party.currency === currency)
+      } else if (currency) {
+        response = response.partyList.filter(party => party.currency === currency)
+      } else if (partySubIdOrType) {
+        response = response.partyList.filter(party => party.partySubIdOrType === partySubIdOrType)
+      }
     } else {
       response = []
     }
@@ -227,6 +238,9 @@ exports.getRequestByTypeId = function (request, h) {
     'Histogram for Simulator http operations',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
+  
+  //// should we support filtering records by currency and/or subId if present in request query?? 
+
   const responseData = requestCache.get(request.params.ID)
   requestCache.del(request.params.ID)
   histTimerEnd({ success: true, operation: 'getRequestByTypeId' })

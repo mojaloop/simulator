@@ -60,7 +60,7 @@ module.exports = [
         }).unknown(false).options({ stripUnknown: true }),
         payload: {
           bulkTransferId: Joi.string().guid().required().description('Id of bulk transfer').label('@ Bulk Transfer Id must be in a valid GUID format. @'),
-          bulkQuoteId: Joi.string().guid().required().description('Id of bulk transfer').label('@ Bulk Transfer Id must be in a valid GUID format. @'),
+          bulkQuoteId: Joi.string().guid().required().description('Id of bulk quote').label('@ Bulk Quote Id must be in a valid GUID format. @'),
           payeeFsp: Joi.string().required().min(1).max(32).description('Financial Service Provider of Payee').label('@ A valid Payee FSP number must be supplied. @'),
           payerFsp: Joi.string().required().min(1).max(32).description('Financial Service Provider of Payer').label('@ A valid Payer FSP number must be supplied. @'),
           extensionList: Joi.object().keys({
@@ -86,7 +86,9 @@ module.exports = [
           }),
           expiration: Joi.string().required().regex(/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/).description('When the transfer expires').label('A valid transfer expiry date must be supplied.')
         },
-        failAction: (request, h, err) => { throw err }
+        failAction: (request, h, err) => {
+          throw err
+        }
       }
     }
   },
