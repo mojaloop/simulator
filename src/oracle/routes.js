@@ -54,12 +54,30 @@ module.exports = [
     }
   },
   {
+    method: 'PUT',
+    path: '/oracle/participants/{Type}/{ID}/{partySubIdOrType}',
+    handler: Handler.updateParticipantsByTypeId,
+    options: {
+      tags: tags,
+      description: 'Update participants by type ID and Sub ID'
+    }
+  },
+  {
     method: 'DELETE',
     path: '/oracle/participants/{Type}/{ID}',
     handler: Handler.delParticipantsByTypeId,
     options: {
       tags: tags,
       description: 'Delete Participants'
+    }
+  },
+  {
+    method: 'DELETE',
+    path: '/oracle/participants/{Type}/{ID}/{partySubIdOrType}',
+    handler: Handler.delParticipantsByTypeId,
+    options: {
+      tags: tags,
+      description: 'Delete Participants by type ID and Sub ID'
     }
   },
   {

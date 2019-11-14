@@ -82,8 +82,8 @@ exports.getParticipantsByTypeId = function (request, h) {
     idMap = participantCache.get(request.params.Type)
     if (idMap.get(request.params.ID)) {
       response = idMap.get(request.params.ID)
-      const currency = request.query.currency || undefined
-      const partySubIdOrType = request.query.partySubIdOrType || undefined
+      const currency = request.query ? request.query.currency : undefined
+      const partySubIdOrType = request.query ? request.query.partySubIdOrType : undefined
       if (currency && partySubIdOrType) {
         response = response.partyList.filter(party => party.partySubIdOrType === partySubIdOrType && party.currency === currency)
       } else if (currency) {
@@ -114,14 +114,14 @@ exports.updateParticipantsByTypeId = function (request, h) {
     idMap = participantCache.get(request.params.Type)
     if (idMap.get(request.params.ID)) {
       const currentRecord = idMap.get(request.params.ID)
+      const partySubIdOrType = request.params.partySubIdOrType || undefined
+      if (partySubIdOrType) {
+        if (partySubIdOrType !== currentRecord.partyList[0].partySubIdOrType) {
+          throw new Error(`Validation error: partySubIdOrType sent ${request.params.partySubIdOrType} does not match record's partySubIdOrType: ${currentRecord.partyList[0].partySubIdOrType}`)
+        }
+      }
       if (request.payload.fspId && currentRecord.partyList[0].fspId !== request.payload.fspId) {
         currentRecord.partyList[0].fspId = request.payload.fspId
-      }
-      if (request.payload.currency && currentRecord.partyList[0].currency !== request.payload.currency) {
-        currentRecord.partyList[0].currency = request.payload.currency
-      }
-      if (request.payload.partySubIdOrType && currentRecord.partyList[0].partySubIdOrType !== request.payload.partySubIdOrType) {
-        currentRecord.partyList[0].partySubIdOrType = request.payload.partySubIdOrType
       }
       idMap.set(request.params.ID, currentRecord)
       participantCache.set(request.params.Type, idMap)
@@ -147,6 +147,13 @@ exports.delParticipantsByTypeId = function (request, h) {
   if (participantCache.get(request.params.Type)) {
     idMap = participantCache.get(request.params.Type)
     if (idMap.get(request.params.ID)) {
+      const currentRecord = idMap.get(request.params.ID)
+      const partySubIdOrType = request.params.partySubIdOrType || undefined
+      if (partySubIdOrType) {
+        if (partySubIdOrType !== currentRecord.partyList[0].partySubIdOrType) {
+          throw new Error(`Validation error: partySubIdOrType sent ${request.params.partySubIdOrType} does not match record's partySubIdOrType: ${currentRecord.partyList[0].partySubIdOrType}`)
+        }
+      }
       idMap.delete(request.params.ID)
       participantCache.set(request.params.Type, idMap)
     } else {
@@ -238,8 +245,6 @@ exports.getRequestByTypeId = function (request, h) {
     'Histogram for Simulator http operations',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
-
-  /// / should we support filtering records by currency and/or subId if present in request query??
 
   const responseData = requestCache.get(request.params.ID)
   requestCache.del(request.params.ID)
