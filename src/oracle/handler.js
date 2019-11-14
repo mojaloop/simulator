@@ -238,8 +238,8 @@ exports.getRequestByTypeId = function (request, h) {
     'Histogram for Simulator http operations',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
-  
-  //// should we support filtering records by currency and/or subId if present in request query?? 
+
+  /// / should we support filtering records by currency and/or subId if present in request query??
 
   const responseData = requestCache.get(request.params.ID)
   requestCache.del(request.params.ID)
