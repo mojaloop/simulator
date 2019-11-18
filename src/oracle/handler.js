@@ -19,7 +19,7 @@
 
  * Rajiv Mothilal <rajiv.mothilal@modusbox.com>
  * Steven Oderayi <steven.oderayi@modusbox.com>
- *
+
  --------------
  ******/
 
@@ -114,10 +114,10 @@ exports.updateParticipantsByTypeId = function (request, h) {
     idMap = participantCache.get(request.params.Type)
     if (idMap.get(request.params.ID)) {
       const currentRecord = idMap.get(request.params.ID)
-      const partySubIdOrType = request.params.partySubIdOrType || undefined
+      const partySubIdOrType = request.params.SubId || undefined
       if (partySubIdOrType) {
         if (partySubIdOrType !== currentRecord.partyList[0].partySubIdOrType) {
-          throw new Error(`Validation error: partySubIdOrType sent ${request.params.partySubIdOrType} does not match record's partySubIdOrType: ${currentRecord.partyList[0].partySubIdOrType}`)
+          throw new Error(`Validation error: partySubIdOrType sent ${request.params.SubId} does not match record's partySubIdOrType: ${currentRecord.partyList[0].partySubIdOrType}`)
         }
       }
       if (request.payload.fspId && currentRecord.partyList[0].fspId !== request.payload.fspId) {
@@ -148,10 +148,10 @@ exports.delParticipantsByTypeId = function (request, h) {
     idMap = participantCache.get(request.params.Type)
     if (idMap.get(request.params.ID)) {
       const currentRecord = idMap.get(request.params.ID)
-      const partySubIdOrType = request.params.partySubIdOrType || undefined
+      const partySubIdOrType = request.params.SubId || undefined
       if (partySubIdOrType) {
         if (partySubIdOrType !== currentRecord.partyList[0].partySubIdOrType) {
-          throw new Error(`Validation error: partySubIdOrType sent ${request.params.partySubIdOrType} does not match record's partySubIdOrType: ${currentRecord.partyList[0].partySubIdOrType}`)
+          throw new Error(`Validation error: partySubIdOrType sent ${request.params.SubId} does not match record's partySubIdOrType: ${currentRecord.partyList[0].partySubIdOrType}`)
         }
       }
       idMap.delete(request.params.ID)
@@ -237,6 +237,41 @@ exports.createParticipantsBatch = function (request, h) {
   }
   histTimerEnd({ success: true, operation: 'postParticipantsBatch', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
   return h.response(responseObject).code(201)
+}
+
+exports.getPartiesByTypeIdAndSubId = function (request, h) {
+  const histTimerEnd = Metrics.getHistogram(
+    'sim_request',
+    'Histogram for Simulator http operations',
+    ['success', 'fsp', 'operation', 'source', 'destination']
+  ).startTimer()
+  Logger.debug(`getPartiesByTypeId::ID=${request.params.ID}`)
+  addNewRequest(request)
+  let idMap = new Map()
+  let response
+  if (participantCache.get(request.params.Type)) {
+    idMap = participantCache.get(request.params.Type)
+    if (idMap.get(request.params.ID)) {
+      response = idMap.get(request.params.ID)
+      const currency = request.query ? request.query.currency : undefined
+      const partySubIdOrType = request.query ? request.query.partySubIdOrType : undefined
+      if (currency && partySubIdOrType) {
+        response = response.partyList.filter(party => party.partySubIdOrType === partySubIdOrType && party.currency === currency).pop()
+      } else if (currency) {
+        response = response.partyList.filter(party => party.currency === currency).pop()
+      } else if (partySubIdOrType) {
+        response = response.partyList.filter(party => party.partySubIdOrType === partySubIdOrType).pop()
+      } else {
+        response = response[0]
+      }
+    } else {
+      response = null
+    }
+  } else {
+    response = null
+  }
+  histTimerEnd({ success: true, operation: 'getParties', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
+  return h.response(response).code(Enums.Http.ReturnCodes.OK.CODE)
 }
 
 exports.getRequestByTypeId = function (request, h) {

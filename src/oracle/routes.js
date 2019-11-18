@@ -18,6 +18,7 @@
  * Gates Foundation
 
  * Rajiv Mothilal <rajiv.mothilal@modusbox.com>
+ * Steven Oderayi <steven.oderayi@modusbox.com>
 
  --------------
  ******/
@@ -55,7 +56,7 @@ module.exports = [
   },
   {
     method: 'PUT',
-    path: '/oracle/participants/{Type}/{ID}/{partySubIdOrType}',
+    path: '/oracle/participants/{Type}/{ID}/{SubId}',
     handler: Handler.updateParticipantsByTypeId,
     options: {
       tags: tags,
@@ -73,7 +74,7 @@ module.exports = [
   },
   {
     method: 'DELETE',
-    path: '/oracle/participants/{Type}/{ID}/{partySubIdOrType}',
+    path: '/oracle/participants/{Type}/{ID}/{SubId}',
     handler: Handler.delParticipantsByTypeId,
     options: {
       tags: tags,
@@ -87,6 +88,33 @@ module.exports = [
     options: {
       tags: tags,
       description: 'Create a list of participants'
+    }
+  },
+  {
+    method: 'GET',
+    path: '/oracle/parties/{Type}/{ID}/{SubId}',
+    handler: Handler.getPartiesByTypeIdAndSubId,
+    options: {
+      tags: tags,
+      description: 'Get a single party by ID and SubId'
+    }
+  },
+  {
+    method: 'PUT',
+    path: '/oracle/parties/{Type}/{ID}',
+    handler: Handler.updateParticipantsByTypeId,
+    options: {
+      tags: tags,
+      description: 'Update parties by type ID'
+    }
+  },
+  {
+    method: 'PUT',
+    path: '/oracle/parties/{Type}/{ID}/{SubId}',
+    handler: Handler.updateParticipantsByTypeId,
+    options: {
+      tags: tags,
+      description: 'Update a parties by type ID and Sub ID'
     }
   },
   {
