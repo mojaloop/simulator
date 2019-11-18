@@ -48,7 +48,7 @@
     "hapi-swagger": "10.2.0",
     "ilp-packet": "3.0.9",
     "joi-currency-code": "2.0.2",
-    "node-cache": "5.0.0",
+    "node-cache": "5.0.2",
     "prom-client": "11.5.3"
   },
   "devDependencies": {
