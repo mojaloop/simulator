@@ -82,14 +82,16 @@ exports.getParticipantsByTypeId = function (request, h) {
     idMap = participantCache.get(request.params.Type)
     if (idMap.get(request.params.ID)) {
       response = idMap.get(request.params.ID)
-      const currency = request.query ? request.query.currency : undefined
-      const partySubIdOrType = request.query ? request.query.partySubIdOrType : undefined
+      const currency = request.query.currency || undefined
+      const partySubIdOrType = request.query.partySubIdOrType || undefined
       if (currency && partySubIdOrType) {
         response = response.partyList.filter(party => party.partySubIdOrType === partySubIdOrType && party.currency === currency)
       } else if (currency) {
         response = response.partyList.filter(party => party.currency === currency)
       } else if (partySubIdOrType) {
         response = response.partyList.filter(party => party.partySubIdOrType === partySubIdOrType)
+      } else {
+        response = response.partyList
       }
     } else {
       response = []
@@ -206,11 +208,11 @@ exports.createParticipantsBatch = function (request, h) {
         ]
       }
       const partyId = {
+        fspId: party.fspId,
         partyIdType: party.partyIdType,
         partyIdentifier: party.partyIdentifier,
-        partySubIdOrType: party.partySubIdOrType || undefined,
-        fspId: party.fspId,
-        currency: party.currency || undefined
+        currency: party.currency || undefined,
+        partySubIdOrType: party.partySubIdOrType || undefined
       }
       let errorInformation
       let idMap = new Map()
@@ -253,8 +255,8 @@ exports.getPartiesByTypeIdAndSubId = function (request, h) {
     idMap = participantCache.get(request.params.Type)
     if (idMap.get(request.params.ID)) {
       response = idMap.get(request.params.ID)
-      const currency = request.query ? request.query.currency : undefined
-      const partySubIdOrType = request.query ? request.query.partySubIdOrType : undefined
+      const currency = request.query.currency || undefined
+      const partySubIdOrType = request.query.partySubIdOrType || request.params.SubId || undefined
       if (currency && partySubIdOrType) {
         response = response.partyList.filter(party => party.partySubIdOrType === partySubIdOrType && party.currency === currency).pop()
       } else if (currency) {
@@ -305,7 +307,7 @@ const addNewRequest = function (request) {
     path: request.path,
     method: request.method,
     params: request.params,
-    payload: request.payload ? request.payload : undefined
+    payload: request.payload || undefined
   }
   if (requestCache.get(request.params.ID)) {
     const incomingRequests = requestCache.get(request.params.ID)
