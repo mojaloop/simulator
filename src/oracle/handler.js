@@ -18,6 +18,7 @@
  * Gates Foundation
 
  * Rajiv Mothilal <rajiv.mothilal@modusbox.com>
+ * Steven Oderayi <steven.oderayi@modusbox.com>
 
  --------------
  ******/
@@ -49,6 +50,7 @@ exports.createParticipantsByTypeAndId = function (request, h) {
     ]
   }
   let idMap = new Map()
+
   if (participantCache.get(request.params.Type)) {
     idMap = participantCache.get(request.params.Type)
     if (idMap.get(request.params.ID)) {
@@ -80,6 +82,17 @@ exports.getParticipantsByTypeId = function (request, h) {
     idMap = participantCache.get(request.params.Type)
     if (idMap.get(request.params.ID)) {
       response = idMap.get(request.params.ID)
+      const currency = request.query.currency || undefined
+      const partySubIdOrType = request.query.partySubIdOrType || undefined
+      if (currency && partySubIdOrType) {
+        response = response.partyList.filter(party => party.partySubIdOrType === partySubIdOrType && party.currency === currency)
+      } else if (currency) {
+        response = response.partyList.filter(party => party.currency === currency)
+      } else if (partySubIdOrType) {
+        response = response.partyList.filter(party => party.partySubIdOrType === partySubIdOrType)
+      } else {
+        response = response.partyList
+      }
     } else {
       response = []
     }
@@ -103,14 +116,14 @@ exports.updateParticipantsByTypeId = function (request, h) {
     idMap = participantCache.get(request.params.Type)
     if (idMap.get(request.params.ID)) {
       const currentRecord = idMap.get(request.params.ID)
+      const partySubIdOrType = request.params.SubId || undefined
+      if (partySubIdOrType) {
+        if (partySubIdOrType !== currentRecord.partyList[0].partySubIdOrType) {
+          throw new Error(`Validation error: partySubIdOrType sent ${request.params.SubId} does not match record's partySubIdOrType: ${currentRecord.partyList[0].partySubIdOrType}`)
+        }
+      }
       if (request.payload.fspId && currentRecord.partyList[0].fspId !== request.payload.fspId) {
         currentRecord.partyList[0].fspId = request.payload.fspId
-      }
-      if (request.payload.currency && currentRecord.partyList[0].currency !== request.payload.currency) {
-        currentRecord.partyList[0].currency = request.payload.currency
-      }
-      if (request.payload.partySubIdOrType && currentRecord.partyList[0].partySubIdOrType !== request.payload.partySubIdOrType) {
-        currentRecord.partyList[0].partySubIdOrType = request.payload.partySubIdOrType
       }
       idMap.set(request.params.ID, currentRecord)
       participantCache.set(request.params.Type, idMap)
@@ -136,6 +149,13 @@ exports.delParticipantsByTypeId = function (request, h) {
   if (participantCache.get(request.params.Type)) {
     idMap = participantCache.get(request.params.Type)
     if (idMap.get(request.params.ID)) {
+      const currentRecord = idMap.get(request.params.ID)
+      const partySubIdOrType = request.params.SubId || undefined
+      if (partySubIdOrType) {
+        if (partySubIdOrType !== currentRecord.partyList[0].partySubIdOrType) {
+          throw new Error(`Validation error: partySubIdOrType sent ${request.params.SubId} does not match record's partySubIdOrType: ${currentRecord.partyList[0].partySubIdOrType}`)
+        }
+      }
       idMap.delete(request.params.ID)
       participantCache.set(request.params.Type, idMap)
     } else {
@@ -188,11 +208,11 @@ exports.createParticipantsBatch = function (request, h) {
         ]
       }
       const partyId = {
+        fspId: party.fspId,
         partyIdType: party.partyIdType,
         partyIdentifier: party.partyIdentifier,
-        partySubIdOrType: party.partySubIdOrType || undefined,
-        fspId: party.fspId,
-        currency: party.currency || undefined
+        currency: party.currency || undefined,
+        partySubIdOrType: party.partySubIdOrType || undefined
       }
       let errorInformation
       let idMap = new Map()
@@ -221,12 +241,48 @@ exports.createParticipantsBatch = function (request, h) {
   return h.response(responseObject).code(201)
 }
 
+exports.getPartiesByTypeIdAndSubId = function (request, h) {
+  const histTimerEnd = Metrics.getHistogram(
+    'sim_request',
+    'Histogram for Simulator http operations',
+    ['success', 'fsp', 'operation', 'source', 'destination']
+  ).startTimer()
+  Logger.debug(`getPartiesByTypeId::ID=${request.params.ID}`)
+  addNewRequest(request)
+  let idMap = new Map()
+  let response
+  if (participantCache.get(request.params.Type)) {
+    idMap = participantCache.get(request.params.Type)
+    if (idMap.get(request.params.ID)) {
+      response = idMap.get(request.params.ID)
+      const currency = request.query.currency || undefined
+      const partySubIdOrType = request.query.partySubIdOrType || request.params.SubId || undefined
+      if (currency && partySubIdOrType) {
+        response = response.partyList.filter(party => party.partySubIdOrType === partySubIdOrType && party.currency === currency).pop()
+      } else if (currency) {
+        response = response.partyList.filter(party => party.currency === currency).pop()
+      } else if (partySubIdOrType) {
+        response = response.partyList.filter(party => party.partySubIdOrType === partySubIdOrType).pop()
+      } else {
+        response = response[0]
+      }
+    } else {
+      response = null
+    }
+  } else {
+    response = null
+  }
+  histTimerEnd({ success: true, operation: 'getParties', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
+  return h.response(response).code(Enums.Http.ReturnCodes.OK.CODE)
+}
+
 exports.getRequestByTypeId = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
     'sim_request',
     'Histogram for Simulator http operations',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
+
   const responseData = requestCache.get(request.params.ID)
   requestCache.del(request.params.ID)
   histTimerEnd({ success: true, operation: 'getRequestByTypeId' })
@@ -251,7 +307,7 @@ const addNewRequest = function (request) {
     path: request.path,
     method: request.method,
     params: request.params,
-    payload: request.payload ? request.payload : undefined
+    payload: request.payload || undefined
   }
   if (requestCache.get(request.params.ID)) {
     const incomingRequests = requestCache.get(request.params.ID)

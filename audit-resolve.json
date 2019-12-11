@@ -31,6 +31,18 @@
     "1165|hapi-good-winston>@hapi/hapi>@hapi/subtext": {
       "decision": "fix",
       "madeAt": 1569389103130
+    },
+    "1316|hapi-swagger>handlebars": {
+      "decision": "fix",
+      "madeAt": 1574774618223
+    },
+    "1324|hapi-swagger>handlebars": {
+      "decision": "fix",
+      "madeAt": 1574774618223
+    },
+    "1325|hapi-swagger>handlebars": {
+      "decision": "fix",
+      "madeAt": 1574774618223
     }
   },
   "rules": {},
