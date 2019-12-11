@@ -42,7 +42,7 @@
     "base64url": "3.0.1",
     "blipp": "4.0.1",
     "five-bells-condition": "5.0.1",
-    "glob": "7.1.5",
+    "glob": "7.1.6",
     "hapi-good-winston": "3.0.0",
     "hapi-openapi": "1.2.4",
     "hapi-swagger": "10.2.0",
