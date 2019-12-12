@@ -90,8 +90,6 @@ exports.getParticipantsByTypeId = function (request, h) {
         response = response.partyList.filter(party => party.currency === currency)
       } else if (partySubIdOrType) {
         response = response.partyList.filter(party => party.partySubIdOrType === partySubIdOrType)
-      } else {
-        response = response.partyList
       }
     } else {
       response = []
