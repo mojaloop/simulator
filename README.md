@@ -11,9 +11,9 @@ Simulators that act as mock payer fsp and payee fsp which interact with the Swit
 
 | Variable | Description | Default |
 |---|---|---|
-| PARTIES_ENDPOINT | Mojaloop Callback Endpoint for Parties | 'http://localhost:8444' | |
-| QUOTES_ENDPOINT | Mojaloop Callback Endpoint for Quotes | 'http://localhost:8444' | |
-| TRANSFERS_ENDPOINT | Mojaloop Callback Endpoint for Transfers | 'http://localhost:8444' |
+| PARTIES_ENDPOINT | Mojaloop Callback Endpoint for Parties | 'http://localhost:1080' | |
+| QUOTES_ENDPOINT | Mojaloop Callback Endpoint for Quotes | 'http://localhost:1080' | |
+| TRANSFERS_ENDPOINT | Mojaloop Callback Endpoint for Transfers | 'http://localhost:1080' |
 | TRANSFERS_FULFIL_RESPONSE_DISABLED | Flag to disable the Fulfil response callback to the TRANSFER_ENDPOINT | 'false' |
 | TRANSFERS_FULFILMENT | ILP Fulfilment value | 'XoSz1cL0tljJSCp_VtIYmPNw-zFUgGfbUqf69AagUzY' |
 | TRANSFERS_CONDITION | ILP Fulfilment condition | 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks' |

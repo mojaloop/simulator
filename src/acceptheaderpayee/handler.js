@@ -32,9 +32,9 @@ const Enums = require('@mojaloop/central-services-shared').Enum
 const Metrics = require('../lib/metrics')
 const base64url = require('base64url')
 
-const partiesEndpoint = process.env.PARTIES_ENDPOINT || 'http://localhost:8444'
-const quotesEndpoint = process.env.QUOTES_ENDPOINT || 'http://localhost:8444'
-const transfersEndpoint = process.env.TRANSFERS_ENDPOINT || 'http://localhost:8444'
+const partiesEndpoint = process.env.PARTIES_ENDPOINT || 'http://localhost:1080'
+const quotesEndpoint = process.env.QUOTES_ENDPOINT || 'http://localhost:1080'
+const transfersEndpoint = process.env.TRANSFERS_ENDPOINT || 'http://localhost:1080'
 const transfersFulfilResponseDisabled = (process.env.TRANSFERS_FULFIL_RESPONSE_DISABLED !== undefined && process.env.TRANSFERS_FULFIL_RESPONSE_DISABLED !== 'false')
 const transfersFulfilment = process.env.TRANSFERS_FULFILMENT || 'XoSz1cL0tljJSCp_VtIYmPNw-zFUgGfbUqf69AagUzY'
 const transfersCondition = process.env.TRANSFERS_CONDITION || 'HOr22-H3AfTDHrSkPjJtVPRdKouuMkDXTR4ejlQa8Ks'
