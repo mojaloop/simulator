@@ -39,7 +39,7 @@ readinessProbe:
   enabled: true
   httpGet:
     path: /health
-    port: 1080
+    port: 8444
     scheme: HTTP
   initialDelaySeconds: 5
   periodSeconds: 15
@@ -47,7 +47,7 @@ livenessProbe:
   enabled: true
   httpGet:
     path: /health
-    port: 1080
+    port: 8444
     scheme: HTTP
   initialDelaySeconds: 5
   periodSeconds: 15

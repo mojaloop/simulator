@@ -12,5 +12,5 @@ RUN apk del native-deps
 
 COPY src /opt/simulator/src
 
-EXPOSE 1080
+EXPOSE 8444
 CMD ["node", "./src/index.js"]

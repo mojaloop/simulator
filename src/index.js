@@ -28,6 +28,6 @@ const Setup = require('.' +
 
 module.exports = Setup.initialize({
   service: 'api',
-  port: 1080,
+  port: 8444,
   modules: [Routes]
 })
