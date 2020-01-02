@@ -146,9 +146,9 @@ exports.getPartiesByTypeAndId = function (request, h) {
           Date: new Date().toUTCString(),
           'FSPIOP-Signature': JSON.stringify(fspiopSignature),
           'FSPIOP-HTTP-Method': 'PUT',
-          'FSPIOP-URI': `/parties/${request.params.type}/${request.params.id}`,
-          traceparent: request.headers.traceparent ? request.headers.traceparent : undefined,
-          tracestate: request.headers.tracestate ? request.headers.tracestate : undefined
+          'FSPIOP-URI': `/parties/${request.params.type}/${request.params.id}`
+          // traceparent: request.headers.traceparent ? request.headers.traceparent : undefined,
+          // tracestate: request.headers.tracestate ? request.headers.tracestate : undefined
         },
         transformRequest: [(data, headers) => {
           delete headers.common.Accept
@@ -161,7 +161,7 @@ exports.getPartiesByTypeAndId = function (request, h) {
       }
 
       // Logger.info((new Date().toISOString()), 'Executing PUT', url)
-      const res = await sendRequest(url, opts)
+      const res = await sendRequest(url, opts, request.span)
       // Logger.info((new Date().toISOString()), 'response: ', res.status)
       if (res.status !== Enums.Http.ReturnCodes.ACCEPTED.CODE) {
         // TODO: how does one identify the failed response?
@@ -262,9 +262,9 @@ exports.postQuotes = function (request, h) {
           Date: new Date().toUTCString(),
           'FSPIOP-Signature': `${JSON.stringify(fspiopSignature)}`,
           'FSPIOP-HTTP-Method': 'PUT',
-          'FSPIOP-URI': `/quotes/${quoteRequest.quoteId}`,
-          traceparent: request.headers.traceparent ? request.headers.traceparent : undefined,
-          tracestate: request.headers.tracestate ? request.headers.tracestate : undefined
+          'FSPIOP-URI': `/quotes/${quoteRequest.quoteId}`
+          // traceparent: request.headers.traceparent ? request.headers.traceparent : undefined,
+          // tracestate: request.headers.tracestate ? request.headers.tracestate : undefined
         },
         transformRequest: [(data, headers) => {
           delete headers.common.Accept
@@ -276,7 +276,7 @@ exports.postQuotes = function (request, h) {
         data: JSON.stringify(quotesResponse)
       }
       // Logger.info((new Date().toISOString()), 'Executing PUT', url)
-      const res = await sendRequest(url, opts)
+      const res = await sendRequest(url, opts, request.span)
       // Logger.info((new Date().toISOString()), 'response: ', res.status)
       if (res.status !== Enums.Http.ReturnCodes.ACCEPTED.CODE) {
         // TODO: how does one identify the failed response?
@@ -351,9 +351,9 @@ exports.postTransfers = async function (request, h) {
           Date: new Date().toUTCString(),
           'FSPIOP-Signature': JSON.stringify(fspiopSignature),
           'FSPIOP-HTTP-Method': 'PUT',
-          'FSPIOP-URI': fspiopUriHeader,
-          traceparent: request.headers.traceparent ? request.headers.traceparent : undefined,
-          tracestate: request.headers.tracestate ? request.headers.tracestate : undefined
+          'FSPIOP-URI': fspiopUriHeader
+          // traceparent: request.headers.traceparent ? request.headers.traceparent : undefined,
+          // tracestate: request.headers.tracestate ? request.headers.tracestate : undefined
         },
         transformRequest: [(data, headers) => {
           delete headers.common.Accept
@@ -366,7 +366,7 @@ exports.postTransfers = async function (request, h) {
       }
 
       // Logger.info(`Executing PUT: [${url}], HEADERS: [${JSON.stringify(opts.headers)}], BODY: [${JSON.stringify(transfersResponse)}]`)
-      const res = await sendRequest(url, opts)
+      const res = await sendRequest(url, opts, request.span)
       // Logger.info(`response: ${res.status}`)
       if (res.status !== Enums.Http.ReturnCodes.ACCEPTED.CODE) {
         // TODO: how does one identify the failed response?
@@ -513,9 +513,9 @@ exports.getQuotesById = function (request, h) {
             Date: new Date().toUTCString(),
             'FSPIOP-Signature': `${JSON.stringify(fspiopSignature)}`,
             'FSPIOP-HTTP-Method': 'PUT',
-            'FSPIOP-URI': `/quotes/${request.params.id}`,
-            traceparent: request.headers.traceparent ? request.headers.traceparent : undefined,
-            tracestate: request.headers.tracestate ? request.headers.tracestate : undefined
+            'FSPIOP-URI': `/quotes/${request.params.id}`
+            // traceparent: request.headers.traceparent ? request.headers.traceparent : undefined,
+            // tracestate: request.headers.tracestate ? request.headers.tracestate : undefined
           },
           transformRequest: [(data, headers) => {
             delete headers.common.Accept
@@ -527,7 +527,7 @@ exports.getQuotesById = function (request, h) {
           data: JSON.stringify(responseData)
         }
         // Logger.info((new Date().toISOString()), 'Executing PUT', url)
-        const res = await sendRequest(url, opts)
+        const res = await sendRequest(url, opts, request.span)
         if (res.status !== Enums.Http.ReturnCodes.ACCEPTED.CODE) {
           throw new Error(`Failed to send. Result: ${res}`)
         }

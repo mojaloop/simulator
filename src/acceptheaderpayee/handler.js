@@ -136,9 +136,9 @@ exports.getPartiesByTypeAndId = function (req, h) {
           Date: new Date().toUTCString(),
           'FSPIOP-Signature': JSON.stringify(fspiopSignature),
           'FSPIOP-HTTP-Method': 'PUT',
-          'FSPIOP-URI': `/parties/${req.params.type}/${req.params.id}`,
-          traceparent: req.headers.traceparent ? req.headers.traceparent : undefined,
-          tracestate: req.headers.tracestate ? req.headers.tracestate : undefined
+          'FSPIOP-URI': `/parties/${req.params.type}/${req.params.id}`
+          // traceparent: req.headers.traceparent ? req.headers.traceparent : undefined,
+          // tracestate: req.headers.tracestate ? req.headers.tracestate : undefined
         },
         httpsAgent: new https.Agent({
           rejectUnauthorized: false
@@ -147,7 +147,7 @@ exports.getPartiesByTypeAndId = function (req, h) {
       }
 
       // Logger.info((new Date().toISOString()), 'Executing PUT', url)
-      const res = await request(url, opts)
+      const res = await request(url, opts, req.span)
       // Logger.info((new Date().toISOString()), 'response: ', res.status)
       if (res.status !== Enums.Http.ReturnCodes.ACCEPTED.CODE) {
         // TODO: how does one identify the failed response?
@@ -225,9 +225,9 @@ exports.postQuotes = function (req, h) {
           Date: new Date().toUTCString(),
           'FSPIOP-Signature': `${JSON.stringify(fspiopSignature)}`,
           'FSPIOP-HTTP-Method': 'PUT',
-          'FSPIOP-URI': `/quotes/${quotesRequest.quoteId}`,
-          traceparent: req.headers.traceparent ? req.headers.traceparent : undefined,
-          tracestate: req.headers.tracestate ? req.headers.tracestate : undefined
+          'FSPIOP-URI': `/quotes/${quotesRequest.quoteId}`
+          // traceparent: req.headers.traceparent ? req.headers.traceparent : undefined,
+          // tracestate: req.headers.tracestate ? req.headers.tracestate : undefined
         },
         httpsAgent: new https.Agent({
           rejectUnauthorized: false
@@ -235,7 +235,7 @@ exports.postQuotes = function (req, h) {
         data: JSON.stringify(quotesResponse)
       }
       // Logger.info((new Date().toISOString()), 'Executing PUT', url)
-      const res = await request(url, opts)
+      const res = await request(url, opts, req.span)
       // Logger.info((new Date().toISOString()), 'response: ', res.status)
       if (res.status !== Enums.Http.ReturnCodes.ACCEPTED.CODE) {
         // TODO: how does one identify the failed response?
@@ -307,9 +307,9 @@ exports.postTransfers = async function (req, h) {
           Date: new Date().toUTCString(),
           'FSPIOP-Signature': JSON.stringify(fspiopSignature),
           'FSPIOP-HTTP-Method': 'PUT',
-          'FSPIOP-URI': fspiopUriHeader,
-          traceparent: req.headers.traceparent ? req.headers.traceparent : undefined,
-          tracestate: req.headers.tracestate ? req.headers.tracestate : undefined
+          'FSPIOP-URI': fspiopUriHeader
+          // traceparent: req.headers.traceparent ? req.headers.traceparent : undefined,
+          // tracestate: req.headers.tracestate ? req.headers.tracestate : undefined
         },
         httpsAgent: new https.Agent({
           rejectUnauthorized: false
@@ -318,7 +318,7 @@ exports.postTransfers = async function (req, h) {
       }
 
       // Logger.info(`Executing PUT: [${url}], HEADERS: [${JSON.stringify(opts.headers)}], BODY: [${JSON.stringify(transfersResponse)}]`)
-      const res = await request(url, opts)
+      const res = await request(url, opts, req.span)
       // Logger.info(`response: ${res.status}`)
       if (res.status !== Enums.Http.ReturnCodes.ACCEPTED.CODE) {
         // TODO: how does one identify the failed response?

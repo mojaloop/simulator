@@ -25,20 +25,49 @@
 
 'use strict'
 
-const Logger = require('@mojaloop/central-services-logger')
-const request = require('axios')
-const { pickBy, identity } = require('lodash')
-const { getTagsFromFSPIOPHeaders } = require('./events')
-
-module.exports = async (url, opts, span) => {
-  Logger.info(`Executing PUT: [${url}], HEADERS: [${JSON.stringify(opts.headers)}], BODY: [${JSON.stringify(opts.body)}]`)
-  let optionsWithCleanHeaders = Object.assign({}, opts, { headers: pickBy(opts.headers, identity) })
-  if (span) {
-    optionsWithCleanHeaders = span.injectContextToHttpRequest(optionsWithCleanHeaders)
-    span.setTags(getTagsFromFSPIOPHeaders(optionsWithCleanHeaders))
-    span.info(optionsWithCleanHeaders)
+const getTagsFromFSPIOPHeaders = (request) => {
+  const tags = {}
+  for (const headerName in request.headers) {
+    const h = headerName.split('-')
+    if (h[0].toUpperCase() === 'FSPIOP' && h[1].toUpperCase() !== 'SIGNATURE') {
+      if (h[1].toUpperCase() === 'HTTP') {
+        tags[h[2].toLowerCase()] = request.headers[headerName]
+      } else {
+        if (h[1].toUpperCase() === 'URI') {
+          const uri = request.headers[headerName].split('/')
+          if (uri[1] === 'transfers') {
+            tags.transactionType = 'transfers'
+            tags.transactionAction = 'sim'
+            tags.transactionId = uri[2]
+          } else if (uri[2] === 'transfers') {
+            tags.transactionType = 'transfers'
+            tags.transactionAction = 'sim'
+            tags.transactionId = uri[3]
+          }
+        }
+        tags[h[1].toLowerCase()] = request.headers[headerName]
+      }
+    }
   }
-  const res = await request(url, optionsWithCleanHeaders)
-  Logger.info((new Date().toISOString()), 'response: ', res.status)
-  return res
+  return tags
+}
+
+const addTagsPostHandler = (request, h) => {
+  const span = request.span
+  if (!span.spanContext.tags.transactionId) {
+    span.setTags(getTagsFromFSPIOPHeaders(request))
+  }
+  return h.continue
+}
+
+const plugin = {
+  name: 'spanTagSetterOnPostHandler',
+  register: function (server) {
+    server.ext('onPostHandler', addTagsPostHandler)
+  }
+}
+
+module.exports = {
+  getTagsFromFSPIOPHeaders,
+  plugin
 }

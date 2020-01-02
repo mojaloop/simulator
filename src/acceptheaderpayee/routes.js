@@ -21,16 +21,18 @@
  ******/
 
 const Handler = require('./handler')
-const tags = ['api', 'metadata']
+const Enum = require('@mojaloop/central-services-shared').Enum
+const tags = ['api', 'metadata', Enum.Tags.RouteTags.SAMPLED]
 const BaseJoi = require('@hapi/joi').extend(require('joi-currency-code'))
 const Joi = BaseJoi.extend(require('@hapi/joi-date'))
 
 module.exports = [
   {
     method: 'GET',
-    path: '/acceptheaderpayeefsp/',
+    path: '/acceptheaderpayeefsp',
     handler: Handler.metadata,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_metadata`,
       tags: tags,
       description: 'Metadata'
     }
@@ -40,6 +42,7 @@ module.exports = [
     path: '/acceptheaderpayeefsp/participants/{type}/{id}',
     handler: Handler.putParticipantsByTypeId,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_putParticipantsByTypeId`,
       tags: tags,
       description: 'Callback for adding participant'
     }
@@ -49,6 +52,7 @@ module.exports = [
     path: '/acceptheaderpayeefsp/parties/{type}/{id}',
     handler: Handler.postPartiesByTypeAndId,
     config: {
+      id: `simulator_${__dirname.split('/').pop()}_postPartiesByTypeAndId`,
       tags: tags,
       auth: null,
       description: 'Transfer API.',
@@ -63,6 +67,7 @@ module.exports = [
     path: '/acceptheaderpayeefsp/parties/{type}/{id}',
     handler: Handler.getPartiesByTypeAndId,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_getPartiesByTypeAndId`,
       tags: tags,
       description: 'Add users to payer simulator',
       validate: {
@@ -88,6 +93,7 @@ module.exports = [
     path: '/acceptheaderpayeefsp/quotes',
     handler: Handler.postQuotes,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_postQuotes`,
       tags: tags,
       description: 'Add users to payer simulator',
       payload: {
@@ -185,6 +191,7 @@ module.exports = [
     path: '/acceptheaderpayeefsp/transfers',
     handler: Handler.postTransfers,
     config: {
+      id: `simulator_${__dirname.split('/').pop()}_postTransfers`,
       tags: tags,
       auth: null,
       description: 'Transfer API.',
@@ -235,6 +242,7 @@ module.exports = [
     path: '/acceptheaderpayeefsp/transfers/{id}',
     handler: Handler.putTransfersById,
     config: {
+      id: `simulator_${__dirname.split('/').pop()}_putTransfersById`,
       tags: tags,
       description: 'Fulfil a transfer',
       payload: {
@@ -276,6 +284,7 @@ module.exports = [
     path: '/acceptheaderpayeefsp/transfers/{id}/error',
     handler: Handler.putTransfersByIdError,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_putTransfersByIdError`,
       tags: tags,
       description: 'Abort a transfer',
       payload: {
@@ -318,6 +327,7 @@ module.exports = [
     path: '/acceptheaderpayeefsp/correlationid/{id}',
     handler: Handler.getcorrelationId,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_getcorrelationId`,
       tags: tags,
       description: 'Get details based on correlationid'
     }
@@ -327,6 +337,7 @@ module.exports = [
     path: '/acceptheaderpayeefsp/requests/{id}',
     handler: Handler.getRequestById,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_getRequestById`,
       tags: tags,
       description: 'Get details based on request id'
     }
@@ -336,6 +347,7 @@ module.exports = [
     path: '/acceptheaderpayeefsp/callbacks/{id}',
     handler: Handler.getCallbackById,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_getCallbackById`,
       tags: tags,
       description: 'Get details based on callback id'
     }

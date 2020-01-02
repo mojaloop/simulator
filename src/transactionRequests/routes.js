@@ -23,7 +23,8 @@
  ******/
 
 const Handler = require('./handler')
-const tags = ['api', 'transactionRequests']
+const Enum = require('@mojaloop/central-services-shared').Enum
+const tags = ['api', 'transactionRequests', Enum.Tags.RouteTags.SAMPLED]
 
 module.exports = [
   {
@@ -31,6 +32,7 @@ module.exports = [
     path: '/transactionRequests/{ID}',
     handler: Handler.getParticipantsByTypeId,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_getParticipantsByTypeId`,
       tags: tags,
       description: 'Get list of participants'
     }
@@ -40,6 +42,7 @@ module.exports = [
     path: '/transactionRequests',
     handler: Handler.createParticipantsByTypeAndId,
     config: {
+      id: `simulator_${__dirname.split('/').pop()}_createParticipantsByTypeAndId`,
       tags: tags,
       description: 'Create participants'
     }
@@ -49,6 +52,7 @@ module.exports = [
     path: '/transactionRequests/{ID}',
     handler: Handler.updateParticipantsByTypeId,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_updateParticipantsByTypeId`,
       tags: tags,
       description: 'Update participants'
     }
@@ -58,6 +62,7 @@ module.exports = [
     path: '/transactionRequests/{ID}/error',
     handler: Handler.delParticipantsByTypeId,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_delParticipantsByTypeId`,
       tags: tags,
       description: 'Delete Participants'
     }
@@ -67,6 +72,7 @@ module.exports = [
     path: '/transactionRequests/requests/{Type}/{ID}',
     handler: Handler.getRequestByTypeId,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_getRequestByTypeId`,
       tags: tags,
       description: 'Get oracle specific requests based on Type and ID'
     }
@@ -76,6 +82,7 @@ module.exports = [
     path: '/transactionRequests/requests/{requestId}',
     handler: Handler.getRequestById,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_getRequestById`,
       tags: tags,
       description: 'Get oracle specific requests based on requestId of a batch'
     }
