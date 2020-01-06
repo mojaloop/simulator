@@ -368,7 +368,7 @@ exports.postTransfers = async function (request, h) {
       // Logger.info(`Executing PUT: [${url}], HEADERS: [${JSON.stringify(opts.headers)}], BODY: [${JSON.stringify(transfersResponse)}]`)
       const res = await sendRequest(url, opts, request.span)
       // Logger.info(`response: ${res.status}`)
-      if (res.status !== Enums.Http.ReturnCodes.ACCEPTED.CODE) {
+      if ((res.status !== Enums.Http.ReturnCodes.ACCEPTED.CODE) || (res.status !== Enums.Http.ReturnCodes.OK.CODE)) {
         // TODO: how does one identify the failed response?
         throw new Error(`Failed to send. Result: ${JSON.stringify(res)}`)
       }

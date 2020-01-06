@@ -25,6 +25,11 @@
 
 'use strict'
 
+const methodDictionary = {
+  POST: 'prepare',
+  PUT: 'fulfil'
+}
+
 const getTagsFromFSPIOPHeaders = (request) => {
   const tags = {}
   for (const headerName in request.headers) {
@@ -35,13 +40,13 @@ const getTagsFromFSPIOPHeaders = (request) => {
       } else {
         if (h[1].toUpperCase() === 'URI') {
           const uri = request.headers[headerName].split('/')
-          if (uri[1] === 'transfers') {
+          if (uri[1] === 'transfers') { // handling outgoing transfers
             tags.transactionType = 'transfers'
-            tags.transactionAction = 'sim'
+            tags.transactionAction = methodDictionary[request.method.toUpperCase()]
             tags.transactionId = uri[2]
-          } else if (uri[2] === 'transfers') {
+          } else if (uri[2] === 'transfers') { // handling incoming transfers
             tags.transactionType = 'transfers'
-            tags.transactionAction = 'sim'
+            tags.transactionAction = methodDictionary[request.method.toUpperCase()]
             tags.transactionId = uri[3]
           }
         }
