@@ -59,7 +59,7 @@ const getTagsFromFSPIOPHeaders = (request) => {
 
 const addTagsPostHandler = (request, h) => {
   const span = request.span
-  if (!span.spanContext.tags.transactionId) {
+  if (span && !span.spanContext.tags.transactionId) {
     span.setTags(getTagsFromFSPIOPHeaders(request))
   }
   return h.continue
