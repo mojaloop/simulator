@@ -21,7 +21,8 @@
  ******/
 
 const Handler = require('./handler')
-const tags = ['api', 'metadata']
+const Enum = require('@mojaloop/central-services-shared').Enum
+const tags = ['api', 'metadata', Enum.Tags.RouteTags.SAMPLED]
 const BaseJoi = require('@hapi/joi').extend(require('joi-currency-code'))
 const Joi = BaseJoi.extend(require('@hapi/joi-date'))
 
@@ -31,6 +32,7 @@ module.exports = [
     path: '/payeefsp/',
     handler: Handler.metadata,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_metadata`,
       tags: tags,
       description: 'Metadata'
     }
@@ -40,6 +42,7 @@ module.exports = [
     path: '/payeefsp/participants/{type}/{id}',
     handler: Handler.putParticipantsByTypeId,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_putParticipantsByTypeId`,
       tags: tags,
       description: 'Callback for adding participant'
     }
@@ -49,7 +52,7 @@ module.exports = [
     path: '/payeefsp/parties/{type}/{id}',
     handler: Handler.postPartiesByTypeAndId,
     config: {
-      id: 'add_parties',
+      id: `simulator_${__dirname.split('/').pop()}_postPartiesByTypeAndId`,
       tags: tags,
       auth: null,
       description: 'Transfer API.',
@@ -64,6 +67,7 @@ module.exports = [
     path: '/payeefsp/parties/{type}/{id}',
     handler: Handler.getPartiesByTypeAndId,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_getPartiesByTypeAndId`,
       tags: tags,
       description: 'Add users to payer simulator',
       validate: {
@@ -89,6 +93,7 @@ module.exports = [
     path: '/payeefsp/quotes',
     handler: Handler.postQuotes,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_postQuotes`,
       tags: tags,
       description: 'Metadata',
       payload: {
@@ -185,6 +190,7 @@ module.exports = [
     path: '/payeefsp/quotes/{id}',
     handler: Handler.getQuotesById,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_getQuotesById`,
       tags: tags,
       description: 'Metadata',
       validate: {
@@ -214,7 +220,7 @@ module.exports = [
     path: '/payeefsp/transfers',
     handler: Handler.postTransfers,
     config: {
-      id: 'transfers',
+      id: `simulator_${__dirname.split('/').pop()}_postTransfers`,
       tags: tags,
       auth: null,
       description: 'Transfer API.',
@@ -265,7 +271,7 @@ module.exports = [
     path: '/payeefsp/transfers/{id}',
     handler: Handler.putTransfersById,
     config: {
-      id: 'transfer_fulfilment',
+      id: `simulator_${__dirname.split('/').pop()}_putTransfersById`,
       tags: tags,
       // auth: Auth.strategy(),
       description: 'Fulfil a transfer',
@@ -308,7 +314,7 @@ module.exports = [
     path: '/payeefsp/transfers/{id}/error',
     handler: Handler.putTransfersByIdError,
     options: {
-      id: 'transfer_abort',
+      id: `simulator_${__dirname.split('/').pop()}_putTransfersByIdError`,
       tags: tags,
       description: 'Abort a transfer',
       payload: {
@@ -351,6 +357,7 @@ module.exports = [
     path: '/payeefsp/correlationid/{id}',
     handler: Handler.getcorrelationId,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_getcorrelationId`,
       tags: tags,
       description: 'Get details based on correlationid'
     }
@@ -360,6 +367,7 @@ module.exports = [
     path: '/payeefsp/requests/{id}',
     handler: Handler.getRequestById,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_getRequestById`,
       tags: tags,
       description: 'Get details based on request id'
     }
@@ -369,6 +377,7 @@ module.exports = [
     path: '/payeefsp/callbacks/{id}',
     handler: Handler.getCallbackById,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_getCallbackById`,
       tags: tags,
       description: 'Get details based on callback id'
     }

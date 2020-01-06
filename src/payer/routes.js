@@ -21,7 +21,8 @@
  ******/
 
 const Handler = require('./handler')
-const tags = ['api', 'metadata']
+const Enum = require('@mojaloop/central-services-shared').Enum
+const tags = ['api', 'metadata', Enum.Tags.RouteTags.SAMPLED]
 const BaseJoi = require('@hapi/joi').extend(require('joi-currency-code'))
 const Joi = BaseJoi.extend(require('@hapi/joi-date'))
 
@@ -31,6 +32,7 @@ module.exports = [
     path: '/payerfsp/',
     handler: Handler.metadata,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_metadata`,
       tags: tags,
       description: 'Metadata'
     }
@@ -40,6 +42,7 @@ module.exports = [
     path: '/payerfsp/participants/{type}/{id}',
     handler: Handler.putParticipantsByTypeId,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_putParticipantsByTypeId`,
       tags: tags,
       description: 'Metadata'
     }
@@ -49,6 +52,7 @@ module.exports = [
     path: '/payerfsp/parties/{type}/{id}',
     handler: Handler.putPartiesByTypeId,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_putPartiesByTypeId`,
       tags: tags,
       description: 'Metadata',
       payload: {
@@ -99,6 +103,7 @@ module.exports = [
     path: '/payerfsp/parties/{type}/{id}/error',
     handler: Handler.putPartiesByTypeIdAndError,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_putPartiesByTypeIdAndError`,
       tags: tags,
       description: 'Metadata',
       payload: {
@@ -142,6 +147,7 @@ module.exports = [
     path: '/payerfsp/quotes/{id}',
     handler: Handler.putQuotesById,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_putQuotesById`,
       tags: tags,
       description: 'Metadata',
       payload: {
@@ -201,6 +207,7 @@ module.exports = [
     path: '/payerfsp/quotes/{id}/error',
     handler: Handler.putQuotesByIdAndError,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_putQuotesByIdAndError`,
       tags: tags,
       description: 'Metadata',
       payload: {
@@ -243,6 +250,7 @@ module.exports = [
     path: '/payerfsp/transfers/{id}',
     handler: Handler.putTransfersById,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_putTransfersById`,
       tags: tags,
       description: 'Metadata',
       payload: {
@@ -285,6 +293,7 @@ module.exports = [
     path: '/payerfsp/transfers/{id}/error',
     handler: Handler.putTransfersByIdError,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_putTransfersByIdError`,
       tags: tags,
       description: 'Metadata',
       payload: {
@@ -327,6 +336,7 @@ module.exports = [
     path: '/payerfsp/correlationid/{id}',
     handler: Handler.getcorrelationId,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_getcorrelationId`,
       tags: tags,
       description: 'Get details based on correlationid'
     }
@@ -336,6 +346,7 @@ module.exports = [
     path: '/payerfsp/requests/{id}',
     handler: Handler.getRequestById,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_getRequestById`,
       tags: tags,
       description: 'Get details based on request id'
     }
@@ -345,6 +356,7 @@ module.exports = [
     path: '/payerfsp/callbacks/{id}',
     handler: Handler.getCallbackById,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_getCallbackById`,
       tags: tags,
       description: 'Get details based on callback id'
     }

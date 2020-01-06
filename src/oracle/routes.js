@@ -24,7 +24,8 @@
  ******/
 
 const Handler = require('./handler')
-const tags = ['api', 'oracle']
+const Enum = require('@mojaloop/central-services-shared').Enum
+const tags = ['api', 'oracle', Enum.Tags.RouteTags.SAMPLED]
 
 module.exports = [
   {
@@ -32,6 +33,7 @@ module.exports = [
     path: '/oracle/participants/{Type}/{ID}',
     handler: Handler.getParticipantsByTypeId,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_getParticipantsByTypeId`,
       tags: tags,
       description: 'Get list of participants'
     }
@@ -41,6 +43,7 @@ module.exports = [
     path: '/oracle/participants/{Type}/{ID}',
     handler: Handler.createParticipantsByTypeAndId,
     config: {
+      id: `simulator_${__dirname.split('/').pop()}_createParticipantsByTypeAndId`,
       tags: tags,
       description: 'Create participants'
     }
@@ -50,6 +53,7 @@ module.exports = [
     path: '/oracle/participants/{Type}/{ID}',
     handler: Handler.updateParticipantsByTypeId,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_updateParticipantsByTypeId`,
       tags: tags,
       description: 'Update participants'
     }
@@ -59,6 +63,7 @@ module.exports = [
     path: '/oracle/participants/{Type}/{ID}/{SubId}',
     handler: Handler.updateParticipantsByTypeId,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_updateParticipantsByTypeId_subId`,
       tags: tags,
       description: 'Update participants by type ID and Sub ID'
     }
@@ -68,6 +73,7 @@ module.exports = [
     path: '/oracle/participants/{Type}/{ID}',
     handler: Handler.delParticipantsByTypeId,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_delParticipantsByTypeId`,
       tags: tags,
       description: 'Delete Participants'
     }
@@ -77,6 +83,7 @@ module.exports = [
     path: '/oracle/participants/{Type}/{ID}/{SubId}',
     handler: Handler.delParticipantsByTypeId,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_delParticipantsByTypeId_subId`,
       tags: tags,
       description: 'Delete Participants by type ID and Sub ID'
     }
@@ -86,6 +93,7 @@ module.exports = [
     path: '/oracle/participants',
     handler: Handler.createParticipantsBatch,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_createParticipantsBatch`,
       tags: tags,
       description: 'Create a list of participants'
     }
@@ -95,6 +103,7 @@ module.exports = [
     path: '/oracle/parties/{Type}/{ID}/{SubId}',
     handler: Handler.getPartiesByTypeIdAndSubId,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_getPartiesByTypeIdAndSubId`,
       tags: tags,
       description: 'Get a single party by ID and SubId'
     }
@@ -104,6 +113,7 @@ module.exports = [
     path: '/oracle/parties/{Type}/{ID}',
     handler: Handler.updateParticipantsByTypeId,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_updateParticipantsByTypeId_parties`,
       tags: tags,
       description: 'Update parties by type ID'
     }
@@ -113,6 +123,7 @@ module.exports = [
     path: '/oracle/parties/{Type}/{ID}/{SubId}',
     handler: Handler.updateParticipantsByTypeId,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_updateParticipantsByTypeId_parties_subId`,
       tags: tags,
       description: 'Update a parties by type ID and Sub ID'
     }
@@ -122,6 +133,7 @@ module.exports = [
     path: '/oracle/requests/{Type}/{ID}',
     handler: Handler.getRequestByTypeId,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_getRequestByTypeId`,
       tags: tags,
       description: 'Get oracle specific requests based on Type and ID'
     }
@@ -131,6 +143,7 @@ module.exports = [
     path: '/oracle/requests/{requestId}',
     handler: Handler.getRequestById,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_getRequestById`,
       tags: tags,
       description: 'Get oracle specific requests based on requestId of a batch'
     }

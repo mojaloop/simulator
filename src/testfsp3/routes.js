@@ -21,7 +21,8 @@
  ******/
 
 const Handler = require('./handler')
-const tags = ['api', 'metadata']
+const Enum = require('@mojaloop/central-services-shared').Enum
+const tags = ['api', 'metadata', Enum.Tags.RouteTags.SAMPLED]
 
 module.exports = [
   {
@@ -29,6 +30,7 @@ module.exports = [
     path: '/testfsp3/',
     handler: Handler.metadata,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_metadata`,
       tags: tags,
       description: 'Metadata'
     }
@@ -38,7 +40,7 @@ module.exports = [
     path: '/testfsp3/parties/{type}/{id}',
     handler: Handler.postPartiesByTypeAndId,
     config: {
-      id: 'testfsp3_post_parties',
+      id: `simulator_${__dirname.split('/').pop()}_postPartiesByTypeAndId`,
       tags: tags,
       auth: null,
       description: 'Transfer API.',
@@ -53,6 +55,7 @@ module.exports = [
     path: '/testfsp3/parties/{type}/{id}',
     handler: Handler.getPartiesByTypeAndId,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_getPartiesByTypeAndId`,
       tags: tags,
       description: 'Add users to payer simulator'
     }
@@ -62,6 +65,7 @@ module.exports = [
     path: '/testfsp3/quotes',
     handler: Handler.postQuotes,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_postQuotes`,
       tags: tags,
       description: 'Add users to payer simulator'
     }
@@ -71,6 +75,7 @@ module.exports = [
     path: '/testfsp3/quotes/{id}',
     handler: Handler.putQuotesById,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_putQuotesById`,
       tags: tags,
       description: 'Metadata'
     }
@@ -80,6 +85,7 @@ module.exports = [
     path: '/testfsp3/transfers',
     handler: Handler.postTransfers,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_postTransfers`,
       tags: tags,
       description: 'Add users to payer simulator'
     }
@@ -89,6 +95,7 @@ module.exports = [
     path: '/testfsp3/transfers/{id}',
     handler: Handler.putTransfersById,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_putTransfersById`,
       tags: tags,
       description: 'Metadata'
     }
@@ -98,6 +105,7 @@ module.exports = [
     path: '/testfsp3/transfers/{id}/error',
     handler: Handler.putTransfersByIdError,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_putTransfersByIdError`,
       tags: tags,
       description: 'Metadata'
     }
@@ -107,6 +115,7 @@ module.exports = [
     path: '/testfsp3/correlationid/{id}',
     handler: Handler.getcorrelationId,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_getcorrelationId`,
       tags: tags,
       description: 'Get details based on correlationid'
     }
