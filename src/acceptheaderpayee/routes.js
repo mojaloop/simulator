@@ -21,19 +21,18 @@
  ******/
 
 const Handler = require('./handler')
-const tags = ['api', 'metadata']
-const BaseJoi = require('joi-currency-code')(require('@hapi/joi'))
-const Extension = require('@hapi/joi-date')
-const Joi = BaseJoi.extend(Extension)
-const transferState = ['RECEIVED', 'RESERVED', 'COMMITTED', 'ABORTED', 'SETTLED']
-const partyIdTypeEnum = ['MSISDN', 'EMAIL', 'PERSONAL_ID', 'BUSINESS', 'DEVICE', 'ACCOUNT_ID', 'IBAN', 'ALIAS']
+const Enum = require('@mojaloop/central-services-shared').Enum
+const tags = ['api', 'metadata', Enum.Tags.RouteTags.SAMPLED]
+const BaseJoi = require('@hapi/joi').extend(require('joi-currency-code'))
+const Joi = BaseJoi.extend(require('@hapi/joi-date'))
 
 module.exports = [
   {
     method: 'GET',
-    path: '/acceptheaderpayeefsp/',
+    path: '/acceptheaderpayeefsp',
     handler: Handler.metadata,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_metadata`,
       tags: tags,
       description: 'Metadata'
     }
@@ -43,6 +42,7 @@ module.exports = [
     path: '/acceptheaderpayeefsp/participants/{type}/{id}',
     handler: Handler.putParticipantsByTypeId,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_putParticipantsByTypeId`,
       tags: tags,
       description: 'Callback for adding participant'
     }
@@ -52,6 +52,7 @@ module.exports = [
     path: '/acceptheaderpayeefsp/parties/{type}/{id}',
     handler: Handler.postPartiesByTypeAndId,
     config: {
+      id: `simulator_${__dirname.split('/').pop()}_postPartiesByTypeAndId`,
       tags: tags,
       auth: null,
       description: 'Transfer API.',
@@ -66,6 +67,7 @@ module.exports = [
     path: '/acceptheaderpayeefsp/parties/{type}/{id}',
     handler: Handler.getPartiesByTypeAndId,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_getPartiesByTypeAndId`,
       tags: tags,
       description: 'Add users to payer simulator',
       validate: {
@@ -91,6 +93,7 @@ module.exports = [
     path: '/acceptheaderpayeefsp/quotes',
     handler: Handler.postQuotes,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_postQuotes`,
       tags: tags,
       description: 'Add users to payer simulator',
       payload: {
@@ -112,13 +115,13 @@ module.exports = [
           traceparent: Joi.string().optional(),
           tracestate: Joi.string().optional()
         }).unknown(false).options({ stripUnknown: true }),
-        payload: {
+        payload: Joi.object({
           quoteId: Joi.string().guid().required().description('Id of quote').label('@ Quote Id must be in a valid GUID format. @'),
           transactionId: Joi.string().guid().required().description('Id of transaction').label('@ Transaction Id must be in a valid GUID format. @'),
           transactionRequestId: Joi.string().guid().optional().description('Id of transaction request').label('@ Transaction Request Id must be in a valid GUID format. @'),
           payer: Joi.object().keys({
             partyIdInfo: Joi.object().keys({
-              partyIdType: Joi.string().required().valid(partyIdTypeEnum).description('Type of the identifier. ').label('@ Type of the identifier.  @'),
+              partyIdType: Joi.string().required().valid('MSISDN', 'EMAIL', 'PERSONAL_ID', 'BUSINESS', 'DEVICE', 'ACCOUNT_ID', 'IBAN', 'ALIAS').description('Type of the identifier. ').label('@ Type of the identifier.  @'),
               partyIdentifier: Joi.string().required().min(1).max(32).description('An identifier for the Party.').label('@ An identifier for the Party. @'),
               partySubIdOrType: Joi.string().optional().min(1).max(32).description('A sub-identifier or sub-type for the Party.').label('@ A sub-identifier or sub-type for the Party. @'),
               fspId: Joi.string().optional().min(1).max(32).description('FSP ID ').label('@ FSP ID  @')
@@ -136,7 +139,7 @@ module.exports = [
           }).required().description('Information about the Payer in the proposed financial transaction.').label('@ Information about the Payer in the proposed financial transaction. @'),
           payee: Joi.object().keys({
             partyIdInfo: Joi.object().keys({
-              partyIdType: Joi.string().required().valid(partyIdTypeEnum).description('Type of the identifier. ').label('@ Type of the identifier.  @'),
+              partyIdType: Joi.string().required().valid('MSISDN', 'EMAIL', 'PERSONAL_ID', 'BUSINESS', 'DEVICE', 'ACCOUNT_ID', 'IBAN', 'ALIAS').description('Type of the identifier. ').label('@ Type of the identifier.  @'),
               partyIdentifier: Joi.string().required().min(1).max(32).description('An identifier for the Party.').label('@ An identifier for the Party. @'),
               partySubIdOrType: Joi.string().optional().min(1).max(32).description('A sub-identifier or sub-type for the Party.').label('@ A sub-identifier or sub-type for the Party. @'),
               fspId: Joi.string().optional().min(1).max(32).description('FSP ID ').label('@ FSP ID  @')
@@ -177,7 +180,7 @@ module.exports = [
               value: Joi.string().required().min(1).max(128).description('Value').label('@ Supplied key value fails to match the required format. @')
             })).required().min(1).max(16).description('extension')
           }).optional().description('Extension list')
-        },
+        }),
         failAction: (request, h, err) => { throw err }
       }
     }
@@ -188,6 +191,7 @@ module.exports = [
     path: '/acceptheaderpayeefsp/transfers',
     handler: Handler.postTransfers,
     config: {
+      id: `simulator_${__dirname.split('/').pop()}_postTransfers`,
       tags: tags,
       auth: null,
       description: 'Transfer API.',
@@ -211,7 +215,7 @@ module.exports = [
           traceparent: Joi.string().optional(),
           tracestate: Joi.string().optional()
         }).unknown(false).options({ stripUnknown: true }),
-        payload: {
+        payload: Joi.object({
           transferId: Joi.string().guid().required().description('Id of transfer').label('@ Transfer Id must be in a valid GUID format. @'),
           payeeFsp: Joi.string().required().min(1).max(32).description('Financial Service Provider of Payee').label('@ A valid Payee FSP number must be supplied. @'),
           payerFsp: Joi.string().required().min(1).max(32).description('Financial Service Provider of Payer').label('@ A valid Payer FSP number must be supplied. @'),
@@ -228,7 +232,7 @@ module.exports = [
               value: Joi.string().required().min(1).max(128).description('Value').label('@ Supplied key value fails to match the required format. @')
             })).required().min(1).max(16).description('extension')
           }).optional().description('Extension list')
-        },
+        }),
         failAction: (request, h, err) => { throw err }
       }
     }
@@ -238,6 +242,7 @@ module.exports = [
     path: '/acceptheaderpayeefsp/transfers/{id}',
     handler: Handler.putTransfersById,
     config: {
+      id: `simulator_${__dirname.split('/').pop()}_putTransfersById`,
       tags: tags,
       description: 'Fulfil a transfer',
       payload: {
@@ -257,20 +262,20 @@ module.exports = [
           traceparent: Joi.string().optional(),
           tracestate: Joi.string().optional()
         }).unknown(false).options({ stripUnknown: true }),
-        params: {
+        params: Joi.object({
           id: Joi.string().required().description('path')
-        },
-        payload: {
+        }),
+        payload: Joi.object({
           fulfilment: Joi.string().regex(/^[A-Za-z0-9-_]{43}$/).max(48).description('fulfilment of the transfer').label('@ Invalid transfer fulfilment description. @'),
           completedTimestamp: Joi.string().regex(/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/).description('When the transfer was completed').label('@ A valid transfer completion date must be supplied. @'),
-          transferState: Joi.string().required().valid(transferState).description('State of the transfer').label('@ Invalid transfer state given. @'),
+          transferState: Joi.string().required().valid('RECEIVED', 'RESERVED', 'COMMITTED', 'ABORTED', 'SETTLED').description('State of the transfer').label('@ Invalid transfer state given. @'),
           extensionList: Joi.object().keys({
             extension: Joi.array().items(Joi.object().keys({
               key: Joi.string().required().min(1).max(32).description('Key').label('@ Supplied key fails to match the required format. @'),
               value: Joi.string().required().min(1).max(128).description('Value').label('@ Supplied key value fails to match the required format. @')
             })).required().min(1).max(16).description('extension')
           }).optional().description('Extension list')
-        }
+        })
       }
     }
   },
@@ -279,6 +284,7 @@ module.exports = [
     path: '/acceptheaderpayeefsp/transfers/{id}/error',
     handler: Handler.putTransfersByIdError,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_putTransfersByIdError`,
       tags: tags,
       description: 'Abort a transfer',
       payload: {
@@ -298,10 +304,10 @@ module.exports = [
           traceparent: Joi.string().optional(),
           tracestate: Joi.string().optional()
         }).unknown(false).options({ stripUnknown: true }),
-        params: {
+        params: Joi.object({
           id: Joi.string().required().description('path')
-        },
-        payload: {
+        }),
+        payload: Joi.object({
           errorInformation: Joi.object().keys({
             errorDescription: Joi.string().required(),
             errorCode: Joi.string().required().regex(/^[0-9]{4}/),
@@ -312,7 +318,7 @@ module.exports = [
               })).required().min(1).max(16).description('extension')
             }).optional().description('Extension list')
           }).required().description('Error information')
-        }
+        })
       }
     }
   },
@@ -321,6 +327,7 @@ module.exports = [
     path: '/acceptheaderpayeefsp/correlationid/{id}',
     handler: Handler.getcorrelationId,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_getcorrelationId`,
       tags: tags,
       description: 'Get details based on correlationid'
     }
@@ -330,6 +337,7 @@ module.exports = [
     path: '/acceptheaderpayeefsp/requests/{id}',
     handler: Handler.getRequestById,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_getRequestById`,
       tags: tags,
       description: 'Get details based on request id'
     }
@@ -339,6 +347,7 @@ module.exports = [
     path: '/acceptheaderpayeefsp/callbacks/{id}',
     handler: Handler.getCallbackById,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_getCallbackById`,
       tags: tags,
       description: 'Get details based on callback id'
     }

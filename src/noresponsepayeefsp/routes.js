@@ -21,7 +21,8 @@
  ******/
 
 const Handler = require('./handler')
-const tags = ['api', 'metadata']
+const Enum = require('@mojaloop/central-services-shared').Enum
+const tags = ['api', 'metadata', Enum.Tags.RouteTags.SAMPLED]
 
 module.exports = [
   {
@@ -29,6 +30,7 @@ module.exports = [
     path: '/noresponsepayeefsp/',
     handler: Handler.metadata,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_metadata`,
       tags: tags,
       description: 'Metadata'
     }
@@ -38,6 +40,7 @@ module.exports = [
     path: '/noresponsepayeefsp/transfers/{id}',
     handler: Handler.putTransfersById,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_putTransfersById`,
       tags: tags,
       description: 'Metadata'
     }
@@ -47,6 +50,7 @@ module.exports = [
     path: '/noresponsepayeefsp/transfers/{id}/error',
     handler: Handler.putTransfersByIdError,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_putTransfersByIdError`,
       tags: tags,
       description: 'Metadata'
     }
@@ -56,6 +60,7 @@ module.exports = [
     path: '/noresponsepayeefsp/callbacks/{id}',
     handler: Handler.getCallbackById,
     options: {
+      id: `simulator_${__dirname.split('/').pop()}_getCallbackById`,
       tags: tags,
       description: 'Get details based on callback id'
     }
