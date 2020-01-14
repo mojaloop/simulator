@@ -342,7 +342,7 @@ jobs:
           command: mkdir -p ./audit/results
       - run:
           name: Check for new npm vulnerabilities
-          command: npm run audit:check --silent -- --json > ./audit/results/auditResults.json 
+          command: npm run audit:check --silent -- --json > ./audit/results/auditResults.json
       - store_artifacts:
           path: ./audit/results
           prefix: audit
@@ -584,7 +584,7 @@ workflows:
 #            - test-spec
           filters:
             tags:
-              only: /v[0-9]+(\.[0-9]+)*\-snapshot/
+              only: /v[0-9]+(\.[0-9]+)*(\-snapshot(\.[0-9]+)?)?/
             branches:
               ignore:
                 - /.*/
@@ -594,7 +594,7 @@ workflows:
             - build-snapshot
           filters:
             tags:
-              only: /v[0-9]+(\.[0-9]+)*\-snapshot/
+              only: /v[0-9]+(\.[0-9]+)*(\-snapshot(\.[0-9]+)?)?/
             branches:
               ignore:
                 - /.*/

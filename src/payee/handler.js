@@ -307,7 +307,7 @@ exports.postTransfers = async function (request, h) {
     'Histogram for Simulator http operations',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
-
+  Logger.info(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::postTransfers - START`)
   Logger.debug(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payee::postTransfers - START`)
 
   const metadata = `${request.method} ${request.path} ${request.payload.transferId}`
@@ -372,6 +372,7 @@ exports.postTransfers = async function (request, h) {
         // TODO: how does one identify the failed response?
         throw new Error(`Failed to send. Result: ${JSON.stringify(res)}`)
       }
+      Logger.info(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::postTransfers - END`)
       // Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payee::postTransfers - END`)
       histTimerEnd({
         success: true,

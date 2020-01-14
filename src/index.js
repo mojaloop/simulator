@@ -25,6 +25,7 @@
 const Routes = require('./routes')
 const Setup = require('.' +
     '/shared/setup')
+process.env.UV_THREADPOOL_SIZE = 12
 
 module.exports = Setup.initialize({
   service: 'api',
