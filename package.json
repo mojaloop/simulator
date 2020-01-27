@@ -4,6 +4,7 @@
   "description": "A super-simple fsp simulator",
   "main": "src/index.js",
   "author": "ModusBox",
+  "license": "Apache-2.0",
   "contributors": [
     "Georgi Georgiev <georgi.georgiev@modusbox.com>",
     "Miguel de Barros <miguel.debarros@modusbox.com>",
