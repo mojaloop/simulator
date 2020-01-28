@@ -29,6 +29,6 @@ process.env.UV_THREADPOOL_SIZE = 12
 
 module.exports = Setup.initialize({
   service: 'api',
-  port: 8444,
+  port: 1080,
   modules: [Routes]
 })
