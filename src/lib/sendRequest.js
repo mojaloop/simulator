@@ -28,15 +28,12 @@
 const Logger = require('@mojaloop/central-services-logger')
 const request = require('axios')
 const { pickBy, identity } = require('lodash')
-const { getTagsFromFSPIOPHeaders } = require('./events')
 
 module.exports = async (url, opts, span) => {
   Logger.info(`Executing PUT: [${url}], HEADERS: [${JSON.stringify(opts.headers)}], BODY: [${JSON.stringify(opts.body)}]`)
   let optionsWithCleanHeaders = Object.assign({}, opts, { headers: pickBy(opts.headers, identity) })
   if (span) {
     optionsWithCleanHeaders = span.injectContextToHttpRequest(optionsWithCleanHeaders)
-    span.setTags(getTagsFromFSPIOPHeaders(optionsWithCleanHeaders))
-    span.info(optionsWithCleanHeaders)
   }
   const res = await request(url, optionsWithCleanHeaders)
   Logger.info((new Date().toISOString()), 'response: ', res.status)

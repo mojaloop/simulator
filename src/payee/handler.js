@@ -529,7 +529,7 @@ exports.getQuotesById = function (request, h) {
         }
         // Logger.info((new Date().toISOString()), 'Executing PUT', url)
         const res = await sendRequest(url, opts, request.span)
-        if (res.status !== Enums.Http.ReturnCodes.ACCEPTED.CODE) {
+        if (res.status !== Enums.Http.ReturnCodes.OK.CODE) {
           throw new Error(`Failed to send. Result: ${res}`)
         }
 
@@ -545,7 +545,8 @@ exports.getQuotesById = function (request, h) {
       await sendErrorCallback(
         ErrorHandler.CreateFSPIOPError(ErrorHandler.Enums.FSPIOPErrorCodes.QUOTE_ID_NOT_FOUND, `Quote id ${request.params.id} not found`, null, request.headers['fspiop-source']),
         request.params.id,
-        request.headers
+        request.headers,
+        request.span
       )
     })
   }
@@ -553,7 +554,7 @@ exports.getQuotesById = function (request, h) {
   return h.response().code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
 }
 
-const sendErrorCallback = async (fspiopError, quoteId, headers) => {
+const sendErrorCallback = async (fspiopError, quoteId, headers, span) => {
   const histTimerEnd = Metrics.getHistogram(
     'sim_request',
     'Histogram for Simulator http operations',
@@ -594,7 +595,7 @@ const sendErrorCallback = async (fspiopError, quoteId, headers) => {
       }),
       data: JSON.stringify(fspiopError.toApiErrorObject())
     }
-    const res = await sendRequest(url, opts)
+    const res = await sendRequest(url, opts, span)
     if (res.status !== Enums.Http.ReturnCodes.OK.CODE) {
       throw new Error(`Failed to send. Result: ${res}`)
     }
