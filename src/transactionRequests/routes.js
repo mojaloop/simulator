@@ -30,61 +30,41 @@ module.exports = [
   {
     method: 'GET',
     path: '/transactionRequests/{ID}',
-    handler: Handler.getParticipantsByTypeId,
+    handler: Handler.getTransactionRequest,
     options: {
-      id: `simulator_${__dirname.split('/').pop()}_getParticipantsByTypeId`,
+      id: `simulator_${__dirname.split('/').pop()}_getTransactionRequest`,
       tags: tags,
-      description: 'Get list of participants'
+      description: 'Get a transaction request by ID'
     }
   },
   {
     method: 'POST',
     path: '/transactionRequests',
-    handler: Handler.createParticipantsByTypeAndId,
+    handler: Handler.incomingTransactionRequests,
     config: {
-      id: `simulator_${__dirname.split('/').pop()}_createParticipantsByTypeAndId`,
+      id: `simulator_${__dirname.split('/').pop()}_incomingTransactionRequests`,
       tags: tags,
-      description: 'Create participants'
+      description: 'Incoming Transaction Requests'
     }
   },
   {
     method: 'PUT',
     path: '/transactionRequests/{ID}',
-    handler: Handler.updateParticipantsByTypeId,
+    handler: Handler.callbackTransactionRequests,
     options: {
-      id: `simulator_${__dirname.split('/').pop()}_updateParticipantsByTypeId`,
+      id: `simulator_${__dirname.split('/').pop()}_callbackTransactionRequests`,
       tags: tags,
-      description: 'Update participants'
+      description: 'Callback Transaction Requests'
     }
   },
   {
     method: 'PUT',
     path: '/transactionRequests/{ID}/error',
-    handler: Handler.delParticipantsByTypeId,
+    handler: Handler.errorCallbackTransactionRequests,
     options: {
-      id: `simulator_${__dirname.split('/').pop()}_delParticipantsByTypeId`,
+      id: `simulator_${__dirname.split('/').pop()}_errorCallbackTransactionRequests`,
       tags: tags,
-      description: 'Delete Participants'
-    }
-  },
-  {
-    method: 'GET',
-    path: '/transactionRequests/requests/{Type}/{ID}',
-    handler: Handler.getRequestByTypeId,
-    options: {
-      id: `simulator_${__dirname.split('/').pop()}_getRequestByTypeId`,
-      tags: tags,
-      description: 'Get oracle specific requests based on Type and ID'
-    }
-  },
-  {
-    method: 'GET',
-    path: '/transactionRequests/requests/{requestId}',
-    handler: Handler.getRequestById,
-    options: {
-      id: `simulator_${__dirname.split('/').pop()}_getRequestById`,
-      tags: tags,
-      description: 'Get oracle specific requests based on requestId of a batch'
+      description: 'Error Callback Transaction Requests'
     }
   }
 ]
