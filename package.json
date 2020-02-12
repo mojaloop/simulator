@@ -50,7 +50,7 @@
     "glob": "7.1.6",
     "hapi-good-winston": "3.0.0",
     "hapi-openapi": "1.2.6",
-    "hapi-swagger": "10.2.0",
+    "hapi-swagger": "11.1.0",
     "ilp-packet": "3.0.9",
     "joi-currency-code": "3.0.0",
     "node-cache": "5.1.0",
