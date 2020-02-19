@@ -17,30 +17,83 @@
  optionally within square brackets <email>.
  * Gates Foundation
 
- * Rajiv Mothilal <rajiv.mothilal@modusbox.com>
- * Vijay Kumar Guthi <vijay.guthi@modusbox.com>
+ * ModusBox
+ - Rajiv Mothilal <rajiv.mothilal@modusbox.com>
+ - Vijay Kumar Guthi <vijay.guthi@modusbox.com>
+ - Steven Oderayi <steven.oderayi@modusbox.com>
 
  --------------
  ******/
 
 'use strict'
 const NodeCache = require('node-cache')
-const transactionRequestsCache = new NodeCache()
-// const requestCache = new NodeCache()
-// const batchRequestCache = new NodeCache()
 const sendRequest = require('../lib/sendRequest')
 const Logger = require('@mojaloop/central-services-logger')
 const Enums = require('@mojaloop/central-services-shared').Enum
 const ErrorHandler = require('@mojaloop/central-services-error-handling')
 
+const requestsCache = new NodeCache()
+const callbackCache = new NodeCache()
+const correlationCache = new NodeCache()
 const transactionRequestsEndpoint = process.env.TRANSACTION_REQUESTS_ENDPOINT || 'http://moja-transaction-requests-service'
 
-exports.incomingTransactionRequests = function (request, h) {
+exports.getTransactionRequestById = function (request, h) {
   (async () => {
-    const url = transactionRequestsEndpoint + '/transactionRequests/' + request.payload.transactionRequestId
-    const fspiopUriHeader = `/transactionRequests/${request.payload.transactionRequestId}`
+    Logger.info(`IN transactionRequests:: Final response for GET /transactionRequests/correlationid/${request.params.ID}, CACHE: [${JSON.stringify(correlationCache.get(request.params.ID))}`)
+    const url = transactionRequestsEndpoint + '/transactionRequests/' + request.params.ID
     try {
-      if (transactionRequestsCache.get(request.payload.transactionRequestId)) {
+      let transactionRequestResponse
+      if (requestsCache.get(request.params.ID)) {
+        transactionRequestResponse = {
+          transactionId: request.params.ID,
+          transactionRequestState: 'RECEIVED'
+        }
+        requestsCache.del(request.params.ID)
+      } else {
+        await sendErrorCallback(
+          ErrorHandler.CreateFSPIOPError(ErrorHandler.Enums.FSPIOPErrorCodes.TXN_REQUEST_ID_NOT_FOUND, `Transaction Request id ${request.params.ID} not found`, null, request.headers['fspiop-source']),
+          request.params.ID,
+          request.headers,
+          request.span
+        )
+        throw new Error(`ID:${request.params.ID} not found`)
+      }
+      const opts = {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/vnd.interoperability.transfers+json;version=1.0',
+          'FSPIOP-Source': request.headers['fspiop-destination'],
+          'FSPIOP-Destination': request.headers['fspiop-source'],
+          Date: new Date().toUTCString(),
+          'FSPIOP-HTTP-Method': 'PUT',
+          'FSPIOP-URI': `/transactionRequests/${request.params.ID}`
+        },
+        transformRequest: [(data, headers) => {
+          delete headers.common.Accept
+          return data
+        }],
+        data: JSON.stringify(transactionRequestResponse)
+      }
+      const res = await sendRequest(url, opts, request.span)
+      Logger.info(`response: ${res.status}`)
+      if (res.status !== Enums.Http.ReturnCodes.OK.CODE) {
+        throw new Error(`Failed to send. Result: ${JSON.stringify(res)}`)
+      }
+    } catch (err) {
+      Logger.error(err)
+    }
+  })()
+
+  return h.response().code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
+}
+
+exports.postTransactionRequest = function (request, h) {
+  (async () => {
+    const metadata = `${request.method} ${request.path} ${request.payload.transactionRequestId}`
+    Logger.info(`IN transactionRequests POST:: received: ${metadata}.`)
+    const url = transactionRequestsEndpoint + '/transactionRequests/' + request.payload.transactionRequestId
+    try {
+      if (requestsCache.get(request.payload.transactionRequestId)) {
         await sendErrorCallback(
           ErrorHandler.CreateFSPIOPError(ErrorHandler.Enums.FSPIOPErrorCodes.CLIENT_ERROR, `ID:${request.payload.transactionRequestId} already exists`, null, request.headers['fspiop-source']),
           request.params.ID,
@@ -49,9 +102,8 @@ exports.incomingTransactionRequests = function (request, h) {
         )
         throw new Error(`ID:${request.payload.transactionRequestId} already exists`)
       } else {
-        transactionRequestsCache.set(request.payload.transactionRequestId, request.payload)
+        requestsCache.set(request.payload.transactionRequestId, request.payload)
       }
-
       const transactionRequestsResponse = {
         transactionId: request.payload.transactionRequestId,
         transactionRequestState: 'RECEIVED',
@@ -65,7 +117,7 @@ exports.incomingTransactionRequests = function (request, h) {
           'FSPIOP-Destination': request.headers['fspiop-source'],
           Date: new Date().toUTCString(),
           'FSPIOP-HTTP-Method': 'PUT',
-          'FSPIOP-URI': fspiopUriHeader
+          'FSPIOP-URI': `/transactionRequests/${request.payload.transactionRequestId}`
         },
         transformRequest: [(data, headers) => {
           delete headers.common.Accept
@@ -73,10 +125,9 @@ exports.incomingTransactionRequests = function (request, h) {
         }],
         data: JSON.stringify(transactionRequestsResponse)
       }
-
       const res = await sendRequest(url, opts, request.span)
       Logger.info(`response: ${res.status}`)
-      if ((res.status !== Enums.Http.ReturnCodes.ACCEPTED.CODE) && (res.status !== Enums.Http.ReturnCodes.OK.CODE)) {
+      if (res.status !== Enums.Http.ReturnCodes.OK.CODE) {
         throw new Error(`Failed to send. Result: ${JSON.stringify(res)}`)
       }
     } catch (err) {
@@ -84,76 +135,51 @@ exports.incomingTransactionRequests = function (request, h) {
     }
   })()
 
-  return h.response().code(202)
+  return h.response().code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
 }
 
-exports.getTransactionRequest = function (request, h) {
-  (async () => {
-    const url = transactionRequestsEndpoint + '/transactionRequests/' + request.params.ID
-    const fspiopUriHeader = `/transactionRequests/${request.params.ID}`
-    try {
-      let getTransactionRequestsResponse
-      if (transactionRequestsCache.get(request.params.ID)) {
-        // getTransactionRequestsResponse = transactionRequestsCache.get(request.params.ID)
-        getTransactionRequestsResponse = {
-          transactionId: request.params.ID,
-          transactionRequestState: 'RECEIVED'
-        }
-        // Delete the transaction request in cache
-        transactionRequestsCache.del(request.params.ID)
-      } else {
-        await sendErrorCallback(
-          ErrorHandler.CreateFSPIOPError(ErrorHandler.Enums.FSPIOPErrorCodes.TXN_REQUEST_ID_NOT_FOUND, `Transaction Request id ${request.params.ID} not found`, null, request.headers['fspiop-source']),
-          request.params.ID,
-          request.headers,
-          request.span
-        )
-        throw new Error(`ID:${request.params.ID} not found`)
-      }
+exports.putTransactionRequest = function (request, h) {
+  Logger.info(`IN transactionRequests :: PUT /transactionRequests/${request.params.ID}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
+  correlationCache.set(request.params.ID, request.payload)
+  callbackCache.set(request.params.ID, { headers: request.headers, data: request.payload })
 
-      const opts = {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/vnd.interoperability.transfers+json;version=1.0',
-          'FSPIOP-Source': request.headers['fspiop-destination'],
-          'FSPIOP-Destination': request.headers['fspiop-source'],
-          Date: new Date().toUTCString(),
-          'FSPIOP-HTTP-Method': 'PUT',
-          'FSPIOP-URI': fspiopUriHeader
-        },
-        transformRequest: [(data, headers) => {
-          delete headers.common.Accept
-          return data
-        }],
-        data: JSON.stringify(getTransactionRequestsResponse)
-      }
-
-      const res = await sendRequest(url, opts, request.span)
-      Logger.info(`response: ${res.status}`)
-      if ((res.status !== Enums.Http.ReturnCodes.ACCEPTED.CODE) && (res.status !== Enums.Http.ReturnCodes.OK.CODE)) {
-        throw new Error(`Failed to send. Result: ${JSON.stringify(res)}`)
-      }
-    } catch (err) {
-      Logger.error(err)
-    }
-  })()
-
-  return h.response().code(202)
-}
-
-exports.callbackTransactionRequests = function (request, h) {
   return h.response().code(Enums.Http.ReturnCodes.OK.CODE)
 }
 
-exports.errorCallbackTransactionRequests = function (request, h) {
+exports.putTransactionRequestError = function (request, h) {
+  Logger.info(`IN transactionRequests :: PUT /transactionRequests/${request.params.ID}/error, PAYLOAD: [${JSON.stringify(request.payload)}]`)
+  correlationCache.set(request.params.ID, request.payload)
+  callbackCache.set(request.params.ID, { headers: request.headers, data: request.payload })
+
   return h.response().code(Enums.Http.ReturnCodes.OK.CODE)
+}
+
+exports.getCorrelationId = function (request, h) {
+  Logger.info(`IN transactionRequests:: GET /transactionRequests/correlationid/${request.params.ID}, CACHE: [${JSON.stringify(correlationCache.get(request.params.ID))}`)
+
+  return h.response(correlationCache.get(request.params.ID)).code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
+}
+
+exports.getRequestById = function (request, h) {
+  Logger.info(`IN transactionRequests :: GET /transactionRequests/requests/${request.params.ID}, CACHE: [${JSON.stringify(requestsCache.get(request.params.ID))}]`)
+  const responseData = requestsCache.get(request.params.ID)
+  requestsCache.del(request.params.ID)
+
+  return h.response(responseData).code(Enums.Http.ReturnCodes.OK.CODE)
+}
+
+exports.getCallbackById = function (request, h) {
+  Logger.info(`IN transactionRequests :: GET /transactionRequests/callbacks/${request.params.ID}, CACHE: [${JSON.stringify(callbackCache.get(request.params.ID))}]`)
+  const responseData = callbackCache.get(request.params.ID)
+  callbackCache.del(request.params.ID)
+
+  return h.response(responseData).code(Enums.Http.ReturnCodes.OK.CODE)
 }
 
 const sendErrorCallback = async (fspiopError, transactionRequestId, headers, span) => {
   try {
     const url = transactionRequestsEndpoint + '/transactionRequests/' + transactionRequestId + '/error'
     const fspiopUriHeader = '/transactionRequests/' + transactionRequestId + '/error'
-
     const opts = {
       method: 'PUT',
       headers: {
