@@ -98,15 +98,15 @@ module.exports = [
             currency: Joi.string().length(3).required()
           }).required().description('Transaction amount').label('@ Transaction amount must be a valid number. @'),
           transactionType: Joi.object().keys({
-            scenario: Joi.string().valid('DEPOSIT', 'WITHDRAWAL', 'REFUND').required().description('Scenario'),
-            subScenario: Joi.string().optional().description('Sub-scenario'),
-            initiator: Joi.string().required().description('Initiator'),
-            initiatorType: Joi.string().required().description('Initiator Type'),
+            scenario: Joi.string().valid('DEPOSIT', 'WITHDRAWAL', 'TRANSFER', 'PAYMENT', 'REFUND').required().description('Scenario'),
+            subScenario: Joi.string().regex(/^[A-Z_]{1,32}$/).optional().description('Sub-scenario'),
+            initiator: Joi.string().valid('PAYER', 'PAYEE').required().description('Initiator'),
+            initiatorType: Joi.string().valid('CONSUMER', 'AGENT', 'BUSINESS', 'DEVICE').required().description('Initiator Type'),
             refundInfo: Joi.object().keys({
               originalTransactionId: Joi.string().guid().required().description('Original Transaction ID'),
-              refundReason: Joi.string().optional().description('Refund Reason')
+              refundReason: Joi.string().max(128).optional().description('Refund Reason')
             }).optional().description('Refund Information'),
-            balanceOfPayments: Joi.string().optional().description('Balance of Payments')
+            balanceOfPayments: Joi.string().max(128).optional().description('Balance of Payments')
           }).required(),
           note: Joi.string().min(1).max(128).optional().description('Transaction note'),
           geoCode: Joi.object().keys({
@@ -155,9 +155,9 @@ module.exports = [
           ID: Joi.string().required().description('path')
         }),
         payload: Joi.object({
-          transactionState: Joi.string().required().valid('RECEIVED', 'PENDING', 'ACCEPTED', 'PROCESSING', 'COMPLETED', 'REJECTED').description('State of the transaction').label('@ Invalid transaction state given. @'),
+          transactionState: Joi.string().required().valid('RECEIVED', 'PENDING', 'COMPLETED', 'REJECTED').description('State of the transaction').label('@ Invalid transaction state given. @'),
           completedTimestamp: Joi.string().regex(/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/).description('When the transaction was completed').label('@ A valid transaction completion date must be supplied. @'),
-          code: Joi.string().max(128).optional(),
+          code: Joi.string().regex(/^[0-9a-zA-Z]{4,32}$/).optional(),
           extensionList: Joi.object().keys({
             extension: Joi.array().items(Joi.object().keys({
               key: Joi.string().required().min(1).max(32).description('Key').label('@ Supplied key fails to match the required format. @'),
