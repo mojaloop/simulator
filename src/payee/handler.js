@@ -31,6 +31,7 @@ const sendRequest = require('../lib/sendRequest')
 const https = require('https')
 const Logger = require('@mojaloop/central-services-logger')
 const Enums = require('@mojaloop/central-services-shared').Enum
+const ErrorHandler = require('@mojaloop/central-services-error-handling')
 const Metrics = require('../lib/metrics')
 const base64url = require('base64url')
 
@@ -528,7 +529,7 @@ exports.getQuotesById = function (request, h) {
         }
         // Logger.info((new Date().toISOString()), 'Executing PUT', url)
         const res = await sendRequest(url, opts, request.span)
-        if (res.status !== Enums.Http.ReturnCodes.ACCEPTED.CODE) {
+        if (res.status !== Enums.Http.ReturnCodes.OK.CODE) {
           throw new Error(`Failed to send. Result: ${res}`)
         }
 
@@ -538,11 +539,71 @@ exports.getQuotesById = function (request, h) {
         histTimerEnd({ success: false, fsp: 'payee', operation: 'getQuotes', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
       }
     })
-  }
-  if (responseData) {
-    return h.response().code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
   } else {
-    return h.response().code(Enums.Http.ReturnCodes.NOTFOUND.CODE)
+    setImmediate(async () => {
+      Logger.error(`getQuotesById: Quote ${request.params.id} not found.`)
+      await sendErrorCallback(
+        ErrorHandler.CreateFSPIOPError(ErrorHandler.Enums.FSPIOPErrorCodes.QUOTE_ID_NOT_FOUND, `Quote id ${request.params.id} not found`, null, request.headers['fspiop-source']),
+        request.params.id,
+        request.headers,
+        request.span
+      )
+    })
+  }
+
+  return h.response().code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
+}
+
+const sendErrorCallback = async (fspiopError, quoteId, headers, span) => {
+  const histTimerEnd = Metrics.getHistogram(
+    'sim_request',
+    'Histogram for Simulator http operations',
+    ['success', 'fsp', 'operation', 'source', 'destination']
+  ).startTimer()
+
+  try {
+    const url = `${quotesEndpoint}/quotes/${quoteId}/error`
+    const protectedHeader = {
+      alg: 'RS256',
+      'FSPIOP-Source': `${headers['fspiop-source']}`,
+      'FSPIOP-Destination': 'switch',
+      'FSPIOP-URI': `/quotes/${quoteId}/error`,
+      'FSPIOP-HTTP-Method': 'PUT',
+      Date: ''
+    }
+    const fspiopSignature = {
+      signature: signature,
+      protectedHeader: `${base64url.encode(JSON.stringify(protectedHeader))}`
+    }
+    const opts = {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/vnd.interoperability.quotes+json;version=1.0',
+        'FSPIOP-Source': headers['fspiop-source'],
+        'FSPIOP-Destination': 'switch',
+        Date: new Date().toUTCString(),
+        'FSPIOP-Signature': `${JSON.stringify(fspiopSignature)}`,
+        'FSPIOP-HTTP-Method': 'PUT',
+        'FSPIOP-URI': `/quotes/${quoteId}/error`
+      },
+      transformRequest: [(data, headers) => {
+        delete headers.common.Accept
+        return data
+      }],
+      httpsAgent: new https.Agent({
+        rejectUnauthorized: false
+      }),
+      data: JSON.stringify(fspiopError.toApiErrorObject())
+    }
+    const res = await sendRequest(url, opts, span)
+    if (res.status !== Enums.Http.ReturnCodes.OK.CODE) {
+      throw new Error(`Failed to send. Result: ${res}`)
+    }
+
+    histTimerEnd({ success: true, fsp: 'payee', operation: 'sendErrorCallback', source: headers['fspiop-source'], destination: 'switch' })
+  } catch (err) {
+    Logger.error(err)
+    histTimerEnd({ success: false, fsp: 'payee', operation: 'sendErrorCallback', source: headers['fspiop-source'], destination: 'switch' })
   }
 }
 
