@@ -91,8 +91,30 @@ module.exports = [
         }).unknown(false).options({ stripUnknown: true }),
         payload: Joi.object({
           transactionRequestId: Joi.string().guid().required().description('Id of transaction request').label('@ Transaction Request Id must be in a valid GUID format. @'),
-          payee: Joi.string().required().min(1).max(32).description('Financial Service Provider of Payee').label('@ A valid Payee FSP number must be supplied. @'),
-          payer: Joi.string().required().min(1).max(32).description('Financial Service Provider of Payer').label('@ A valid Payer FSP number must be supplied. @'),
+          payee: Joi.object().keys({
+            partyIdInfo: Joi.object().keys({
+              partyIdType: Joi.string().valid('MSISDN', 'EMAIL', 'PERSONAL_ID', 'BUSINESS', 'DEVICE', 'ACCOUNT_ID', 'IBAN', 'ALIAS').required().description('PartyID Type'),
+              partyIdentifier: Joi.string().required().min(1).max(128).description('Identifier of the Party').label('@ A valid Party Identifier must be supplied. @'),
+              partySubIdOrType: Joi.string().optional().min(1).max(128).description('Sub Party ID or Type').label('@ A valid partySubIdOrType must be supplied. @'),
+              fspId: Joi.string().optional().min(1).max(32).description('FSP identifier').label('@ A valid FSP ID must be supplied. @')
+            }).required().description('Party ID Information').label('@ A valid PartyID Information must be supplied. @'),
+            merchantClassificationCode: Joi.string().regex(/^[\d]{1,4}$/).optional().description('merchantClassificationCode'),
+            name: Joi.string().optional().min(1).max(128).description('Name of the Party').label('@ A valid party name must be supplied. @'),
+            personalInfo: Joi.object().keys({
+              complexName: Joi.object().keys({
+                firstName: Joi.string().min(1).max(128).regex(/^(?!\s*$)[\w .,''-]{1,128}$/).optional().description('First name of the Party'),
+                middleName: Joi.string().min(1).max(128).regex(/^(?!\s*$)[\w .,''-]{1,128}$/).optional().description('Middle name of the Party'),
+                lastName: Joi.string().min(1).max(128).regex(/^(?!\s*$)[\w .,''-]{1,128}$/).optional().description('Last name of the Party')
+              }).optional().description('Complex Name').label('@ A valid Complex Name Information must be supplied. @'),
+              dateOfBirth: Joi.string().optional().regex(/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)$/).description('Date of Birth of the Party').label('@ A valid Date of Birth must be supplied. @')
+            }).optional().description('Personal Information').label('@ A valid Personal Information must be supplied. @')
+          }).required().description('Financial Service Provider of Payee').label('@ A valid Payee Information must be supplied. @'),
+          payer: Joi.object().keys({
+            partyIdType: Joi.string().valid('MSISDN', 'EMAIL', 'PERSONAL_ID', 'BUSINESS', 'DEVICE', 'ACCOUNT_ID', 'IBAN', 'ALIAS').required().description('PartyID Type'),
+            partyIdentifier: Joi.string().required().min(1).max(128).description('Identifier of the Party').label('@ A valid Party Identifier must be supplied. @'),
+            partySubIdOrType: Joi.string().optional().min(1).max(128).description('Sub Party ID or Type').label('@ A valid partySubIdOrType must be supplied. @'),
+            fspId: Joi.string().optional().min(1).max(32).description('FSP identifier').label('@ A valid FSP ID must be supplied. @')
+          }).required().description('Financial Service Provider of Payer').label('@ A valid Payer Information must be supplied. @'),
           amount: Joi.object().keys({
             amount: Joi.string().regex(/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/).required(),
             currency: Joi.string().length(3).required()
