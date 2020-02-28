@@ -17,269 +17,190 @@
  optionally within square brackets <email>.
  * Gates Foundation
 
- * Rajiv Mothilal <rajiv.mothilal@modusbox.com>
+ * ModusBox
+ - Rajiv Mothilal <rajiv.mothilal@modusbox.com>
+ - Vijay Kumar Guthi <vijay.guthi@modusbox.com>
+ - Steven Oderayi <steven.oderayi@modusbox.com>
 
  --------------
  ******/
 
 'use strict'
 const NodeCache = require('node-cache')
-const participantCache = new NodeCache()
-const requestCache = new NodeCache()
-const batchRequestCache = new NodeCache()
+const sendRequest = require('../lib/sendRequest')
 const Logger = require('@mojaloop/central-services-logger')
 const Enums = require('@mojaloop/central-services-shared').Enum
-const Metrics = require('../lib/metrics')
+const ErrorHandler = require('@mojaloop/central-services-error-handling')
 
-exports.createParticipantsByTypeAndId = function (request, h) {
-  const histTimerEnd = Metrics.getHistogram(
-    'sim_request',
-    'Histogram for Simulator http operations',
-    ['success', 'fsp', 'operation', 'source', 'destination']
-  ).startTimer()
-  Logger.debug(`createParticipantByTypeId::ID=${request.params.ID} payload=${request.payload}`)
-  addNewRequest(request)
-  const record = {
-    partyList: [
-      {
-        fspId: request.payload.fspId,
-        currency: request.payload.currency || undefined,
-        partySubIdOrType: request.payload.partySubIdOrType || undefined
+const requestsCache = new NodeCache()
+const callbackCache = new NodeCache()
+const correlationCache = new NodeCache()
+const transactionRequestsEndpoint = process.env.TRANSACTION_REQUESTS_ENDPOINT || 'http://moja-transaction-requests-service'
+
+exports.getTransactionRequestById = function (request, h) {
+  (async () => {
+    Logger.info(`IN transactionRequests:: Final response for GET /transactionRequests/correlationid/${request.params.ID}, CACHE: [${JSON.stringify(correlationCache.get(request.params.ID))}`)
+    const url = transactionRequestsEndpoint + '/transactionRequests/' + request.params.ID
+    try {
+      let transactionRequestResponse
+      if (requestsCache.get(request.params.ID)) {
+        transactionRequestResponse = {
+          transactionId: request.params.ID,
+          transactionRequestState: 'RECEIVED'
+        }
+        requestsCache.del(request.params.ID)
+      } else {
+        await sendErrorCallback(
+          ErrorHandler.CreateFSPIOPError(ErrorHandler.Enums.FSPIOPErrorCodes.TXN_REQUEST_ID_NOT_FOUND, `Transaction Request id ${request.params.ID} not found`, null, request.headers['fspiop-source']),
+          request.params.ID,
+          request.headers,
+          request.span
+        )
+        throw new Error(`ID:${request.params.ID} not found`)
       }
-    ]
-  }
-  let idMap = new Map()
-  if (participantCache.get(request.params.Type)) {
-    idMap = participantCache.get(request.params.Type)
-    if (idMap.get(request.params.ID)) {
-      throw new Error(`ID:${request.params.ID} already exists`)
-    } else {
-      idMap.set(request.params.ID, record)
-      participantCache.set(request.params.Type, idMap)
+      const opts = {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/vnd.interoperability.transfers+json;version=1.0',
+          'FSPIOP-Source': request.headers['fspiop-destination'],
+          'FSPIOP-Destination': request.headers['fspiop-source'],
+          Date: new Date().toUTCString(),
+          'FSPIOP-HTTP-Method': 'PUT',
+          'FSPIOP-URI': `/transactionRequests/${request.params.ID}`
+        },
+        transformRequest: [(data, headers) => {
+          delete headers.common.Accept
+          return data
+        }],
+        data: JSON.stringify(transactionRequestResponse)
+      }
+      const res = await sendRequest(url, opts, request.span)
+      Logger.info(`response: ${res.status}`)
+      if (res.status !== Enums.Http.ReturnCodes.OK.CODE) {
+        throw new Error(`Failed to send. Result: ${JSON.stringify(res)}`)
+      }
+    } catch (err) {
+      Logger.error(err)
     }
-  } else {
-    idMap.set(request.params.ID, record)
-    participantCache.set(request.params.Type, idMap)
-  }
+  })()
 
-  histTimerEnd({ success: true, operation: 'postParticipants', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
-  return h.response().code(201)
+  return h.response().code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
 }
 
-exports.getParticipantsByTypeId = function (request, h) {
-  const histTimerEnd = Metrics.getHistogram(
-    'sim_request',
-    'Histogram for Simulator http operations',
-    ['success', 'fsp', 'operation', 'source', 'destination']
-  ).startTimer()
-  Logger.debug(`getParticipantsByTypeId::ID=${request.params.ID}`)
-  addNewRequest(request)
-  let idMap = new Map()
-  let response
-  if (participantCache.get(request.params.Type)) {
-    idMap = participantCache.get(request.params.Type)
-    if (idMap.get(request.params.ID)) {
-      response = idMap.get(request.params.ID)
-    } else {
-      response = []
+exports.postTransactionRequest = function (request, h) {
+  (async () => {
+    const metadata = `${request.method} ${request.path} ${request.payload.transactionRequestId}`
+    Logger.info(`IN transactionRequests POST:: received: ${metadata}.`)
+    const url = transactionRequestsEndpoint + '/transactionRequests/' + request.payload.transactionRequestId
+    try {
+      if (requestsCache.get(request.payload.transactionRequestId)) {
+        await sendErrorCallback(
+          ErrorHandler.CreateFSPIOPError(ErrorHandler.Enums.FSPIOPErrorCodes.CLIENT_ERROR, `ID:${request.payload.transactionRequestId} already exists`, null, request.headers['fspiop-source']),
+          request.params.ID,
+          request.headers,
+          request.span
+        )
+        throw new Error(`ID:${request.payload.transactionRequestId} already exists`)
+      } else {
+        requestsCache.set(request.payload.transactionRequestId, request.payload)
+      }
+      const transactionRequestsResponse = {
+        transactionId: request.payload.transactionRequestId,
+        transactionRequestState: 'RECEIVED',
+        extensionList: request.payload.extensionList
+      }
+      const opts = {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/vnd.interoperability.transfers+json;version=1.0',
+          'FSPIOP-Source': request.headers['fspiop-destination'],
+          'FSPIOP-Destination': request.headers['fspiop-source'],
+          Date: new Date().toUTCString(),
+          'FSPIOP-HTTP-Method': 'PUT',
+          'FSPIOP-URI': `/transactionRequests/${request.payload.transactionRequestId}`
+        },
+        transformRequest: [(data, headers) => {
+          delete headers.common.Accept
+          return data
+        }],
+        data: JSON.stringify(transactionRequestsResponse)
+      }
+      const res = await sendRequest(url, opts, request.span)
+      Logger.info(`response: ${res.status}`)
+      if (res.status !== Enums.Http.ReturnCodes.OK.CODE) {
+        throw new Error(`Failed to send. Result: ${JSON.stringify(res)}`)
+      }
+    } catch (err) {
+      Logger.error(err)
     }
-  } else {
-    response = []
-  }
-  histTimerEnd({ success: true, operation: 'getParticipants', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
-  return h.response(response).code(Enums.Http.ReturnCodes.OK.CODE)
+  })()
+
+  return h.response().code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
 }
 
-exports.updateParticipantsByTypeId = function (request, h) {
-  const histTimerEnd = Metrics.getHistogram(
-    'sim_request',
-    'Histogram for Simulator http operations',
-    ['success', 'fsp', 'operation', 'source', 'destination']
-  ).startTimer()
-  Logger.debug(`updateParticipantByTypeId::ID=${request.params.ID} payload=${request.payload}`)
-  addNewRequest(request)
-  let idMap
-  if (participantCache.get(request.params.Type)) {
-    idMap = participantCache.get(request.params.Type)
-    if (idMap.get(request.params.ID)) {
-      const currentRecord = idMap.get(request.params.ID)
-      if (request.payload.fspId && currentRecord.partyList[0].fspId !== request.payload.fspId) {
-        currentRecord.partyList[0].fspId = request.payload.fspId
-      }
-      if (request.payload.currency && currentRecord.partyList[0].currency !== request.payload.currency) {
-        currentRecord.partyList[0].currency = request.payload.currency
-      }
-      if (request.payload.partySubIdOrType && currentRecord.partyList[0].partySubIdOrType !== request.payload.partySubIdOrType) {
-        currentRecord.partyList[0].partySubIdOrType = request.payload.partySubIdOrType
-      }
-      idMap.set(request.params.ID, currentRecord)
-      participantCache.set(request.params.Type, idMap)
-    } else {
-      throw new Error(`ID:${request.params.ID} not found`)
-    }
-  } else {
-    throw new Error(`Type:${request.params.Type} not found`)
-  }
-  histTimerEnd({ success: true, operation: 'putParticipants', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
+exports.putTransactionRequest = function (request, h) {
+  Logger.info(`IN transactionRequests :: PUT /transactionRequests/${request.params.ID}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
+  correlationCache.set(request.params.ID, request.payload)
+  callbackCache.set(request.params.ID, { headers: request.headers, data: request.payload })
+
   return h.response().code(Enums.Http.ReturnCodes.OK.CODE)
 }
 
-exports.delParticipantsByTypeId = function (request, h) {
-  const histTimerEnd = Metrics.getHistogram(
-    'sim_request',
-    'Histogram for Simulator http operations',
-    ['success', 'fsp', 'operation', 'source', 'destination']
-  ).startTimer()
-  Logger.debug(`delParticipantsByTypeId::ID=${request.params.ID}`)
-  addNewRequest(request)
-  let idMap
-  if (participantCache.get(request.params.Type)) {
-    idMap = participantCache.get(request.params.Type)
-    if (idMap.get(request.params.ID)) {
-      idMap.delete(request.params.ID)
-      participantCache.set(request.params.Type, idMap)
-    } else {
-      const errorObject = {
-        errorCode: 2345,
-        errorDescription: `ID:${request.params.ID} not found`
-      }
-      histTimerEnd({ success: false, operation: 'deleteParticipants', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
-      return h.response(buildErrorObject(errorObject, [])).code(400)
-    }
-  } else {
-    throw new Error(`Type:${request.params.Type} not found`)
-  }
-  histTimerEnd({ success: true, operation: 'delParticipants', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
-  return h.response().code(204)
+exports.putTransactionRequestError = function (request, h) {
+  Logger.info(`IN transactionRequests :: PUT /transactionRequests/${request.params.ID}/error, PAYLOAD: [${JSON.stringify(request.payload)}]`)
+  correlationCache.set(request.params.ID, request.payload)
+  callbackCache.set(request.params.ID, { headers: request.headers, data: request.payload })
+
+  return h.response().code(Enums.Http.ReturnCodes.OK.CODE)
 }
 
-exports.createParticipantsBatch = function (request, h) {
-  const histTimerEnd = Metrics.getHistogram(
-    'sim_request',
-    'Histogram for Simulator http operations',
-    ['success', 'fsp', 'operation', 'source', 'destination']
-  ).startTimer()
-  const responseObject = {
-    partyList: []
-  }
-  if (batchRequestCache.get(request.payload.requestId)) {
-    const errorObject = {
-      errorCode: 2345,
-      errorDescription: `Duplicated batch requestId:${request.payload.requestId} received`
-    }
-    return h.response(buildErrorObject(errorObject, [])).code(400)
-  } else {
-    const newRequest = {
-      headers: request.headers,
-      path: request.path,
-      method: request.method,
-      params: request.params,
-      payload: request.payload
-    }
-    batchRequestCache.set(request.payload.requestId, newRequest)
-    for (const party of request.payload.partyList) {
-      const record = {
-        partyList: [
-          {
-            fspId: party.fspId,
-            currency: party.currency,
-            partySubIdOrType: party.partySubIdOrType
-          }
-        ]
-      }
-      const partyId = {
-        partyIdType: party.partyIdType,
-        partyIdentifier: party.partyIdentifier,
-        partySubIdOrType: party.partySubIdOrType || undefined,
-        fspId: party.fspId,
-        currency: party.currency || undefined
-      }
-      let errorInformation
-      let idMap = new Map()
-      if (participantCache.get(party.partyIdType)) {
-        idMap = participantCache.get(party.partyIdType)
-        if (idMap.get(party.partyIdentifier)) {
-          const errorObject = {
-            errorCode: 1234,
-            errorDescription: `Participant:${party.partyIdentifier} already exists`
-          }
-          errorInformation = buildErrorObject(errorObject, [{ key: party.partyIdentifier, value: party.partyIdType }])
-          responseObject.partyList.push({ partyId, errorInformation })
-        } else {
-          idMap.set(party.partyIdentifier, record)
-          participantCache.set(party.partyIdType, idMap)
-          responseObject.partyList.push({ partyId })
-        }
-      } else {
-        idMap.set(party.partyIdentifier, record)
-        participantCache.set(party.partyIdType, idMap)
-        responseObject.partyList.push({ partyId })
-      }
-    }
-  }
-  histTimerEnd({ success: true, operation: 'postParticipantsBatch', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
-  return h.response(responseObject).code(201)
-}
+exports.getCorrelationId = function (request, h) {
+  Logger.info(`IN transactionRequests:: GET /transactionRequests/correlationid/${request.params.ID}, CACHE: [${JSON.stringify(correlationCache.get(request.params.ID))}`)
 
-exports.getRequestByTypeId = function (request, h) {
-  const histTimerEnd = Metrics.getHistogram(
-    'sim_request',
-    'Histogram for Simulator http operations',
-    ['success', 'fsp', 'operation', 'source', 'destination']
-  ).startTimer()
-  const responseData = requestCache.get(request.params.ID)
-  requestCache.del(request.params.ID)
-  histTimerEnd({ success: true, operation: 'getRequestByTypeId' })
-  return h.response(responseData).code(Enums.Http.ReturnCodes.OK.CODE)
+  return h.response(correlationCache.get(request.params.ID)).code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
 }
 
 exports.getRequestById = function (request, h) {
-  const histTimerEnd = Metrics.getHistogram(
-    'sim_request',
-    'Histogram for Simulator http operations',
-    ['success', 'fsp', 'operation', 'source', 'destination']
-  ).startTimer()
-  const responseData = batchRequestCache.get(request.params.requestId)
-  batchRequestCache.del(request.params.requestId)
-  histTimerEnd({ success: true, operation: 'getRequestById' })
+  Logger.info(`IN transactionRequests :: GET /transactionRequests/requests/${request.params.ID}, CACHE: [${JSON.stringify(requestsCache.get(request.params.ID))}]`)
+  const responseData = requestsCache.get(request.params.ID)
+  requestsCache.del(request.params.ID)
+
   return h.response(responseData).code(Enums.Http.ReturnCodes.OK.CODE)
 }
 
-const addNewRequest = function (request) {
-  const newRequest = {
-    headers: request.headers,
-    path: request.path,
-    method: request.method,
-    params: request.params,
-    payload: request.payload ? request.payload : undefined
-  }
-  if (requestCache.get(request.params.ID)) {
-    const incomingRequests = requestCache.get(request.params.ID)
-    let foundMethod = false
-    let count = 0
-    for (const entry of incomingRequests) {
-      if (entry.method === newRequest.method) {
-        foundMethod = true
-        break
-      }
-      count++
-    }
-    if (!foundMethod) {
-      incomingRequests.push(newRequest)
-    } else {
-      incomingRequests.splice(count, 1)
-      incomingRequests.push(newRequest)
-    }
-    requestCache.set(request.params.ID, incomingRequests)
-  } else {
-    requestCache.set(request.params.ID, [newRequest])
-  }
+exports.getCallbackById = function (request, h) {
+  Logger.info(`IN transactionRequests :: GET /transactionRequests/callbacks/${request.params.ID}, CACHE: [${JSON.stringify(callbackCache.get(request.params.ID))}]`)
+  const responseData = callbackCache.get(request.params.ID)
+  callbackCache.del(request.params.ID)
+
+  return h.response(responseData).code(Enums.Http.ReturnCodes.OK.CODE)
 }
 
-const buildErrorObject = function (error, extensionList) {
-  return {
-    errorCode: error.errorCode.toString(),
-    errorDescription: error.errorDescription,
-    extensionList
+const sendErrorCallback = async (fspiopError, transactionRequestId, headers, span) => {
+  try {
+    const url = transactionRequestsEndpoint + '/transactionRequests/' + transactionRequestId + '/error'
+    const fspiopUriHeader = '/transactionRequests/' + transactionRequestId + '/error'
+    const opts = {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/vnd.interoperability.quotes+json;version=1.0',
+        'FSPIOP-Source': headers['fspiop-destination'],
+        'FSPIOP-Destination': headers['fspiop-source'],
+        Date: new Date().toUTCString(),
+        'FSPIOP-HTTP-Method': 'PUT',
+        'FSPIOP-URI': fspiopUriHeader
+      },
+      transformRequest: [(data, headers) => {
+        delete headers.common.Accept
+        return data
+      }],
+      data: JSON.stringify(fspiopError.toApiErrorObject())
+    }
+    const res = await sendRequest(url, opts, span)
+    if (res.status !== Enums.Http.ReturnCodes.OK.CODE) {
+      throw new Error(`Failed to send. Result: ${res}`)
+    }
+  } catch (err) {
+    Logger.error(err)
   }
 }
