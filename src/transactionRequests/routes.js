@@ -34,7 +34,15 @@ module.exports = [
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getTransactionRequest`,
       tags: tags,
-      description: 'Get a transaction request by ID'
+      description: 'Get a transaction request by ID',
+      validate: {
+        headers: Joi.object({
+          accept: Joi.string().optional().regex(regexAccept)
+        }).unknown(false).options({ stripUnknown: true }),
+        params: Joi.object({
+          ID: Joi.string().guid().required().description('path').label('Supply a valid transfer Id to continue.')
+        })
+      }
     }
   },
   {
@@ -54,7 +62,38 @@ module.exports = [
     options: {
       id: `simulator_${__dirname.split('/').pop()}_callbackTransactionRequests`,
       tags: tags,
-      description: 'Callback Transaction Requests'
+      description: 'Callback Transaction Request',
+      payload: {
+        failAction: 'error'
+      },
+      validate: {
+        headers: Joi.object({
+          'content-type': Joi.string().required().regex(regexContentType),
+          date: Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
+          'x-forwarded-for': Joi.string().optional(),
+          'fspiop-source': Joi.string().required(),
+          'fspiop-destination': Joi.string().required(),
+          'fspiop-encryption': Joi.string().optional(),
+          'fspiop-signature': Joi.string().optional(),
+          'fspiop-uri': Joi.string().optional(),
+          'fspiop-http-method': Joi.string().optional(),
+          traceparent: Joi.string().optional(),
+          tracestate: Joi.string().optional()
+        }).unknown(false).options({ stripUnknown: true }),
+        params: Joi.object({
+          ID: Joi.string().required().description('path')
+        }),
+        payload: Joi.object({
+          transactionId: Joi.string().required().description('Identifies a related transaction (if a transaction has been created).').label('@ Invalid transaction Id given. @'),
+          transactionRequestState: Joi.string().valid('RECEIVED', 'PENDING', 'ACCEPTED', 'REJECTED').required().description('State of the transaction').label('@ Invalid transaction state given. @'),
+          extensionList: Joi.object().keys({
+            extension: Joi.array().items(Joi.object().keys({
+              key: Joi.string().required().min(1).max(32).description('Key').label('@ Supplied key fails to match the required format. @'),
+              value: Joi.string().required().min(1).max(128).description('Value').label('@ Supplied key value fails to match the required format. @')
+            })).required().min(1).max(16).description('extension')
+          }).optional().description('Extension list')
+        })
+      }
     }
   },
   {
