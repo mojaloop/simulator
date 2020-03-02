@@ -57,7 +57,7 @@ module.exports = [
           tracestate: Joi.string().optional()
         }).unknown(false).options({ stripUnknown: true }),
         params: Joi.object({
-          id: Joi.string().guid().required().description('path').label('Supply a valid transfer Id to continue.')
+          ID: Joi.string().guid().required().description('path').label('Supply a valid transfer Id to continue.')
         })
       }
     }
@@ -177,9 +177,8 @@ module.exports = [
           ID: Joi.string().required().description('path')
         }),
         payload: Joi.object({
-          transactionState: Joi.string().required().valid('RECEIVED', 'PENDING', 'COMPLETED', 'REJECTED').description('State of the transaction').label('@ Invalid transaction state given. @'),
-          completedTimestamp: Joi.string().regex(/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/).description('When the transaction was completed').label('@ A valid transaction completion date must be supplied. @'),
-          code: Joi.string().regex(/^[0-9a-zA-Z]{4,32}$/).optional(),
+          transactionId: Joi.string().required().description('Identifies a related transaction (if a transaction has been created).').label('@ Invalid transaction Id given. @'),
+          transactionRequestState: Joi.string().valid('RECEIVED', 'PENDING', 'ACCEPTED', 'REJECTED').required().description('State of the transaction').label('@ Invalid transaction state given. @'),
           extensionList: Joi.object().keys({
             extension: Joi.array().items(Joi.object().keys({
               key: Joi.string().required().min(1).max(32).description('Key').label('@ Supplied key fails to match the required format. @'),

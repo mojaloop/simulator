@@ -102,7 +102,7 @@ exports.postTransactionRequest = function (request, h) {
         )
         throw new Error(`ID:${request.payload.transactionRequestId} already exists`)
       } else {
-        requestsCache.set(request.payload.transactionRequestId, request.payload)
+        requestsCache.set(request.payload.transactionRequestId, { headers: request.headers, data: request.payload })
       }
       const transactionRequestsResponse = {
         transactionId: request.payload.transactionRequestId,
@@ -140,7 +140,7 @@ exports.postTransactionRequest = function (request, h) {
 
 exports.putTransactionRequest = function (request, h) {
   Logger.info(`IN transactionRequests :: PUT /transactionRequests/${request.params.ID}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
-  correlationCache.set(request.params.ID, request.payload)
+  correlationCache.set(request.params.ID, { headers: request.headers, data: request.payload })
   callbackCache.set(request.params.ID, { headers: request.headers, data: request.payload })
 
   return h.response().code(Enums.Http.ReturnCodes.OK.CODE)
@@ -148,7 +148,7 @@ exports.putTransactionRequest = function (request, h) {
 
 exports.putTransactionRequestError = function (request, h) {
   Logger.info(`IN transactionRequests :: PUT /transactionRequests/${request.params.ID}/error, PAYLOAD: [${JSON.stringify(request.payload)}]`)
-  correlationCache.set(request.params.ID, request.payload)
+  correlationCache.set(request.params.ID, { headers: request.headers, data: request.payload })
   callbackCache.set(request.params.ID, { headers: request.headers, data: request.payload })
 
   return h.response().code(Enums.Http.ReturnCodes.OK.CODE)
