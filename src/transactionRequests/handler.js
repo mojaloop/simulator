@@ -185,7 +185,8 @@ const sendErrorCallback = async (fspiopError, transactionRequestId, headers, spa
     const opts = {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/vnd.interoperability.quotes+json;version=1.0',
+        ID: transactionRequestId,
+        'Content-Type': 'application/vnd.interoperability.transactionRequests+json;version=1.0',
         'FSPIOP-Source': headers['fspiop-destination'],
         'FSPIOP-Destination': headers['fspiop-source'],
         Date: new Date().toUTCString(),
