@@ -61,7 +61,8 @@ exports.getTransactionRequestById = function (request, h) {
       const opts = {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/vnd.interoperability.transfers+json;version=1.0',
+          ID: request.params.ID,
+          'Content-Type': 'application/vnd.interoperability.transactionRequests+json;version=1.0',
           'FSPIOP-Source': request.headers['fspiop-destination'],
           'FSPIOP-Destination': request.headers['fspiop-source'],
           Date: new Date().toUTCString(),
