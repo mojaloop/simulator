@@ -1,6 +1,6 @@
 {
   "name": "sims",
-  "version": "9.3.1",
+  "version": "9.3.2",
   "description": "A super-simple fsp simulator",
   "main": "src/index.js",
   "author": "ModusBox",
@@ -47,7 +47,7 @@
     "base64url": "3.0.1",
     "blipp": "4.0.1",
     "glob": "7.1.6",
-    "hapi-swagger": "12.1.1",
+    "hapi-swagger": "12.1.2",
     "joi-currency-code": "3.0.0",
     "lodash": "4.17.15",
     "node-cache": "5.1.0"

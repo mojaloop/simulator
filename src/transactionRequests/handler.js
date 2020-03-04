@@ -61,7 +61,8 @@ exports.getTransactionRequestById = function (request, h) {
       const opts = {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/vnd.interoperability.transfers+json;version=1.0',
+          ID: request.params.ID,
+          'Content-Type': 'application/vnd.interoperability.transactionRequests+json;version=1.0',
           'FSPIOP-Source': request.headers['fspiop-destination'],
           'FSPIOP-Destination': request.headers['fspiop-source'],
           Date: new Date().toUTCString(),
@@ -112,7 +113,8 @@ exports.postTransactionRequest = function (request, h) {
       const opts = {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/vnd.interoperability.transfers+json;version=1.0',
+          ID: request.payload.transactionRequestId,
+          'Content-Type': 'application/vnd.interoperability.transactionRequests+json;version=1.0',
           'FSPIOP-Source': request.headers['fspiop-destination'],
           'FSPIOP-Destination': request.headers['fspiop-source'],
           Date: new Date().toUTCString(),
@@ -183,7 +185,8 @@ const sendErrorCallback = async (fspiopError, transactionRequestId, headers, spa
     const opts = {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/vnd.interoperability.quotes+json;version=1.0',
+        ID: transactionRequestId,
+        'Content-Type': 'application/vnd.interoperability.transactionRequests+json;version=1.0',
         'FSPIOP-Source': headers['fspiop-destination'],
         'FSPIOP-Destination': headers['fspiop-source'],
         Date: new Date().toUTCString(),
