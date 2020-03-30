@@ -1,6 +1,6 @@
 {
   "name": "sims",
-  "version": "9.3.2-snapshot.1",
+  "version": "9.4.0-perf1.0",
   "description": "A super-simple fsp simulator",
   "main": "src/index.js",
   "author": "ModusBox",

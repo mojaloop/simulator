@@ -29,13 +29,104 @@ const Logger = require('@mojaloop/central-services-logger')
 const request = require('axios')
 const { pickBy, identity } = require('lodash')
 
-module.exports = async (url, opts, span) => {
-  Logger.info(`Executing PUT: [${url}], HEADERS: [${JSON.stringify(opts.headers)}], BODY: [${JSON.stringify(opts.body)}]`)
-  let optionsWithCleanHeaders = Object.assign({}, opts, { headers: pickBy(opts.headers, identity) })
-  if (span) {
-    optionsWithCleanHeaders = span.injectContextToHttpRequest(optionsWithCleanHeaders)
+// module.exports = async (url, opts, span) => {
+//   Logger.info(`Executing PUT: [${url}], HEADERS: [${JSON.stringify(opts.headers)}], BODY: [${JSON.stringify(opts.body)}]`)
+//   let optionsWithCleanHeaders = Object.assign({}, opts, { headers: pickBy(opts.headers, identity) })
+//   if (span) {
+//     optionsWithCleanHeaders = span.injectContextToHttpRequest(optionsWithCleanHeaders)
+//   }
+//   const res = await request(url, optionsWithCleanHeaders)
+//   Logger.info((new Date().toISOString()), 'response: ', res.status)
+//   return res
+// }
+
+const httpKeepAlive = process.env.HTTP_KEEPALIVE || 'true'
+const httpKeepAliveMsecs = process.env.HTTP_KEEPALIVEMS || undefined
+const httpMaxSockets = process.env.HTTP_MAXSOCKETS || undefined
+const httpMaxFreeSockets = process.env.HTTP_MAXFREESOCKETS || undefined
+const httpTimeoutMsecs = process.env.HTTP_TIMEOUTMS || undefined
+
+const httpAgentConfig = {}
+
+if (httpKeepAlive && httpKeepAlive === 'true') {
+  Object.assign(httpAgentConfig, { keepAlive: true })
+}
+
+if (httpKeepAliveMsecs && !isNaN(httpKeepAliveMsecs)) {
+  Object.assign(httpAgentConfig, { keepAliveMsecs: parseInt(httpKeepAliveMsecs) })
+}
+
+if (httpMaxSockets && !isNaN(httpMaxSockets)) {
+  Object.assign(httpAgentConfig, { maxSockets: parseInt(httpMaxSockets) })
+}
+
+if (httpMaxFreeSockets && !isNaN(httpMaxFreeSockets)) {
+  Object.assign(httpAgentConfig, { maxFreeSockets: parseInt(httpMaxFreeSockets) })
+}
+
+if (httpTimeoutMsecs && !isNaN(httpTimeoutMsecs)) {
+  Object.assign(httpAgentConfig, { timeout: parseInt(httpTimeoutMsecs) })
+}
+
+
+/** 
+ * Class: HTTPRequestHandler 
+ * Implementation that allows config options to be injected into underying Axios.
+ * See https://github.com/axios/axios#request-config for configuration options.
+ * TODO: 
+ * - Productionise code below, and also create unit tests, etc.
+ * - Consider replacing all sendRequest using the implementation below
+*/
+
+const http = require('http')
+const axios = require('axios')
+class HTTPRequestHandler {
+  constructor(opts) {
+    if (opts) {
+      this._opts = opts
+    } else {
+      // Set config defaults when creating the instance
+      this._opts = {
+        httpAgent: new http.Agent({
+          "keepAlive": true
+        })
+      }
+    }
+
+    this._requestInstance = axios.create(opts)
   }
-  const res = await request(url, optionsWithCleanHeaders)
-  Logger.info((new Date().toISOString()), 'response: ', res.status)
-  return res
+
+  /**
+   * @method sendRequest
+   *
+   * @description sends a request to url
+   *
+   * @param {string} url the endpoint for the service you require
+   * @param {object} opts option config for axios - https://github.com/axios/axios#request-config
+   * @param {object} span a span for event logging if this request is within a span
+   *
+   *@return {object} The response for the request being sent or error object with response included
+  */
+  sendRequest = async (url, opts, span) => {
+    Logger.info(`Executing PUT: [${url}], HEADERS: [${JSON.stringify(opts.headers)}], BODY: [${JSON.stringify(opts.body)}]`)
+    let optionsWithCleanHeaders = Object.assign({}, opts, { headers: pickBy(opts.headers, identity) })
+    if (span) {
+      optionsWithCleanHeaders = span.injectContextToHttpRequest(optionsWithCleanHeaders)
+    }
+    const res = await this._requestInstance.request(url, optionsWithCleanHeaders)
+    Logger.info((new Date().toISOString()), 'response: ', res.status)
+    return res
+  }
+}
+
+const httpRequestHandler = new HTTPRequestHandler({
+  httpAgent: new http.Agent(
+    {
+      httpAgent: httpAgentConfig
+    }
+  )
+})
+
+module.exports = async (url, opts, span) => {
+  return await httpRequestHandler.sendRequest(url, optionsWithCleanHeaders)
 }
