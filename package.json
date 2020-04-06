@@ -42,7 +42,7 @@
     "@mojaloop/central-services-error-handling": "9.1.0",
     "@mojaloop/central-services-logger": "9.1.0",
     "@mojaloop/central-services-metrics": "9.1.0",
-    "@mojaloop/central-services-shared": "9.4.1",
+    "@mojaloop/central-services-shared": "9.5.1",
     "axios": "0.19.2",
     "base64url": "3.0.1",
     "blipp": "4.0.1",
