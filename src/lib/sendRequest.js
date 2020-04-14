@@ -26,7 +26,6 @@
 'use strict'
 
 const Logger = require('@mojaloop/central-services-logger')
-const request = require('axios')
 const { pickBy, identity } = require('lodash')
 
 // module.exports = async (url, opts, span) => {
@@ -68,12 +67,11 @@ if (httpTimeoutMsecs && !isNaN(httpTimeoutMsecs)) {
   Object.assign(httpAgentConfig, { timeout: parseInt(httpTimeoutMsecs) })
 }
 
-
-/** 
- * Class: HTTPRequestHandler 
+/**
+ * Class: HTTPRequestHandler
  * Implementation that allows config options to be injected into underying Axios.
  * See https://github.com/axios/axios#request-config for configuration options.
- * TODO: 
+ * TODO:
  * - Productionise code below, and also create unit tests, etc.
  * - Consider replacing all sendRequest using the implementation below
 */
@@ -81,14 +79,14 @@ if (httpTimeoutMsecs && !isNaN(httpTimeoutMsecs)) {
 const http = require('http')
 const axios = require('axios')
 class HTTPRequestHandler {
-  constructor(opts) {
+  constructor (opts) {
     if (opts) {
       this._opts = opts
     } else {
       // Set config defaults when creating the instance
       this._opts = {
         httpAgent: new http.Agent({
-          "keepAlive": true
+          keepAlive: true
         })
       }
     }
@@ -107,7 +105,7 @@ class HTTPRequestHandler {
    *
    *@return {object} The response for the request being sent or error object with response included
   */
-  sendRequest = async (url, opts, span) => {
+  async sendRequest (url, opts, span) {
     Logger.info(`Executing PUT: [${url}], HEADERS: [${JSON.stringify(opts.headers)}], BODY: [${JSON.stringify(opts.body)}]`)
     let optionsWithCleanHeaders = Object.assign({}, opts, { headers: pickBy(opts.headers, identity) })
     if (span) {
@@ -128,5 +126,5 @@ const httpRequestHandler = new HTTPRequestHandler({
 })
 
 module.exports = async (url, opts, span) => {
-  return await httpRequestHandler.sendRequest(url, optionsWithCleanHeaders)
+  return httpRequestHandler.sendRequest(url, opts, span)
 }
