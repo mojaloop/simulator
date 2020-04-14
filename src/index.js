@@ -25,7 +25,6 @@
 const Routes = require('./routes')
 const Setup = require('.' +
     '/shared/setup')
-process.env.UV_THREADPOOL_SIZE = 12
 let httpHostPort = process.env.HTTP_HOST_PORT || 8444
 
 if (httpHostPort && !isNaN(httpHostPort)) {
