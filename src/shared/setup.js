@@ -48,19 +48,19 @@ const createServer = (port, modules) => {
       RequestLogger.logResponse(request)
       return h.continue
     })
-    Logger.info('Registering server modules...')
+    Logger.isInfoEnabled && Logger.info('Registering server modules...')
     await server.register(modules)
 
-    Logger.info('Registering server plugins')
+    Logger.isInfoEnabled && Logger.info('Registering server plugins')
     await require('./plugins').registerPlugins(server)
 
-    Logger.info('Initializing metrics...')
+    Logger.isInfoEnabled && Logger.info('Initializing metrics...')
     Metrics.setup()
 
-    Logger.info('Server starting up...')
+    Logger.isInfoEnabled && Logger.info('Server starting up...')
     await server.start()
 
-    Logger.info(`Server running at: ${server.info.uri}`)
+    Logger.isInfoEnabled && Logger.info(`Server running at: ${server.info.uri}`)
     return server
   })()
 }

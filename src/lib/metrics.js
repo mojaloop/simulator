@@ -50,7 +50,7 @@ const metricOptions = {
 const setup = () => {
   if (alreadySetup || isDisabled) {
     if (isDisabled) {
-      Logger.warn(disabledMessage)
+      Logger.isWarnEnabled && Logger.warn(disabledMessage)
     }
     return
   }

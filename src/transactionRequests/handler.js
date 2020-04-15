@@ -39,7 +39,7 @@ const transactionRequestsEndpoint = process.env.TRANSACTION_REQUESTS_ENDPOINT ||
 
 exports.getTransactionRequestById = function (request, h) {
   (async () => {
-    Logger.info(`IN transactionRequests:: Final response for GET /transactionRequests/correlationid/${request.params.ID}, CACHE: [${JSON.stringify(correlationCache.get(request.params.ID))}`)
+    Logger.isInfoEnabled && Logger.info(`IN transactionRequests:: Final response for GET /transactionRequests/correlationid/${request.params.ID}, CACHE: [${JSON.stringify(correlationCache.get(request.params.ID))}`)
     const url = transactionRequestsEndpoint + '/transactionRequests/' + request.params.ID
     try {
       let transactionRequestResponse
@@ -76,12 +76,12 @@ exports.getTransactionRequestById = function (request, h) {
         data: JSON.stringify(transactionRequestResponse)
       }
       const res = await sendRequest(url, opts, request.span)
-      Logger.info(`response: ${res.status}`)
+      Logger.isInfoEnabled && Logger.info(`response: ${res.status}`)
       if (res.status !== Enums.Http.ReturnCodes.OK.CODE) {
         throw new Error(`Failed to send. Result: ${JSON.stringify(res)}`)
       }
     } catch (err) {
-      Logger.error(err)
+      Logger.isErrorEnabled && Logger.error(err)
     }
   })()
 
@@ -91,7 +91,7 @@ exports.getTransactionRequestById = function (request, h) {
 exports.postTransactionRequest = function (request, h) {
   (async () => {
     const metadata = `${request.method} ${request.path} ${request.payload.transactionRequestId}`
-    Logger.info(`IN transactionRequests POST:: received: ${metadata}.`)
+    Logger.isInfoEnabled && Logger.info(`IN transactionRequests POST:: received: ${metadata}.`)
     const url = transactionRequestsEndpoint + '/transactionRequests/' + request.payload.transactionRequestId
     try {
       if (requestsCache.get(request.payload.transactionRequestId)) {
@@ -128,12 +128,12 @@ exports.postTransactionRequest = function (request, h) {
         data: JSON.stringify(transactionRequestsResponse)
       }
       const res = await sendRequest(url, opts, request.span)
-      Logger.info(`response: ${res.status}`)
+      Logger.isInfoEnabled && Logger.info(`response: ${res.status}`)
       if (res.status !== Enums.Http.ReturnCodes.OK.CODE) {
         throw new Error(`Failed to send. Result: ${JSON.stringify(res)}`)
       }
     } catch (err) {
-      Logger.error(err)
+      Logger.isErrorEnabled && Logger.error(err)
     }
   })()
 
@@ -141,7 +141,7 @@ exports.postTransactionRequest = function (request, h) {
 }
 
 exports.putTransactionRequest = function (request, h) {
-  Logger.info(`IN transactionRequests :: PUT /transactionRequests/${request.params.ID}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
+  Logger.isInfoEnabled && Logger.info(`IN transactionRequests :: PUT /transactionRequests/${request.params.ID}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
   correlationCache.set(request.params.ID, { headers: request.headers, data: request.payload })
   callbackCache.set(request.params.ID, { headers: request.headers, data: request.payload })
 
@@ -149,7 +149,7 @@ exports.putTransactionRequest = function (request, h) {
 }
 
 exports.putTransactionRequestError = function (request, h) {
-  Logger.info(`IN transactionRequests :: PUT /transactionRequests/${request.params.ID}/error, PAYLOAD: [${JSON.stringify(request.payload)}]`)
+  Logger.isInfoEnabled && Logger.info(`IN transactionRequests :: PUT /transactionRequests/${request.params.ID}/error, PAYLOAD: [${JSON.stringify(request.payload)}]`)
   correlationCache.set(request.params.ID, { headers: request.headers, data: request.payload })
   callbackCache.set(request.params.ID, { headers: request.headers, data: request.payload })
 
@@ -157,13 +157,13 @@ exports.putTransactionRequestError = function (request, h) {
 }
 
 exports.getCorrelationId = function (request, h) {
-  Logger.info(`IN transactionRequests:: GET /transactionRequests/correlationid/${request.params.ID}, CACHE: [${JSON.stringify(correlationCache.get(request.params.ID))}`)
+  Logger.isInfoEnabled && Logger.info(`IN transactionRequests:: GET /transactionRequests/correlationid/${request.params.ID}, CACHE: [${JSON.stringify(correlationCache.get(request.params.ID))}`)
 
   return h.response(correlationCache.get(request.params.ID)).code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
 }
 
 exports.getRequestById = function (request, h) {
-  Logger.info(`IN transactionRequests :: GET /transactionRequests/requests/${request.params.ID}, CACHE: [${JSON.stringify(requestsCache.get(request.params.ID))}]`)
+  Logger.isInfoEnabled && Logger.info(`IN transactionRequests :: GET /transactionRequests/requests/${request.params.ID}, CACHE: [${JSON.stringify(requestsCache.get(request.params.ID))}]`)
   const responseData = requestsCache.get(request.params.ID)
   requestsCache.del(request.params.ID)
 
@@ -171,7 +171,7 @@ exports.getRequestById = function (request, h) {
 }
 
 exports.getCallbackById = function (request, h) {
-  Logger.info(`IN transactionRequests :: GET /transactionRequests/callbacks/${request.params.ID}, CACHE: [${JSON.stringify(callbackCache.get(request.params.ID))}]`)
+  Logger.isInfoEnabled && Logger.info(`IN transactionRequests :: GET /transactionRequests/callbacks/${request.params.ID}, CACHE: [${JSON.stringify(callbackCache.get(request.params.ID))}]`)
   const responseData = callbackCache.get(request.params.ID)
   callbackCache.del(request.params.ID)
 
@@ -204,6 +204,6 @@ const sendErrorCallback = async (fspiopError, transactionRequestId, headers, spa
       throw new Error(`Failed to send. Result: ${res}`)
     }
   } catch (err) {
-    Logger.error(err)
+    Logger.isErrorEnabled && Logger.error(err)
   }
 }

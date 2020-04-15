@@ -30,7 +30,7 @@ exports.plugin = {
   register: function (server) {
     Glob.sync('*/routes.js', { cwd: __dirname, ignore: 'routes.js' })
       .forEach(x => {
-        Logger.info(`Loading module: [${x}]`)
+        Logger.isInfoEnabled && Logger.info(`Loading module: [${x}]`)
         server.route(require('./' + x))
       })
   }
