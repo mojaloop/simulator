@@ -29,13 +29,13 @@ const Logger = require('@mojaloop/central-services-logger')
 const { pickBy, identity } = require('lodash')
 
 // module.exports = async (url, opts, span) => {
-//   Logger.info(`Executing PUT: [${url}], HEADERS: [${JSON.stringify(opts.headers)}], BODY: [${JSON.stringify(opts.body)}]`)
+//   Logger.isInfoEnabled && Logger.info(`Executing PUT: [${url}], HEADERS: [${JSON.stringify(opts.headers)}], BODY: [${JSON.stringify(opts.body)}]`)
 //   let optionsWithCleanHeaders = Object.assign({}, opts, { headers: pickBy(opts.headers, identity) })
 //   if (span) {
 //     optionsWithCleanHeaders = span.injectContextToHttpRequest(optionsWithCleanHeaders)
 //   }
 //   const res = await request(url, optionsWithCleanHeaders)
-//   Logger.info((new Date().toISOString()), 'response: ', res.status)
+//   Logger.isInfoEnabled && Logger.info((new Date().toISOString()), 'response: ', res.status)
 //   return res
 // }
 
@@ -106,13 +106,13 @@ class HTTPRequestHandler {
    *@return {object} The response for the request being sent or error object with response included
   */
   async sendRequest (url, opts, span) {
-    Logger.info(`Executing PUT: [${url}], HEADERS: [${JSON.stringify(opts.headers)}], BODY: [${JSON.stringify(opts.body)}]`)
+    Logger.isInfoEnabled && Logger.info(`Executing PUT: [${url}], HEADERS: [${JSON.stringify(opts.headers)}], BODY: [${JSON.stringify(opts.body)}]`)
     let optionsWithCleanHeaders = Object.assign({}, opts, { headers: pickBy(opts.headers, identity) })
     if (span) {
       optionsWithCleanHeaders = span.injectContextToHttpRequest(optionsWithCleanHeaders)
     }
     const res = await this._requestInstance.request(url, optionsWithCleanHeaders)
-    Logger.info((new Date().toISOString()), 'response: ', res.status)
+    Logger.isInfoEnabled && Logger.info((new Date().toISOString()), 'response: ', res.status)
     return res
   }
 }

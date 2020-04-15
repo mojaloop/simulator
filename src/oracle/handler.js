@@ -38,7 +38,7 @@ exports.createParticipantsByTypeAndId = function (request, h) {
     'Histogram for Simulator http operations',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
-  Logger.debug(`createParticipantByTypeId::ID=${request.params.ID} payload=${request.payload}`)
+  Logger.isDebugEnabled && Logger.debug(`createParticipantByTypeId::ID=${request.params.ID} payload=${request.payload}`)
   addNewRequest(request)
   const record = {
     partyList: [
@@ -74,7 +74,7 @@ exports.getParticipantsByTypeId = function (request, h) {
     'Histogram for Simulator http operations',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
-  Logger.debug(`getParticipantsByTypeId::ID=${request.params.ID}`)
+  Logger.isDebugEnabled && Logger.debug(`getParticipantsByTypeId::ID=${request.params.ID}`)
   addNewRequest(request)
   let idMap = new Map()
   let response
@@ -107,7 +107,7 @@ exports.updateParticipantsByTypeId = function (request, h) {
     'Histogram for Simulator http operations',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
-  Logger.debug(`updateParticipantByTypeId::ID=${request.params.ID} payload=${request.payload}`)
+  Logger.isDebugEnabled && Logger.debug(`updateParticipantByTypeId::ID=${request.params.ID} payload=${request.payload}`)
   addNewRequest(request)
   let idMap
   if (participantCache.get(request.params.Type)) {
@@ -141,7 +141,7 @@ exports.delParticipantsByTypeId = function (request, h) {
     'Histogram for Simulator http operations',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
-  Logger.debug(`delParticipantsByTypeId::ID=${request.params.ID}`)
+  Logger.isDebugEnabled && Logger.debug(`delParticipantsByTypeId::ID=${request.params.ID}`)
   addNewRequest(request)
   let idMap
   if (participantCache.get(request.params.Type)) {
@@ -245,7 +245,7 @@ exports.getPartiesByTypeIdAndSubId = function (request, h) {
     'Histogram for Simulator http operations',
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
-  Logger.debug(`getPartiesByTypeId::ID=${request.params.ID}`)
+  Logger.isDebugEnabled && Logger.debug(`getPartiesByTypeId::ID=${request.params.ID}`)
   addNewRequest(request)
   let idMap = new Map()
   let response
