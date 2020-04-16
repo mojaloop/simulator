@@ -1,6 +1,6 @@
 {
   "name": "sims",
-  "version": "9.4.0",
+  "version": "9.5.0",
   "description": "A super-simple fsp simulator",
   "main": "src/index.js",
   "author": "ModusBox",
@@ -40,9 +40,9 @@
     "@hapi/joi-date": "2.0.1",
     "@hapi/vision": "6.0.0",
     "@mojaloop/central-services-error-handling": "9.1.0",
-    "@mojaloop/central-services-logger": "9.1.0",
-    "@mojaloop/central-services-metrics": "9.1.0",
-    "@mojaloop/central-services-shared": "9.4.1",
+    "@mojaloop/central-services-logger": "9.5.1",
+    "@mojaloop/central-services-metrics": "9.5.0",
+    "@mojaloop/central-services-shared": "9.5.5",
     "axios": "0.19.2",
     "base64url": "3.0.1",
     "blipp": "4.0.1",
@@ -56,6 +56,6 @@
     "pre-commit": "1.2.2",
     "standard": "14.3.3",
     "npm-audit-resolver": "2.2.0",
-    "npm-check-updates": "4.0.5"
+    "npm-check-updates": "4.1.2"
   }
 }

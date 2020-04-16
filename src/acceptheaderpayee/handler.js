@@ -68,7 +68,7 @@ exports.putParticipantsByTypeId = function (request, h) {
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
-  Logger.info(`IN PAYEEFSP:: PUT /acceptheaderpayeefsp/participants/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
+  Logger.isInfoEnabled && Logger.info(`IN PAYEEFSP:: PUT /acceptheaderpayeefsp/participants/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
 
   // Saving Incoming request
   const incomingRequest = {
@@ -90,7 +90,7 @@ exports.postPartiesByTypeAndId = function (request, h) {
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
-  Logger.info('IN PAYEEFSP:: POST /acceptheaderpayeefsp/parties/' + request.params.id, request.payload)
+  Logger.isInfoEnabled && Logger.info('IN PAYEEFSP:: POST /acceptheaderpayeefsp/parties/' + request.params.id, request.payload)
   correlationCache.set(request.params.id, request.payload)
 
   histTimerEnd({ success: true, fsp: 'payee', operation: 'postPartiesByTypeAndId', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
@@ -106,7 +106,7 @@ exports.getPartiesByTypeAndId = function (req, h) {
     ).startTimer()
 
     const metadata = `${req.method} ${req.path} ${req.params.id} `
-    Logger.info((new Date().toISOString()), ['IN PAYEEFSP::'], `received: ${metadata}. `)
+    Logger.isInfoEnabled && Logger.info((new Date().toISOString()), ['IN PAYEEFSP::'], `received: ${metadata}. `)
     // Saving Incoming request
     const incomingRequest = {
       headers: req.headers
@@ -146,9 +146,9 @@ exports.getPartiesByTypeAndId = function (req, h) {
         data: JSON.stringify(correlationCache.get(req.params.id))
       }
 
-      // Logger.info((new Date().toISOString()), 'Executing PUT', url)
+      // Logger.isInfoEnabled && Logger.info((new Date().toISOString()), 'Executing PUT', url)
       const res = await request(url, opts, req.span)
-      // Logger.info((new Date().toISOString()), 'response: ', res.status)
+      // Logger.isInfoEnabled && Logger.info((new Date().toISOString()), 'response: ', res.status)
       if (res.status !== Enums.Http.ReturnCodes.ACCEPTED.CODE) {
         // TODO: how does one identify the failed response?
         throw new Error(`Failed to send. Result: ${res}`)
@@ -156,7 +156,7 @@ exports.getPartiesByTypeAndId = function (req, h) {
 
       histTimerEnd({ success: true, fsp: 'payee', operation: 'getPartiesByTypeAndId', source: req.headers['fspiop-source'], destination: req.headers['fspiop-destination'] })
     } catch (err) {
-      Logger.error(err)
+      Logger.isErrorEnabled && Logger.error(err)
       histTimerEnd({ success: false, fsp: 'payee', operation: 'getPartiesByTypeAndId', source: req.headers['fspiop-source'], destination: req.headers['fspiop-destination'] })
     }
   })()
@@ -174,8 +174,8 @@ exports.postQuotes = function (req, h) {
 
     const metadata = `${req.method} ${req.path}`
     const quotesRequest = req.payload
-    Logger.info((new Date().toISOString()), ['IN PAYEEFSP::'], `received: ${metadata}. `)
-    Logger.info(`incoming request: ${quotesRequest.quoteId}`)
+    Logger.isInfoEnabled && Logger.info((new Date().toISOString()), ['IN PAYEEFSP::'], `received: ${metadata}. `)
+    Logger.isInfoEnabled && Logger.info(`incoming request: ${quotesRequest.quoteId}`)
 
     // Saving Incoming request
     const incomingRequest = {
@@ -234,9 +234,9 @@ exports.postQuotes = function (req, h) {
         }),
         data: JSON.stringify(quotesResponse)
       }
-      // Logger.info((new Date().toISOString()), 'Executing PUT', url)
+      // Logger.isInfoEnabled && Logger.info((new Date().toISOString()), 'Executing PUT', url)
       const res = await request(url, opts, req.span)
-      // Logger.info((new Date().toISOString()), 'response: ', res.status)
+      // Logger.isInfoEnabled && Logger.info((new Date().toISOString()), 'response: ', res.status)
       if (res.status !== Enums.Http.ReturnCodes.ACCEPTED.CODE) {
         // TODO: how does one identify the failed response?
         throw new Error(`Failed to send. Result: ${res}`)
@@ -244,7 +244,7 @@ exports.postQuotes = function (req, h) {
 
       histTimerEnd({ success: true, fsp: 'payee', operation: 'postQuotes', source: req.headers['fspiop-source'], destination: req.headers['fspiop-destination'] })
     } catch (err) {
-      Logger.error(err)
+      Logger.isErrorEnabled && Logger.error(err)
       histTimerEnd({ success: false, fsp: 'payee', operation: 'postQuotes', source: req.headers['fspiop-source'], destination: req.headers['fspiop-destination'] })
       // TODO: what if this fails? We need to log. What happens by default?
       // const url = await rq.createErrorUrl(db, req.path, requesterName);
@@ -265,10 +265,10 @@ exports.postTransfers = async function (req, h) {
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
-  Logger.debug(`[cid=${req.payload.transferId}, fsp=${req.headers['fspiop-source']}, source=${req.headers['fspiop-source']}, dest=${req.headers['fspiop-destination']}] ~ Simulator::api::payee::postTransfers - START`)
+  Logger.isDebugEnabled && Logger.debug(`[cid=${req.payload.transferId}, fsp=${req.headers['fspiop-source']}, source=${req.headers['fspiop-source']}, dest=${req.headers['fspiop-destination']}] ~ Simulator::api::payee::postTransfers - START`)
 
   const metadata = `${req.method} ${req.path} ${req.payload.transferId}`
-  Logger.info(`IN PAYEEFSP:: received: ${metadata}.`)
+  Logger.isInfoEnabled && Logger.info(`IN PAYEEFSP:: received: ${metadata}.`)
 
   if (!transfersFulfilResponseDisabled) {
     // Saving Incoming request
@@ -317,9 +317,9 @@ exports.postTransfers = async function (req, h) {
         data: JSON.stringify(transfersResponse)
       }
 
-      // Logger.info(`Executing PUT: [${url}], HEADERS: [${JSON.stringify(opts.headers)}], BODY: [${JSON.stringify(transfersResponse)}]`)
+      // Logger.isInfoEnabled && Logger.info(`Executing PUT: [${url}], HEADERS: [${JSON.stringify(opts.headers)}], BODY: [${JSON.stringify(transfersResponse)}]`)
       const res = await request(url, opts, req.span)
-      // Logger.info(`response: ${res.status}`)
+      // Logger.isInfoEnabled && Logger.info(`response: ${res.status}`)
       if (res.status !== Enums.Http.ReturnCodes.ACCEPTED.CODE) {
         // TODO: how does one identify the failed response?
         throw new Error(`Failed to send. Result: ${JSON.stringify(res)}`)
@@ -332,7 +332,7 @@ exports.postTransfers = async function (req, h) {
         destination: req.headers['fspiop-destination']
       })
     } catch (err) {
-      Logger.error(err)
+      Logger.isErrorEnabled && Logger.error(err)
       histTimerEnd({
         success: false,
         fsp: 'payee',
@@ -368,7 +368,7 @@ exports.putTransfersById = function (request, h) {
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
-  Logger.info(`IN PAYEEFSP:: PUT /acceptheaderpayeefsp/transfers/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
+  Logger.isInfoEnabled && Logger.info(`IN PAYEEFSP:: PUT /acceptheaderpayeefsp/transfers/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
 
   correlationCache.set(request.params.id, request.payload)
 
@@ -390,7 +390,7 @@ exports.putTransfersByIdError = function (request, h) {
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
-  Logger.info(`IN PAYEEFSP:: PUT /acceptheaderpayeefsp/transfers/${request.params.id}/error, PAYLOAD: [${JSON.stringify(request.payload)}]`)
+  Logger.isInfoEnabled && Logger.info(`IN PAYEEFSP:: PUT /acceptheaderpayeefsp/transfers/${request.params.id}/error, PAYLOAD: [${JSON.stringify(request.payload)}]`)
   correlationCache.set(request.params.id, request.payload)
 
   // Saving Incoming request
@@ -411,7 +411,7 @@ exports.getcorrelationId = function (request, h) {
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
-  Logger.info(`IN PAYEEFSP:: Final response for GET /acceptheaderpayeefsp/correlationid/${request.params.id}, CACHE: [${JSON.stringify(correlationCache.get(request.params.id))}`)
+  Logger.isInfoEnabled && Logger.info(`IN PAYEEFSP:: Final response for GET /acceptheaderpayeefsp/correlationid/${request.params.id}, CACHE: [${JSON.stringify(correlationCache.get(request.params.id))}`)
 
   histTimerEnd({ success: true, fsp: 'payee', operation: 'getcorrelationId' })
   return h.response(correlationCache.get(request.params.id)).code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
@@ -424,7 +424,7 @@ exports.getRequestById = function (request, h) {
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
-  Logger.info(`IN PAYEEFSP:: PUT /acceptheaderpayeefsp/requests/${request.params.id}, CACHE: [${JSON.stringify(requestCache.get(request.params.id))}]`)
+  Logger.isInfoEnabled && Logger.info(`IN PAYEEFSP:: PUT /acceptheaderpayeefsp/requests/${request.params.id}, CACHE: [${JSON.stringify(requestCache.get(request.params.id))}]`)
   const responseData = requestCache.get(request.params.id)
   requestCache.del(request.params.id)
 
@@ -440,7 +440,7 @@ exports.getCallbackById = function (request, h) {
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
-  Logger.info(`IN PAYEEFSP:: PUT /acceptheaderpayeefsp/callbacks/${request.params.id}, CACHE: [${JSON.stringify(callbackCache.get(request.params.id))}]`)
+  Logger.isInfoEnabled && Logger.info(`IN PAYEEFSP:: PUT /acceptheaderpayeefsp/callbacks/${request.params.id}, CACHE: [${JSON.stringify(callbackCache.get(request.params.id))}]`)
   const responseData = callbackCache.get(request.params.id)
   callbackCache.del(request.params.id)
 

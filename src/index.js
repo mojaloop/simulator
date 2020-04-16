@@ -25,9 +25,14 @@
 const Routes = require('./routes')
 const Setup = require('.' +
     '/shared/setup')
+let httpHostPort = process.env.HTTP_HOST_PORT || 8444
+
+if (httpHostPort && !isNaN(httpHostPort)) {
+  httpHostPort = parseInt(httpHostPort)
+}
 
 module.exports = Setup.initialize({
   service: 'api',
-  port: 8444,
+  port: httpHostPort,
   modules: [Routes]
 })
