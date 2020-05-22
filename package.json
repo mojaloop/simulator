@@ -1,6 +1,6 @@
 {
   "name": "sims",
-  "version": "10.1.0",
+  "version": "10.2.0",
   "description": "A super-simple fsp simulator",
   "main": "src/index.js",
   "author": "ModusBox",
@@ -22,8 +22,8 @@
     "standard": "standard",
     "start": "node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "audit:resolve": "SHELL=sh resolve-audit",
-    "audit:check": "SHELL=sh check-audit",
+    "audit:resolve": "SHELL=sh resolve-audit --production",
+    "audit:check": "SHELL=sh check-audit --production",
     "dep:check": "npx ncu -e 2",
     "dep:update": "npx ncu -u"
   },
