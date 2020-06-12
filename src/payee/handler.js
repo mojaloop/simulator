@@ -418,6 +418,45 @@ exports.postTransfers = async function (request, h) {
   return h.response().code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
 }
 
+// Section about Quotes
+exports.putQuotesById = function (request, h) {
+  const histTimerEnd = Metrics.getHistogram(
+    'sim_request',
+    'Histogram for Simulator http operations',
+    ['success', 'fsp', 'operation', 'source', 'destination']
+  ).startTimer()
+
+  // Logger.isPerfEnabled && Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payer::putQuotesById - START`)
+
+  Logger.isInfoEnabled && Logger.info(`IN PAYEEFSP:: PUT /payeefsp/quotes/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
+
+  // Saving Incoming request
+  const incomingRequest = {
+    headers: request.headers,
+    data: request.payload
+  }
+  callbackCache.set(request.params.id, incomingRequest)
+  correlationCache.set(request.params.id, request.payload)
+
+  // Logger.isPerfEnabled && Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payer::putQuotesById - END`)
+  histTimerEnd({ success: true, fsp: 'payee', operation: 'putQuotesById', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
+  return h.response().code(Enums.Http.ReturnCodes.OK.CODE)
+}
+
+exports.putQuotesByIdAndError = function (request, h) {
+  console.log((new Date().toISOString()), 'IN PAYEEFSP:: PUT /payeefsp/quotes/' + request.params.id + '/error', request.payload)
+  correlationCache.set(request.params.id, request.payload)
+
+  // Saving Incoming request
+  const incomingRequest = {
+    headers: request.headers,
+    data: request.payload
+  }
+  callbackCache.set(request.params.id, incomingRequest)
+
+  return h.response().code(Enums.Http.ReturnCodes.OK.CODE)
+}
+
 exports.putTransfersById = function (request, h) {
   const histTimerEnd = Metrics.getHistogram(
     'sim_request',

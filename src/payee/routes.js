@@ -269,6 +269,109 @@ module.exports = [
   },
   {
     method: 'PUT',
+    path: '/payeefsp/quotes/{id}',
+    handler: Handler.putQuotesById,
+    options: {
+      id: `simulator_${__dirname.split('/').pop()}_putQuotesById`,
+      tags: tags,
+      description: 'Metadata',
+      payload: {
+        failAction: 'error'
+      },
+      validate: {
+        headers: Joi.object({
+          'content-type': Joi.string().required().regex(/application\/vnd.interoperability[.]/),
+          'content-length': Joi.number().max(5242880),
+          date: Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
+          'x-forwarded-for': Joi.string().optional(),
+          'fspiop-source': Joi.string().required(),
+          'fspiop-destination': Joi.string().required(),
+          'fspiop-encryption': Joi.string().optional(),
+          'fspiop-signature': Joi.string().optional(),
+          'fspiop-uri': Joi.string().optional(),
+          'fspiop-http-method': Joi.string().optional(),
+          traceparent: Joi.string().optional(),
+          tracestate: Joi.string().optional()
+        }).unknown(false).options({ stripUnknown: true }),
+        params: Joi.object({
+          id: Joi.string().required().description('path')
+        }),
+        payload: Joi.object({
+          transferAmount: Joi.object().keys({
+            currency: Joi.string().required().currency().description('Currency of the transfer').label('@ Currency needs to be a valid ISO 4217 currency code. @'),
+            amount: Joi.string().required().regex(/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/).description('Amount of the transfer')
+          }).optional().description('The amount of Money that the Payer FSP should transfer to the Payee FSP.').label('@ The amount of Money that the Payer FSP should transfer to the Payee FSP. @'),
+          payeeReceiveAmount: Joi.object().keys({
+            currency: Joi.string().required().currency().description('Currency of the transfer').label('@ Currency needs to be a valid ISO 4217 currency code. @'),
+            amount: Joi.string().required().regex(/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/).description('Amount of the transfer')
+          }).optional().description('Amount that the Payee should receive in the end-to-end transaction. Optional as the Payee FSP might not want to disclose any optional Payee fees').label('@ Supplied payeeReceiveAmount fails to match the required format. @'),
+          payeeFspFee: Joi.object().keys({
+            currency: Joi.string().required().currency().description('Currency of the transfer').label('@ Currency needs to be a valid ISO 4217 currency code. @'),
+            amount: Joi.string().required().regex(/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/).description('Amount of the transfer')
+          }).optional().description('Payee FSP’s part of the transaction fee').label('@ Supplied payeeFspFee fails to match the required format. @'),
+          payeeFspCommission: Joi.object().keys({
+            currency: Joi.string().required().currency().description('Currency of the transfer').label('@ Currency needs to be a valid ISO 4217 currency code. @'),
+            amount: Joi.string().required().regex(/^([0]|([1-9][0-9]{0,17}))([.][0-9]{0,3}[1-9])?$/).description('Amount of the transfer')
+          }).optional().description('Transaction commission from the Payee FSP').label('@ Supplied payeeFspCommission fails to match the required format. @'),
+          expiration: Joi.string().required().trim().description('When the transfer expires').label('@ A valid transfer expiry date must be supplied. @'),
+          ilpPacket: Joi.string().required().regex(/^[A-Za-z0-9-_]+[=]{0,2}$/).min(1).max(32768).description('ilp packet').label('@ Supplied ILPPacket fails to match the required format. @'),
+          condition: Joi.string().required().trim().max(48).regex(/^[A-Za-z0-9-_]{43}$/).description('Condition of transfer').label('@ A valid transfer condition must be supplied. @'),
+          extensionList: Joi.object().keys({
+            extension: Joi.array().items(Joi.object().keys({
+              key: Joi.string().required().min(1).max(32).description('Key').label('@ Supplied key fails to match the required format. @'),
+              value: Joi.string().required().min(1).max(128).description('Value').label('@ Supplied key value fails to match the required format. @')
+            })).required().min(1).max(16).description('extension')
+          }).optional().description('Extension list')
+        }),
+        failAction: (request, h, err) => { throw err }
+      }
+    }
+  },
+  {
+    method: 'PUT',
+    path: '/payeefsp/quotes/{id}/error',
+    handler: Handler.putQuotesByIdAndError,
+    options: {
+      id: `simulator_${__dirname.split('/').pop()}_putQuotesByIdAndError`,
+      tags: tags,
+      description: 'Metadata',
+      payload: {
+        failAction: 'error'
+      },
+      validate: {
+        headers: Joi.object({
+          'content-type': Joi.string().required().regex(/application\/vnd.interoperability[.]/),
+          date: Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
+          'x-forwarded-for': Joi.string().optional(),
+          'fspiop-source': Joi.string().required(),
+          'fspiop-destination': Joi.string().required(),
+          'fspiop-encryption': Joi.string().optional(),
+          'fspiop-signature': Joi.string().optional(),
+          'fspiop-uri': Joi.string().optional(),
+          'fspiop-http-method': Joi.string().optional(),
+          traceparent: Joi.string().optional(),
+          tracestate: Joi.string().optional()
+        }).unknown(false).options({ stripUnknown: true }),
+        params: Joi.object({
+          id: Joi.string().required().description('path')
+        }),
+        payload: Joi.object({
+          errorInformation: Joi.object().keys({
+            errorDescription: Joi.string().required(),
+            errorCode: Joi.string().required().regex(/^[0-9]{4}/),
+            extensionList: Joi.object().keys({
+              extension: Joi.array().items(Joi.object().keys({
+                key: Joi.string().required().min(1).max(32).description('Key').label('@ Supplied key fails to match the required format. @'),
+                value: Joi.string().required().min(1).max(128).description('Value').label('@ Supplied key value fails to match the required format. @')
+              })).required().min(1).max(16).description('extension')
+            }).optional().description('Extension list')
+          }).required().description('Error information')
+        })
+      }
+    }
+  },
+  {
+    method: 'PUT',
     path: '/payeefsp/transfers/{id}',
     handler: Handler.putTransfersById,
     config: {
