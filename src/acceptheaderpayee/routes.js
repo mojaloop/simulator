@@ -130,9 +130,9 @@ module.exports = [
             name: Joi.string().optional().min(1).max(32).description('Display name of the Party, could be a real name or a nick name.').label('@ Display name of the Party, could be a real name or a nick name. @'),
             personalInfo: Joi.object().keys({
               complexName: Joi.object().keys({
-                firstName: Joi.string().required().regex(/^(?!\s*$)[\w .,'-]{1,128}$/).description('Party’s first name.').label('@ Party’s first name. @'),
-                middleName: Joi.string().optional().regex(/^(?!\s*$)[\w .,'-]{1,128}$/).description('Party’s middle name.').label('@ Party’s middle name. @'),
-                lastName: Joi.string().required().regex(/^(?!\s*$)[\w .,'-]{1,128}$/).description('Party ’s last name.').label('@ Party ’s last name. @')
+                firstName: Joi.string().required().regex(/^(?!\s*$)[\p{L}\p{Nd} .,''-]{1,128}$/u).description('Party’s first name.').label('@ Party’s first name. @'),
+                middleName: Joi.string().optional().regex(/^(?!\s*$)[\p{L}\p{Nd} .,''-]{1,128}$/u).description('Party’s middle name.').label('@ Party’s middle name. @'),
+                lastName: Joi.string().required().regex(/^(?!\s*$)[\p{L}\p{Nd} .,''-]{1,128}$/u).description('Party ’s last name.').label('@ Party ’s last name. @')
               }).optional().description('Amount of the transfer').label('@ Supplied amount fails to match the required format. @'),
               dateOfBirth: Joi.string().optional().min(1).max(32).description('Financial Service Provider of Payee').label('@ A valid Payee FSP number must be supplied. @')
             }).optional().description('Personal information used to verify identity of Party such as first, middle, last name and date of birth.').label('@ Personal information used to verify identity of Party such as first, middle, last name and date of birth. @')
@@ -148,9 +148,9 @@ module.exports = [
             name: Joi.string().optional().min(1).max(32).description('Display name of the Party, could be a real name or a nick name.').label('@ Display name of the Party, could be a real name or a nick name. @'),
             personalInfo: Joi.object().keys({
               complexName: Joi.object().keys({
-                firstName: Joi.string().required().regex(/^(?!\s*$)[\w .,'-]{1,128}$/).description('Party’s first name.').label('@ Party’s first name. @'),
-                middleName: Joi.string().optional().regex(/^(?!\s*$)[\w .,'-]{1,128}$/).description('Party’s middle name.').label('@ Party’s middle name. @'),
-                lastName: Joi.string().required().regex(/^(?!\s*$)[\w .,'-]{1,128}$/).description('Party ’s last name.').label('@ Party ’s last name. @')
+                firstName: Joi.string().required().regex(/^(?!\s*$)[\p{L}\p{Nd} .,''-]{1,128}$/u).description('Party’s first name.').label('@ Party’s first name. @'),
+                middleName: Joi.string().optional().regex(/^(?!\s*$)[\p{L}\p{Nd} .,''-]{1,128}$/u).description('Party’s middle name.').label('@ Party’s middle name. @'),
+                lastName: Joi.string().required().regex(/^(?!\s*$)[\p{L}\p{Nd} .,''-]{1,128}$/u).description('Party ’s last name.').label('@ Party ’s last name. @')
               }).optional().description('Amount of the transfer').label('@ Supplied amount fails to match the required format. @'),
               dateOfBirth: Joi.string().optional().min(1).max(32).description('Financial Service Provider of Payee').label('@ A valid Payee FSP number must be supplied. @')
             }).optional().description('Personal information used to verify identity of Party such as first, middle, last name and date of birth.').label('@ Personal information used to verify identity of Party such as first, middle, last name and date of birth. @')
