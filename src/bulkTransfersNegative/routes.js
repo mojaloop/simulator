@@ -16,7 +16,8 @@
  their names indented and be marked with a '-'. Email address can be added
  optionally within square brackets <email>.
  * Gates Foundation
- - Rajiv Mothilal rajiv.mothilal@modusbox.com
+ * ModusBox
+ - Steven Oderayi <steven.oderayi@modusbox.com>
 
  --------------
  ******/
@@ -30,7 +31,7 @@ const Joi = BaseJoi.extend(require('@hapi/joi-date'))
 module.exports = [
   {
     method: 'POST',
-    path: '/bulkTransfers',
+    path: '/bulkTransfersNegative',
     handler: Handler.postBulkTransfers,
     config: {
       id: `simulator_${__dirname.split('/').pop()}_postBulkTransfers`,
@@ -91,12 +92,11 @@ module.exports = [
   },
   {
     method: 'PUT',
-    path: '/bulkTransfers/{id}',
+    path: '/bulkTransfersNegative/{id}',
     handler: Handler.putBulkTransfersById,
     config: {
       id: `simulator_${__dirname.split('/').pop()}_putBulkTransfersById`,
       tags: tags,
-      // auth: Auth.strategy(),
       description: 'Fulfil a bulk transfer',
       payload: {
         failAction: 'error'
@@ -153,7 +153,7 @@ module.exports = [
   },
   {
     method: 'PUT',
-    path: '/bulkTransfers/{id}/error',
+    path: '/bulkTransfersNegative/{id}/error',
     handler: Handler.putBulkTransfersByIdError,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_putBulkTransfersByIdError`,
@@ -179,18 +179,6 @@ module.exports = [
         params: Joi.object({
           id: Joi.string().required().description('path')
         }),
-        // payload: Joi.object({
-        //   errorInformation: Joi.object().keys({
-        //     errorDescription: Joi.string().required(),
-        //     errorCode: Joi.string().required().regex(/^[0-9]{4}/),
-        //     extensionList: Joi.object().keys({
-        //       extension: Joi.array().items(Joi.object().keys({
-        //         key: Joi.string().required().min(1).max(32).description('Key').label('@ Supplied key fails to match the required format. @'),
-        //         value: Joi.string().required().min(1).max(128).description('Value').label('@ Supplied key value fails to match the required format. @')
-        //       })).required().min(1).max(16).description('extension')
-        //     }).optional().description('Extension list')
-        //   }).required().description('Error information')
-        // })
         payload: Joi.object({
           bulkTransferState: Joi.string().required().valid('RECEIVED', 'PENDING', 'ACCEPTED', 'PROCESSING', 'COMPLETED', 'REJECTED').description('State of the bulk transfer').label('@ Invalid bulk transfer state given. @'),
           completedTimestamp: Joi.string().regex(/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/).description('When the transfer was completed').label('@ A valid transfer completion date must be supplied. @')
@@ -200,7 +188,7 @@ module.exports = [
   },
   {
     method: 'GET',
-    path: '/bulkTransfers/correlationid/{id}',
+    path: '/bulkTransfersNegative/correlationid/{id}',
     handler: Handler.getCorrelationId,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getCorrelationId`,
@@ -210,7 +198,7 @@ module.exports = [
   },
   {
     method: 'GET',
-    path: '/bulkTransfers/requests/{id}',
+    path: '/bulkTransfersNegative/requests/{id}',
     handler: Handler.getRequestById,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getRequestById`,
@@ -220,7 +208,7 @@ module.exports = [
   },
   {
     method: 'GET',
-    path: '/bulkTransfers/callbacks/{id}',
+    path: '/bulkTransfersNegative/callbacks/{id}',
     handler: Handler.getCallbackById,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getCallbackById`,
