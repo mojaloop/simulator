@@ -45,7 +45,7 @@ exports.postBulkTransfers = async function (req, h) {
     ['success', 'fsp', 'operation', 'source', 'destination']
   ).startTimer()
 
-  Logger.isDebugEnabled && Logger.debug(`[cid=${req.payload.bulkTransferId}, fsp=${req.headers['fspiop-source']}, source=${req.headers['fspiop-source']}, dest=${req.headers['fspiop-destination']}] ~ Simulator::api::payee::postTransfers - START`)
+  Logger.isDebugEnabled && Logger.debug(`[cid=${req.payload.bulkTransferId}, fsp=${req.headers['fspiop-source']}, source=${req.headers['fspiop-source']}, dest=${req.headers['fspiop-destination']}] ~ Simulator::api::payee::postBulkTransfers - START`)
 
   const metadata = `${req.method} ${req.path} ${req.payload.bulkTransferId}`
   Logger.isInfoEnabled && Logger.info(`IN Bulk Transfers POST:: received: ${metadata}.`)

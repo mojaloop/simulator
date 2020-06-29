@@ -16,7 +16,8 @@
  their names indented and be marked with a '-'. Email address can be added
  optionally within square brackets <email>.
  * Gates Foundation
- - Rajiv Mothilal rajiv.mothilal@modusbox.com
+ * ModusBox
+ - Steven Oderayi <steven.oderayi@modusbox.com>
 
  --------------
  ******/
@@ -30,7 +31,7 @@ const Joi = BaseJoi.extend(require('@hapi/joi-date'))
 module.exports = [
   {
     method: 'POST',
-    path: '/bulkTransfers',
+    path: '/bulkTransfersNegative',
     handler: Handler.postBulkTransfers,
     config: {
       id: `simulator_${__dirname.split('/').pop()}_postBulkTransfers`,
@@ -91,12 +92,11 @@ module.exports = [
   },
   {
     method: 'PUT',
-    path: '/bulkTransfers/{id}',
+    path: '/bulkTransfersNegative/{id}',
     handler: Handler.putBulkTransfersById,
     config: {
       id: `simulator_${__dirname.split('/').pop()}_putBulkTransfersById`,
       tags: tags,
-      // auth: Auth.strategy(),
       description: 'Fulfil a bulk transfer',
       payload: {
         failAction: 'error'
@@ -153,7 +153,7 @@ module.exports = [
   },
   {
     method: 'PUT',
-    path: '/bulkTransfers/{id}/error',
+    path: '/bulkTransfersNegative/{id}/error',
     handler: Handler.putBulkTransfersByIdError,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_putBulkTransfersByIdError`,
@@ -188,7 +188,7 @@ module.exports = [
   },
   {
     method: 'GET',
-    path: '/bulkTransfers/correlationid/{id}',
+    path: '/bulkTransfersNegative/correlationid/{id}',
     handler: Handler.getCorrelationId,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getCorrelationId`,
@@ -198,7 +198,7 @@ module.exports = [
   },
   {
     method: 'GET',
-    path: '/bulkTransfers/requests/{id}',
+    path: '/bulkTransfersNegative/requests/{id}',
     handler: Handler.getRequestById,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getRequestById`,
@@ -208,7 +208,7 @@ module.exports = [
   },
   {
     method: 'GET',
-    path: '/bulkTransfers/callbacks/{id}',
+    path: '/bulkTransfersNegative/callbacks/{id}',
     handler: Handler.getCallbackById,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getCallbackById`,
