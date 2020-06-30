@@ -465,7 +465,7 @@ exports.putTransfersById = function (request, h) {
   ).startTimer()
   // Logger.isPerfEnabled && Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payee::putTransfersById - START`)
 
-  Logger.isInfoEnabled && Logger.info(`IN PAYEEFSP:: PUT /payeefsp/transfers/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
+  Logger.isInfoEnabled && Logger.info(`IN PAYEEFSP:: ${request.method.toUpperCase()} /payeefsp/transfers/${request.params.id}, PAYLOAD: [${JSON.stringify(request.payload)}]`)
 
   correlationCache.set(request.params.id, request.payload)
 

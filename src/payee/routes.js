@@ -371,11 +371,11 @@ module.exports = [
     }
   },
   {
-    method: 'PUT',
+    method: ['PUT', 'PATCH'],
     path: '/payeefsp/transfers/{id}',
     handler: Handler.putTransfersById,
     config: {
-      id: `simulator_${__dirname.split('/').pop()}_putTransfersById`,
+      // id: `simulator_${__dirname.split('/').pop()}_putTransfersById`,
       tags: tags,
       // auth: Auth.strategy(),
       description: 'Fulfil a transfer',
