@@ -90,7 +90,7 @@ exports.postBulkTransfers = async function (req, h) {
       const opts = {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/vnd.interoperability.transfers+json;version=1.0',
+          'Content-Type': req.headers['content-type'],
           'FSPIOP-Source': req.headers['fspiop-destination'],
           'FSPIOP-Destination': req.headers['fspiop-source'],
           Date: new Date().toUTCString(),

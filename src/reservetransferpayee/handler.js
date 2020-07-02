@@ -347,7 +347,7 @@ exports.postTransfers = async function (request, h) {
       const opts = {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/vnd.interoperability.transfers+json;version=1.0',
+          'Content-Type': request.headers['content-type'],
           'FSPIOP-Source': request.headers['fspiop-destination'],
           'FSPIOP-Destination': request.headers['fspiop-source'],
           Date: new Date().toUTCString(),
