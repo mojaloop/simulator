@@ -1,6 +1,6 @@
 {
   "name": "sims",
-  "version": "10.5.2",
+  "version": "10.5.3",
   "description": "A super-simple fsp simulator",
   "main": "src/index.js",
   "author": "ModusBox",
@@ -51,7 +51,7 @@
     "hapi-swagger": "12.1.3",
     "joi-currency-code": "3.0.1",
     "lodash": "4.17.15",
-    "node-cache": "5.1.1"
+    "node-cache": "5.1.2"
   },
   "devDependencies": {
     "pre-commit": "1.2.2",
