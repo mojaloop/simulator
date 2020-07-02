@@ -29,7 +29,7 @@ const Joi = BaseJoi.extend(require('@hapi/joi-date'))
 module.exports = [
   {
     method: 'GET',
-    path: '/payeefsp/',
+    path: '/reservetransferpayee/',
     handler: Handler.metadata,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_metadata`,
@@ -39,7 +39,7 @@ module.exports = [
   },
   {
     method: 'PUT',
-    path: '/payeefsp/participants/{type}/{id}',
+    path: '/reservetransferpayee/participants/{type}/{id}',
     handler: Handler.putParticipantsByTypeId,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_putParticipantsByTypeId`,
@@ -49,7 +49,7 @@ module.exports = [
   },
   {
     method: 'POST',
-    path: '/payeefsp/parties/{type}/{id}',
+    path: '/reservetransferpayee/parties/{type}/{id}',
     handler: Handler.postPartiesByTypeAndId,
     config: {
       id: `simulator_${__dirname.split('/').pop()}_postPartiesByTypeAndId`,
@@ -64,7 +64,7 @@ module.exports = [
   },
   {
     method: 'GET',
-    path: '/payeefsp/parties/{type}/{id}',
+    path: '/reservetransferpayee/parties/{type}/{id}',
     handler: Handler.getPartiesByTypeAndId,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getPartiesByTypeAndId`,
@@ -91,7 +91,7 @@ module.exports = [
   },
   {
     method: 'POST',
-    path: '/payeefsp/quotes',
+    path: '/reservetransferpayee/quotes',
     handler: Handler.postQuotes,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_postQuotes`,
@@ -188,7 +188,7 @@ module.exports = [
   },
   {
     method: 'GET',
-    path: '/payeefsp/quotes/{id}',
+    path: '/reservetransferpayee/quotes/{id}',
     handler: Handler.getQuotesById,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getQuotesById`,
@@ -218,7 +218,7 @@ module.exports = [
   },
   {
     method: 'POST',
-    path: '/payeefsp/transfers',
+    path: '/reservetransferpayee/transfers',
     handler: Handler.postTransfers,
     config: {
       id: `simulator_${__dirname.split('/').pop()}_postTransfers`,
@@ -269,7 +269,7 @@ module.exports = [
   },
   {
     method: 'PUT',
-    path: '/payeefsp/quotes/{id}',
+    path: '/reservetransferpayee/quotes/{id}',
     handler: Handler.putQuotesById,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_putQuotesById`,
@@ -329,7 +329,7 @@ module.exports = [
   },
   {
     method: 'PUT',
-    path: '/payeefsp/quotes/{id}/error',
+    path: '/reservetransferpayee/quotes/{id}/error',
     handler: Handler.putQuotesByIdAndError,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_putQuotesByIdAndError`,
@@ -372,7 +372,7 @@ module.exports = [
   },
   {
     method: ['PUT', 'PATCH'],
-    path: '/payeefsp/transfers/{id}',
+    path: '/reservetransferpayee/transfers/{id}',
     handler: Handler.putTransfersById,
     config: {
       // id: `simulator_${__dirname.split('/').pop()}_putTransfersById`,
@@ -415,7 +415,7 @@ module.exports = [
   },
   {
     method: 'PUT',
-    path: '/payeefsp/transfers/{id}/error',
+    path: '/reservetransferpayee/transfers/{id}/error',
     handler: Handler.putTransfersByIdError,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_putTransfersByIdError`,
@@ -458,7 +458,7 @@ module.exports = [
   },
   {
     method: 'GET',
-    path: '/payeefsp/correlationid/{id}',
+    path: '/reservetransferpayee/correlationid/{id}',
     handler: Handler.getcorrelationId,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getcorrelationId`,
@@ -468,7 +468,7 @@ module.exports = [
   },
   {
     method: 'GET',
-    path: '/payeefsp/requests/{id}',
+    path: '/reservetransferpayee/requests/{id}',
     handler: Handler.getRequestById,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getRequestById`,
@@ -478,7 +478,7 @@ module.exports = [
   },
   {
     method: 'GET',
-    path: '/payeefsp/callbacks/{id}',
+    path: '/reservetransferpayee/callbacks/{id}',
     handler: Handler.getCallbackById,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getCallbackById`,
