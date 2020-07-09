@@ -389,7 +389,7 @@ exports.postTransfers = async function (req, h) {
       const opts = {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/vnd.interoperability.transfers+json;version=1.0',
+          'Content-Type': req.headers['content-type'],
           'FSPIOP-Source': 'testfsp1',
           'FSPIOP-Destination': req.headers['fspiop-source'],
           Date: new Date().toUTCString(),
@@ -399,6 +399,13 @@ exports.postTransfers = async function (req, h) {
           // traceparent: req.headers.traceparent ? req.headers.traceparent : undefined,
           // tracestate: req.headers.tracestate ? req.headers.tracestate : undefined
         },
+        transformRequest: [(data, headers) => {
+          delete headers.common.Accept
+          return data
+        }],
+        httpsAgent: new https.Agent({
+          rejectUnauthorized: false
+        }),
         data: JSON.stringify(transfersResponse)
       }
       // Logger.isInfoEnabled && Logger.info(`Executing PUT: [${url}], HEADERS: [${JSON.stringify(opts.headers)}], BODY: [${JSON.stringify(transfersResponse)}]`)
