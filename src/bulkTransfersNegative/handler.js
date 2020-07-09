@@ -39,6 +39,13 @@ exports.postBulkTransfers = async function (req, h) {
   Logger.isDebugEnabled && Logger.debug(`[cid=${req.payload.bulkTransferId}, fsp=${req.headers['fspiop-source']}, source=${req.headers['fspiop-source']}, dest=${req.headers['fspiop-destination']}] ~ Simulator::api::payee::postBulkTransfers - START`)
   const metadata = `${req.method} ${req.path} ${req.payload.bulkTransferId}`
   Logger.isInfoEnabled && Logger.info(`IN BulkTransfersNegative POST:: received: ${metadata}.`)
+  correlationCache.set(req.payload.bulkTransferId, req.payload)
+  // Saving Incoming request
+  const incomingRequest = {
+    headers: req.headers,
+    data: req.payload
+  }
+  requestCache.set(req.payload.bulkTransferId, incomingRequest)
   histTimerEnd({
     success: true,
     fsp: req.headers['fspiop-source'],
