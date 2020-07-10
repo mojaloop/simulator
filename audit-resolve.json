@@ -1,0 +1,61 @@
+{
+  "decisions": {
+    "1523|@mojaloop/central-services-error-handling>lodash": {
+      "decision": "ignore",
+      "madeAt": 1593690805474,
+      "expiresAt": 1594295587401
+    },
+    "1523|@mojaloop/central-services-shared>@mojaloop/central-services-error-handling>lodash": {
+      "decision": "ignore",
+      "madeAt": 1594298944661,
+      "expiresAt": 1594903731767
+    },
+    "1523|@mojaloop/central-services-logger>winston>async>lodash": {
+      "decision": "ignore",
+      "madeAt": 1593690805474,
+      "expiresAt": 1594295587401
+    },
+    "1523|@mojaloop/central-services-shared>@mojaloop/central-services-logger>winston>async>lodash": {
+      "decision": "ignore",
+      "madeAt": 1594299151022,
+      "expiresAt": 1594903942653
+    },
+    "1523|@mojaloop/central-services-shared>@mojaloop/event-sdk>@mojaloop/central-services-logger>winston>async>lodash": {
+      "decision": "ignore",
+      "madeAt": 1594299151022,
+      "expiresAt": 1594903942653
+    },
+    "1523|@mojaloop/central-services-shared>@mojaloop/event-sdk>winston>async>lodash": {
+      "decision": "ignore",
+      "madeAt": 1594299151022,
+      "expiresAt": 1594903942653
+    },
+    "1523|@mojaloop/central-services-shared>@mojaloop/event-sdk>lodash": {
+      "decision": "ignore",
+      "madeAt": 1594298944661,
+      "expiresAt": 1594903731767
+    },
+    "1523|@mojaloop/central-services-shared>lodash": {
+      "decision": "ignore",
+      "madeAt": 1594298944661,
+      "expiresAt": 1594903731767
+    },
+    "1523|@mojaloop/central-services-shared>openapi-backend>lodash": {
+      "decision": "ignore",
+      "madeAt": 1593690805474,
+      "expiresAt": 1594295587401
+    },
+    "1523|@mojaloop/central-services-shared>openapi-backend>mock-json-schema>lodash": {
+      "decision": "ignore",
+      "madeAt": 1593690805474,
+      "expiresAt": 1594295587401
+    },
+    "1523|lodash": {
+      "decision": "ignore",
+      "madeAt": 1593690805474,
+      "expiresAt": 1594295587401
+    }
+  },
+  "rules": {},
+  "version": 1
+}
