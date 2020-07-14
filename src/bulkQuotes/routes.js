@@ -259,6 +259,49 @@ module.exports = [
     }
   },
   {
+    method: 'PUT',
+    path: '/bulkQuotes/{id}/error',
+    handler: Handler.putBulkQuotesByIdAndError,
+    options: {
+      id: `simulator_${__dirname.split('/').pop()}_putBulkQuotesByIdAndError`,
+      tags: tags,
+      description: 'Metadata',
+      payload: {
+        failAction: 'error'
+      },
+      validate: {
+        headers: Joi.object({
+          'content-type': Joi.string().required().regex(/application\/vnd.interoperability[.]/),
+          date: Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
+          'x-forwarded-for': Joi.string().optional(),
+          'fspiop-source': Joi.string().required(),
+          'fspiop-destination': Joi.string().required(),
+          'fspiop-encryption': Joi.string().optional(),
+          'fspiop-signature': Joi.string().optional(),
+          'fspiop-uri': Joi.string().optional(),
+          'fspiop-http-method': Joi.string().optional(),
+          traceparent: Joi.string().optional(),
+          tracestate: Joi.string().optional()
+        }).unknown(false).options({ stripUnknown: true }),
+        params: Joi.object({
+          id: Joi.string().required().description('path')
+        }),
+        payload: Joi.object({
+          errorInformation: Joi.object().keys({
+            errorDescription: Joi.string().required(),
+            errorCode: Joi.string().required().regex(/^[0-9]{4}/),
+            extensionList: Joi.object().keys({
+              extension: Joi.array().items(Joi.object().keys({
+                key: Joi.string().required().min(1).max(32).description('Key').label('@ Supplied key fails to match the required format. @'),
+                value: Joi.string().required().min(1).max(128).description('Value').label('@ Supplied key value fails to match the required format. @')
+              })).required().min(1).max(16).description('extension')
+            }).optional().description('Extension list')
+          }).required().description('Error information')
+        })
+      }
+    }
+  },
+  {
     method: 'GET',
     path: '/bulkQuotes/correlationId/{id}',
     handler: Handler.getCorrelationId,
