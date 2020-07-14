@@ -80,7 +80,7 @@ module.exports = [
             longitude: Joi.string().regex(/^(\+|-)?(?:180(?:(?:\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\.[0-9]{1,6})?))$/u).required().description('Longitude of the Party.')
           }),
           expiration: Joi.string().optional().regex(/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/).description('When the transfer expires').label('@ A valid transfer expiry date must be supplied. @'),
-          individualQuotes: Joi.object().required().keys({
+          individualQuotes: Joi.array().required().items(Joi.object().keys({
             quoteId: Joi.string().guid().required().description('Id of quote').label('@ Quote Id must be in a valid GUID format. @'),
             transactionId: Joi.string().guid().required().description('Identifies transaction message.').label('Transaction Id must be in a valid GUID format.'),
             payee: Joi.object().required().keys({
@@ -128,7 +128,7 @@ module.exports = [
                 value: Joi.string().required().min(1).max(128).description('Value').label('@ Supplied key value fails to match the required format. @')
               })).required().min(1).max(16).description('extension')
             }).optional().description('Extension list')
-          }),
+          })),
           extensionList: Joi.object().keys({
             extension: Joi.array().items(Joi.object().keys({
               key: Joi.string().required().min(1).max(32).description('Key').label('@ Supplied key fails to match the required format. @'),
@@ -200,7 +200,7 @@ module.exports = [
           id: Joi.string().required().description('path')
         }),
         payload: Joi.object({
-          individualQuoteResults: Joi.object({
+          individualQuoteResults: Joi.array().items(Joi.object().keys({
             quoteId: Joi.string().guid().required().description('Id of quote').label('@ Quote Id must be in a valid GUID format. @'),
             payee: Joi.object({
               partyIdInfo: Joi.object().keys({
@@ -245,7 +245,7 @@ module.exports = [
                 value: Joi.string().required().min(1).max(128).description('Value').label('@ Supplied key value fails to match the required format. @')
               })).required().min(1).max(16).description('extension')
             }).optional().description('Extension list')
-          }),
+          })),
           expiration: Joi.string().required().trim().description('When the transfer expires').label('@ A valid transfer expiry date must be supplied. @'),
           extensionList: Joi.object().keys({
             extension: Joi.array().items(Joi.object().keys({

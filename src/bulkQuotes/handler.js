@@ -84,7 +84,13 @@ exports.postBulkQuotes = function (request, h) {
     const individualQuoteResults = []
     for (const individualQuote of bulkQuoteRequest.individualQuotes) {
       const quotesResult = {
+        quoteId: individualQuote.quoteId,
+        payee: individualQuote.payee,
         transferAmount: {
+          amount: individualQuote.amount.amount,
+          currency: individualQuote.amount.currency
+        },
+        payeeReceiveAmount: {
           amount: individualQuote.amount.amount,
           currency: individualQuote.amount.currency
         },
@@ -187,7 +193,7 @@ exports.putBulkQuotesById = function (request, h) {
   correlationCache.set(request.params.id, request.payload)
 
   // Logger.isPerfEnabled && Logger.perf(`[cid=${request.payload.transferId}, fsp=${request.headers['fspiop-source']}, source=${request.headers['fspiop-source']}, dest=${request.headers['fspiop-destination']}] ~ Simulator::api::payer::putQuotesById - END`)
-  histTimerEnd({ success: true, fsp: 'payee', operation: 'putQuotesById', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
+  histTimerEnd({ success: true, fsp: 'payee', operation: 'putBulkQuotesById', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
   return h.response().code(Enums.Http.ReturnCodes.OK.CODE)
 }
 
