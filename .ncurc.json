@@ -1,10 +1,5 @@
 {
     "reject": [
-        "hapi-swagger",
-        "@hapi/joi",
-        "@hapi/inert",
-        "@hapi/good",
-        "@hapi/vision",
-        "@hapi/hapi"
+        "@mojaloop/sdk-standard-components"
     ]
 }
