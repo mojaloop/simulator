@@ -64,5 +64,45 @@ module.exports = [
       tags: tags,
       description: 'Get details based on callback id'
     }
+  },
+  {
+    method: 'POST',
+    path: '/noresponsepayeefsp/quotes',
+    handler: Handler.postQuotes,
+    options: {
+      id: `simulator_${__dirname.split('/').pop()}_postQuotes`,
+      tags: tags,
+      description: 'Create quotes request'
+    }
+  },
+  {
+    method: 'GET',
+    path: '/noresponsepayeefsp/quotes/{id}',
+    handler: Handler.getQuotesById,
+    options: {
+      id: `simulator_${__dirname.split('/').pop()}_getQuotesById`,
+      tags: tags,
+      description: 'Get quote by ID'
+    }
+  },
+  {
+    method: 'PUT',
+    path: '/noresponsepayeefsp/quotes/{id}',
+    handler: Handler.putQuotesById,
+    options: {
+      id: `simulator_${__dirname.split('/').pop()}_putQuotesById`,
+      tags: tags,
+      description: 'Callback for POST or GET quotes request'
+    }
+  },
+  {
+    method: 'PUT',
+    path: '/noresponsepayeefsp/quotes/{id}/error',
+    handler: Handler.putQuotesByIdAndError,
+    options: {
+      id: `simulator_${__dirname.split('/').pop()}_putQuotesByIdAndError`,
+      tags: tags,
+      description: 'Error callback for POST or GET quotes request'
+    }
   }
 ]
