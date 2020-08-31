@@ -162,7 +162,7 @@ exports.delParticipantsByTypeId = function (request, h) {
         errorDescription: `ID:${request.params.ID} not found`
       }
       histTimerEnd({ success: false, operation: 'deleteParticipants', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
-      return h.response(buildErrorObject(errorObject, [])).code(400)
+      return h.response(buildErrorObject(errorObject, { extension: [] })).code(400)
     }
   } else {
     throw new Error(`Type:${request.params.Type} not found`)
@@ -185,7 +185,7 @@ exports.createParticipantsBatch = function (request, h) {
       errorCode: 2345,
       errorDescription: `Duplicated batch requestId:${request.payload.requestId} received`
     }
-    return h.response(buildErrorObject(errorObject, [])).code(400)
+    return h.response(buildErrorObject(errorObject, { extension: [] })).code(400)
   } else {
     const newRequest = {
       headers: request.headers,
@@ -221,7 +221,7 @@ exports.createParticipantsBatch = function (request, h) {
             errorCode: 1234,
             errorDescription: `Participant:${party.partyIdentifier} already exists`
           }
-          errorInformation = buildErrorObject(errorObject, [{ key: party.partyIdentifier, value: party.partyIdType }])
+          errorInformation = buildErrorObject(errorObject, { extension: [{ key: party.partyIdentifier, value: party.partyIdType }] })
           responseObject.partyList.push({ partyId, errorInformation })
         } else {
           idMap.set(party.partyIdentifier, record)
