@@ -26,7 +26,7 @@
 
 const Handler = require('./handler')
 const Enum = require('@mojaloop/central-services-shared').Enum
-const BaseJoi = require('@hapi/joi').extend(require('joi-currency-code'))
+const BaseJoi = require('joi').extend(require('joi-currency-code'))
 const Joi = BaseJoi.extend(require('@hapi/joi-date'))
 const tags = ['api', 'transactionRequests', Enum.Tags.RouteTags.SAMPLED]
 const regexAccept = Enum.Http.Headers.GENERAL.ACCEPT.regex
