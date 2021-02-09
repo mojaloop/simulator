@@ -1,6 +1,6 @@
 {
   "name": "sims",
-  "version": "11.0.2",
+  "version": "11.1.0",
   "description": "A super-simple fsp simulator",
   "main": "src/index.js",
   "author": "ModusBox",
@@ -32,31 +32,31 @@
     "dep:check"
   ],
   "dependencies": {
-    "@hapi/boom": "9.1.0",
+    "@hapi/boom": "9.1.1",
     "@hapi/good": "9.0.1",
-    "@hapi/hapi": "20.0.1",
+    "@hapi/hapi": "20.1.0",
     "@hapi/inert": "6.0.3",
     "@hapi/joi-date": "2.0.1",
     "@hapi/vision": "6.0.1",
-    "@mojaloop/central-services-error-handling": "10.6.0",
+    "@mojaloop/central-services-error-handling": "11.0.0",
     "@mojaloop/central-services-logger": "10.6.0",
     "@mojaloop/central-services-metrics": "9.5.0",
-    "@mojaloop/central-services-shared": "11.3.6",
+    "@mojaloop/central-services-shared": "11.5.5",
     "@mojaloop/sdk-standard-components": "10.3.2",
     "axios": "0.21.1",
     "base64url": "3.0.1",
-    "blipp": "4.0.1",
+    "blipp": "4.0.2",
     "glob": "7.1.6",
-    "hapi-swagger": "14.0.0",
-    "joi": "17.2.1",
+    "hapi-swagger": "14.1.0",
+    "joi": "17.4.0",
     "joi-currency-code": "3.0.1",
     "lodash": "4.17.20",
     "node-cache": "5.1.2"
   },
   "devDependencies": {
     "pre-commit": "1.2.2",
-    "standard": "14.3.4",
+    "standard": "16.0.3",
     "npm-audit-resolver": "2.2.1",
-    "npm-check-updates": "9.0.3"
+    "npm-check-updates": "11.1.1"
   }
 }
