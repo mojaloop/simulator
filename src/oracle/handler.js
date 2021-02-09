@@ -19,6 +19,7 @@
 
  * Rajiv Mothilal <rajiv.mothilal@modusbox.com>
  * Steven Oderayi <steven.oderayi@modusbox.com>
+ * Shashikant Hirugade <shashikant.hirugade@modusbox.com>
 
  --------------
  ******/
@@ -53,9 +54,28 @@ exports.createParticipantsByTypeAndId = function (request, h) {
 
   if (participantCache.get(request.params.Type)) {
     idMap = participantCache.get(request.params.Type)
-    if (idMap.get(request.params.ID)) {
-      throw new Error(`ID:${request.params.ID} already exists`)
-    } else {
+
+    if (idMap.get(request.params.ID)) { // ID already present
+      const currentRecord = idMap.get(request.params.ID)
+      const partySubIdOrType = request.payload.partySubIdOrType || undefined
+      // if it's a different partySubIdOrType then add
+      if (partySubIdOrType) {
+        const existingPartySubIdOrType = currentRecord.partyList.filter(party => party.partySubIdOrType === partySubIdOrType)
+        if (existingPartySubIdOrType.length === 0) {
+          currentRecord.partyList.push({
+            fspId: request.payload.fspId,
+            currency: request.payload.currency || undefined,
+            partySubIdOrType: request.payload.partySubIdOrType
+          })
+          idMap.set(request.params.ID, currentRecord)
+          participantCache.set(request.params.Type, idMap)
+        } else { // partySubIdOrType exists - throw error
+          throw new Error(`ID:${request.params.ID} and partySubIdOrType:${partySubIdOrType} already exists`)
+        }
+      } else { // partySubIdOrType is null throw error if ID exists
+        throw new Error(`ID:${request.params.ID} already exists`)
+      }
+    } else { // new record - add
       idMap.set(request.params.ID, record)
       participantCache.set(request.params.Type, idMap)
     }
@@ -86,10 +106,13 @@ exports.getParticipantsByTypeId = function (request, h) {
       const partySubIdOrType = request.query.partySubIdOrType || undefined
       if (currency && partySubIdOrType) {
         response = response.partyList.filter(party => party.partySubIdOrType === partySubIdOrType && party.currency === currency)
+        response = response.length === 0 ? response : { partyList: response }
       } else if (currency) {
         response = response.partyList.filter(party => party.currency === currency)
+        response = response.length === 0 ? response : { partyList: response }
       } else if (partySubIdOrType) {
         response = response.partyList.filter(party => party.partySubIdOrType === partySubIdOrType)
+        response = response.length === 0 ? response : { partyList: response }
       }
     } else {
       response = []
