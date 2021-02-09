@@ -1,0 +1,10 @@
+{
+  "decisions": {
+    "1500|@mojaloop/central-services-shared>widdershins>yargs>yargs-parser": {
+      "decision": "postpone",
+      "madeAt": 1612859493456
+    }
+  },
+  "rules": {},
+  "version": 1
+}
