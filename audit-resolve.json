@@ -7,8 +7,23 @@
     },
     "1500|@mojaloop/central-services-shared>widdershins>yargs>yargs-parser": {
       "decision": "ignore",
-      "madeAt": 1612844154624,
-      "expiresAt": 1615436148658
+      "madeAt": 1622810087710,
+      "expiresAt": 1623414882846
+    },
+    "1675|@mojaloop/central-services-shared>shins>sanitize-html": {
+      "decision": "ignore",
+      "madeAt": 1622810089989,
+      "expiresAt": 1623414882846
+    },
+    "1676|@mojaloop/central-services-shared>shins>sanitize-html": {
+      "decision": "ignore",
+      "madeAt": 1622810089989,
+      "expiresAt": 1623414882846
+    },
+    "1693|@mojaloop/central-services-shared>shins>sanitize-html>postcss": {
+      "decision": "ignore",
+      "madeAt": 1622810091937,
+      "expiresAt": 1623414882846
     }
   },
   "rules": {},

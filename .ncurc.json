@@ -1,5 +1,4 @@
 {
     "reject": [
-        "@mojaloop/sdk-standard-components"
     ]
 }
