@@ -103,7 +103,7 @@ exports.getParticipantsByTypeId = function (request, h) {
     if (idMap.get(request.params.ID)) {
       response = idMap.get(request.params.ID)
       const currency = request.query.currency || undefined
-      const partySubIdOrType = request.query.partySubIdOrType || undefined
+      const partySubIdOrType = request.query.SubId || undefined
       if (currency && partySubIdOrType) {
         response = response.partyList.filter(party => party.partySubIdOrType === partySubIdOrType && party.currency === currency)
         response = response.length === 0 ? response : { partyList: response }
