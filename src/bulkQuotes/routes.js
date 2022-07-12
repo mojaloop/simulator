@@ -34,7 +34,7 @@ module.exports = [
     handler: Handler.postBulkQuotes,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_postBulkQuotes`,
-      tags: tags,
+      tags,
       description: 'Metadata',
       payload: {
         failAction: 'error'
@@ -146,7 +146,7 @@ module.exports = [
     handler: Handler.getBulkQuotesById,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getBulkQuotesById`,
-      tags: tags,
+      tags,
       description: 'Metadata',
       validate: {
         headers: Joi.object({
@@ -176,7 +176,7 @@ module.exports = [
     handler: Handler.putBulkQuotesById,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_putBulkQuotesById`,
-      tags: tags,
+      tags,
       description: 'Metadata',
       payload: {
         failAction: 'error'
@@ -264,7 +264,7 @@ module.exports = [
     handler: Handler.putBulkQuotesByIdAndError,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_putBulkQuotesByIdAndError`,
-      tags: tags,
+      tags,
       description: 'Metadata',
       payload: {
         failAction: 'error'
@@ -307,7 +307,7 @@ module.exports = [
     handler: Handler.getCorrelationId,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getBulkQuoteCorrelationId`,
-      tags: tags,
+      tags,
       description: 'Get details based on correlationId'
     }
   },
@@ -317,7 +317,7 @@ module.exports = [
     handler: Handler.getRequestById,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getBulkQuoteRequestById`,
-      tags: tags,
+      tags,
       description: 'Get details based on request id'
     }
   },
@@ -327,7 +327,7 @@ module.exports = [
     handler: Handler.getCallbackById,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getBulkQuoteCallbackById`,
-      tags: tags,
+      tags,
       description: 'Get details based on callback id'
     }
   }

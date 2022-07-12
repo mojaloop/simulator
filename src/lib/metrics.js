@@ -43,7 +43,7 @@ const metricOptions = {
   timeout,
   prefix,
   defaultLabels: {
-    serviceName: serviceName
+    serviceName
   }
 }
 
@@ -90,7 +90,7 @@ const getMetricsForPrometheus = () => {
 module.exports = {
   isDisabled,
   options: metricOptions,
-  disabledMessage: disabledMessage,
+  disabledMessage,
   setup,
   getHistogram,
   getMetricsForPrometheus

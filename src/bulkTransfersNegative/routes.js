@@ -35,7 +35,7 @@ module.exports = [
     handler: Handler.postBulkTransfers,
     config: {
       id: `simulator_${__dirname.split('/').pop()}_postBulkTransfers`,
-      tags: tags,
+      tags,
       auth: null,
       description: 'Bulk Transfer API.',
       payload: {
@@ -96,7 +96,7 @@ module.exports = [
     handler: Handler.putBulkTransfersById,
     config: {
       id: `simulator_${__dirname.split('/').pop()}_putBulkTransfersById`,
-      tags: tags,
+      tags,
       description: 'Fulfil a bulk transfer',
       payload: {
         failAction: 'error'
@@ -157,7 +157,7 @@ module.exports = [
     handler: Handler.putBulkTransfersByIdError,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_putBulkTransfersByIdError`,
-      tags: tags,
+      tags,
       description: 'Abort a bulk transfer',
       payload: {
         failAction: 'error'
@@ -200,7 +200,7 @@ module.exports = [
     handler: Handler.getCorrelationId,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getCorrelationId`,
-      tags: tags,
+      tags,
       description: 'Get details based on correlationid'
     }
   },
@@ -210,7 +210,7 @@ module.exports = [
     handler: Handler.getRequestById,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getRequestById`,
-      tags: tags,
+      tags,
       description: 'Get details based on request id'
     }
   },
@@ -220,7 +220,7 @@ module.exports = [
     handler: Handler.getCallbackById,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getCallbackById`,
-      tags: tags,
+      tags,
       description: 'Get details based on callback id'
     }
   }

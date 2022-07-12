@@ -33,7 +33,7 @@ module.exports = [
     handler: Handler.metadata,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_metadata`,
-      tags: tags,
+      tags,
       description: 'Metadata'
     }
   },
@@ -43,7 +43,7 @@ module.exports = [
     handler: Handler.putParticipantsByTypeId,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_putParticipantsByTypeId`,
-      tags: tags,
+      tags,
       description: 'Metadata'
     }
   },
@@ -53,7 +53,7 @@ module.exports = [
     handler: Handler.putPartiesByTypeId,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_putPartiesByTypeId`,
-      tags: tags,
+      tags,
       description: 'Metadata',
       payload: {
         failAction: 'error'
@@ -104,7 +104,7 @@ module.exports = [
     handler: Handler.putPartiesByTypeIdAndError,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_putPartiesByTypeIdAndError`,
-      tags: tags,
+      tags,
       description: 'Metadata',
       payload: {
         failAction: 'error'
@@ -148,7 +148,7 @@ module.exports = [
     handler: Handler.putQuotesById,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_putQuotesById`,
-      tags: tags,
+      tags,
       description: 'Metadata',
       payload: {
         failAction: 'error'
@@ -208,7 +208,7 @@ module.exports = [
     handler: Handler.putQuotesByIdAndError,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_putQuotesByIdAndError`,
-      tags: tags,
+      tags,
       description: 'Metadata',
       payload: {
         failAction: 'error'
@@ -251,7 +251,7 @@ module.exports = [
     handler: Handler.putTransfersById,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_putTransfersById`,
-      tags: tags,
+      tags,
       description: 'Metadata',
       payload: {
         failAction: 'error'
@@ -294,7 +294,7 @@ module.exports = [
     handler: Handler.putTransfersByIdError,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_putTransfersByIdError`,
-      tags: tags,
+      tags,
       description: 'Metadata',
       payload: {
         failAction: 'error'
@@ -337,7 +337,7 @@ module.exports = [
     handler: Handler.getcorrelationId,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getcorrelationId`,
-      tags: tags,
+      tags,
       description: 'Get details based on correlationid'
     }
   },
@@ -347,7 +347,7 @@ module.exports = [
     handler: Handler.getRequestById,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getRequestById`,
-      tags: tags,
+      tags,
       description: 'Get details based on request id'
     }
   },
@@ -357,7 +357,7 @@ module.exports = [
     handler: Handler.getCallbackById,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getCallbackById`,
-      tags: tags,
+      tags,
       description: 'Get details based on callback id'
     }
   }

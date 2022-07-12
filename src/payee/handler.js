@@ -135,7 +135,7 @@ exports.getPartiesByTypeAndId = function (request, h) {
         Date: ''
       }
       const fspiopSignature = {
-        signature: signature,
+        signature,
         protectedHeader: `${base64url.encode(JSON.stringify(protectedHeader))}`
       }
       const opts = {
@@ -251,7 +251,7 @@ exports.postQuotes = function (request, h) {
         Date: ''
       }
       const fspiopSignature = {
-        signature: signature,
+        signature,
         protectedHeader: `${base64url.encode(JSON.stringify(protectedHeader))}`
       }
       const opts = {
@@ -341,7 +341,7 @@ exports.postTransfers = async function (request, h) {
         Date: ''
       }
       const fspiopSignature = {
-        signature: signature,
+        signature,
         protectedHeader: `${base64url.encode(JSON.stringify(protectedHeader))}`
       }
       const opts = {
@@ -546,7 +546,7 @@ exports.getQuotesById = function (request, h) {
           Date: ''
         }
         const fspiopSignature = {
-          signature: signature,
+          signature,
           protectedHeader: `${base64url.encode(JSON.stringify(protectedHeader))}`
         }
         const opts = {
@@ -616,7 +616,7 @@ const sendErrorCallback = async (fspiopError, quoteId, headers, span) => {
       Date: ''
     }
     const fspiopSignature = {
-      signature: signature,
+      signature,
       protectedHeader: `${base64url.encode(JSON.stringify(protectedHeader))}`
     }
     const opts = {

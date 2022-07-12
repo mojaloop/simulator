@@ -31,7 +31,7 @@ module.exports = [
     handler: Handler.metadata,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_metadata`,
-      tags: tags,
+      tags,
       description: 'Metadata'
     }
   },
@@ -41,7 +41,7 @@ module.exports = [
     handler: Handler.postPartiesByTypeAndId,
     config: {
       id: `simulator_${__dirname.split('/').pop()}_postPartiesByTypeAndId`,
-      tags: tags,
+      tags,
       auth: null,
       description: 'Transfer API.',
       payload: {
@@ -56,7 +56,7 @@ module.exports = [
     handler: Handler.getPartiesByTypeAndId,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getPartiesByTypeAndId`,
-      tags: tags,
+      tags,
       description: 'Add users to payer simulator'
     }
   },
@@ -66,7 +66,7 @@ module.exports = [
     handler: Handler.postQuotes,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_postQuotes`,
-      tags: tags,
+      tags,
       description: 'Add users to payer simulator'
     }
   },
@@ -76,7 +76,7 @@ module.exports = [
     handler: Handler.putQuotesById,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_putQuotesById`,
-      tags: tags,
+      tags,
       description: 'Metadata'
     }
   },
@@ -86,7 +86,7 @@ module.exports = [
     handler: Handler.postTransfers,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_postTransfers`,
-      tags: tags,
+      tags,
       description: 'Add users to payer simulator'
     }
   },
@@ -96,7 +96,7 @@ module.exports = [
     handler: Handler.putTransfersById,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_putTransfersById`,
-      tags: tags,
+      tags,
       description: 'Metadata'
     }
   },
@@ -106,7 +106,7 @@ module.exports = [
     handler: Handler.putTransfersByIdError,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_putTransfersByIdError`,
-      tags: tags,
+      tags,
       description: 'Metadata'
     }
   },
@@ -116,7 +116,7 @@ module.exports = [
     handler: Handler.getcorrelationId,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getcorrelationId`,
-      tags: tags,
+      tags,
       description: 'Get details based on correlationid'
     }
   }

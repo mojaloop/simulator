@@ -124,7 +124,7 @@ exports.getPartiesByTypeAndId = function (req, h) {
         Date: ''
       }
       const fspiopSignature = {
-        signature: signature,
+        signature,
         protectedHeader: `${base64url.encode(JSON.stringify(protectedHeader))}`
       }
       const opts = {
@@ -213,7 +213,7 @@ exports.postQuotes = function (req, h) {
         Date: ''
       }
       const fspiopSignature = {
-        signature: signature,
+        signature,
         protectedHeader: `${base64url.encode(JSON.stringify(protectedHeader))}`
       }
       const opts = {
@@ -295,7 +295,7 @@ exports.postTransfers = async function (req, h) {
         Date: ''
       }
       const fspiopSignature = {
-        signature: signature,
+        signature,
         protectedHeader: `${base64url.encode(JSON.stringify(protectedHeader))}`
       }
       const opts = {

@@ -39,7 +39,7 @@ module.exports = [
     handler: Handler.getTransactionRequestById,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getTransactionRequest`,
-      tags: tags,
+      tags,
       description: 'Get a transaction request by ID',
       validate: {
         headers: Joi.object({
@@ -68,7 +68,7 @@ module.exports = [
     handler: Handler.postTransactionRequest,
     config: {
       id: `simulator_${__dirname.split('/').pop()}_postTransactionRequest`,
-      tags: tags,
+      tags,
       description: 'Incoming Transaction Request',
       payload: {
         failAction: 'error'
@@ -154,7 +154,7 @@ module.exports = [
     handler: Handler.putTransactionRequest,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_putTransactionRequest`,
-      tags: tags,
+      tags,
       description: 'Callback Transaction Request',
       payload: {
         failAction: 'error'
@@ -195,7 +195,7 @@ module.exports = [
     handler: Handler.putTransactionRequestError,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_putTransactionRequestError`,
-      tags: tags,
+      tags,
       description: 'Error Callback Transaction Request',
       payload: {
         failAction: 'error'
@@ -238,7 +238,7 @@ module.exports = [
     handler: Handler.getCorrelationId,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getCorrelationId`,
-      tags: tags,
+      tags,
       description: 'Get details based on correlation id'
     }
   },
@@ -248,7 +248,7 @@ module.exports = [
     handler: Handler.getRequestById,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getRequestById`,
-      tags: tags,
+      tags,
       description: 'Get details based on request id'
     }
   },
@@ -258,7 +258,7 @@ module.exports = [
     handler: Handler.getCallbackById,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getCallbackById`,
-      tags: tags,
+      tags,
       description: 'Get details based on callback id'
     }
   }

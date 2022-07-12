@@ -130,7 +130,7 @@ exports.postBulkQuotes = function (request, h) {
         Date: ''
       }
       const fspiopSignature = {
-        signature: signature,
+        signature,
         protectedHeader: `${base64url.encode(JSON.stringify(protectedHeader))}`
       }
       const opts = {
@@ -252,7 +252,7 @@ exports.getBulkQuotesById = function (request, h) {
           Date: ''
         }
         const fspiopSignature = {
-          signature: signature,
+          signature,
           protectedHeader: `${base64url.encode(JSON.stringify(protectedHeader))}`
         }
         const opts = {
@@ -320,7 +320,7 @@ const sendErrorCallback = async (fspiopError, bulkQuoteId, headers, span) => {
       Date: ''
     }
     const fspiopSignature = {
-      signature: signature,
+      signature,
       protectedHeader: `${base64url.encode(JSON.stringify(protectedHeader))}`
     }
     const opts = {

@@ -34,7 +34,7 @@ module.exports = [
     path: '/health',
     handler: Handler.health,
     options: {
-      tags: tags,
+      tags,
       description: 'Status of adapter',
       id: 'health'
     }
