@@ -31,7 +31,7 @@ module.exports = [
     handler: Handler.metadata,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_metadata`,
-      tags: tags,
+      tags,
       description: 'Metadata'
     }
   },
@@ -41,7 +41,7 @@ module.exports = [
     handler: Handler.putTransfersById,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_putTransfersById`,
-      tags: tags,
+      tags,
       description: 'Metadata'
     }
   },
@@ -51,7 +51,7 @@ module.exports = [
     handler: Handler.putTransfersByIdError,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_putTransfersByIdError`,
-      tags: tags,
+      tags,
       description: 'Metadata'
     }
   },
@@ -61,7 +61,7 @@ module.exports = [
     handler: Handler.getCallbackById,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getCallbackById`,
-      tags: tags,
+      tags,
       description: 'Get details based on callback id'
     }
   },
@@ -71,7 +71,7 @@ module.exports = [
     handler: Handler.postQuotes,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_postQuotes`,
-      tags: tags,
+      tags,
       description: 'Create quotes request'
     }
   },
@@ -81,7 +81,7 @@ module.exports = [
     handler: Handler.getQuotesById,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getQuotesById`,
-      tags: tags,
+      tags,
       description: 'Get quote by ID'
     }
   },
@@ -91,7 +91,7 @@ module.exports = [
     handler: Handler.putQuotesById,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_putQuotesById`,
-      tags: tags,
+      tags,
       description: 'Callback for POST or GET quotes request'
     }
   },
@@ -101,7 +101,7 @@ module.exports = [
     handler: Handler.putQuotesByIdAndError,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_putQuotesByIdAndError`,
-      tags: tags,
+      tags,
       description: 'Error callback for POST or GET quotes request'
     }
   }

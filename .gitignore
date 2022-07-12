@@ -58,3 +58,11 @@ jspm_packages
 
 #package-lock.json
 .history
+
+# https://devspace.sh/
+devspace*
+.devspace/**.*
+
+# Add ignores
+*IGNORE*
+*ignore*

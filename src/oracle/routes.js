@@ -34,7 +34,7 @@ module.exports = [
     handler: Handler.getParticipantsByTypeId,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getParticipantsByTypeId`,
-      tags: tags,
+      tags,
       description: 'Get list of participants'
     }
   },
@@ -44,7 +44,7 @@ module.exports = [
     handler: Handler.createParticipantsByTypeAndId,
     config: {
       id: `simulator_${__dirname.split('/').pop()}_createParticipantsByTypeAndId`,
-      tags: tags,
+      tags,
       description: 'Create participants'
     }
   },
@@ -54,7 +54,7 @@ module.exports = [
     handler: Handler.updateParticipantsByTypeId,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_updateParticipantsByTypeId`,
-      tags: tags,
+      tags,
       description: 'Update participants'
     }
   },
@@ -64,7 +64,7 @@ module.exports = [
     handler: Handler.updateParticipantsByTypeId,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_updateParticipantsByTypeId_subId`,
-      tags: tags,
+      tags,
       description: 'Update participants by type ID and Sub ID'
     }
   },
@@ -74,7 +74,7 @@ module.exports = [
     handler: Handler.delParticipantsByTypeId,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_delParticipantsByTypeId`,
-      tags: tags,
+      tags,
       description: 'Delete Participants'
     }
   },
@@ -84,7 +84,7 @@ module.exports = [
     handler: Handler.delParticipantsByTypeId,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_delParticipantsByTypeId_subId`,
-      tags: tags,
+      tags,
       description: 'Delete Participants by type ID and Sub ID'
     }
   },
@@ -94,7 +94,7 @@ module.exports = [
     handler: Handler.createParticipantsBatch,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_createParticipantsBatch`,
-      tags: tags,
+      tags,
       description: 'Create a list of participants'
     }
   },
@@ -104,7 +104,7 @@ module.exports = [
     handler: Handler.getPartiesByTypeIdAndSubId,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getPartiesByTypeIdAndSubId`,
-      tags: tags,
+      tags,
       description: 'Get a single party by ID and SubId'
     }
   },
@@ -114,7 +114,7 @@ module.exports = [
     handler: Handler.updateParticipantsByTypeId,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_updateParticipantsByTypeId_parties`,
-      tags: tags,
+      tags,
       description: 'Update parties by type ID'
     }
   },
@@ -124,7 +124,7 @@ module.exports = [
     handler: Handler.updateParticipantsByTypeId,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_updateParticipantsByTypeId_parties_subId`,
-      tags: tags,
+      tags,
       description: 'Update a parties by type ID and Sub ID'
     }
   },
@@ -134,7 +134,7 @@ module.exports = [
     handler: Handler.getRequestByTypeId,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getRequestByTypeId`,
-      tags: tags,
+      tags,
       description: 'Get oracle specific requests based on Type and ID'
     }
   },
@@ -144,7 +144,7 @@ module.exports = [
     handler: Handler.getRequestById,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getRequestById`,
-      tags: tags,
+      tags,
       description: 'Get oracle specific requests based on requestId of a batch'
     }
   }

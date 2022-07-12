@@ -84,7 +84,7 @@ exports.postBulkTransfers = async function (req, h) {
         Date: ''
       }
       const fspiopSignature = {
-        signature: signature,
+        signature,
         protectedHeader: `${base64url.encode(JSON.stringify(protectedHeader))}`
       }
       const opts = {
