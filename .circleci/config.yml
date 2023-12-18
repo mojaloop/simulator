@@ -270,7 +270,7 @@ jobs:
           path: coverage
           destination: test
       
-TODO: Uncomment when there are integration tests
+# TODO: Uncomment when there are integration tests
   test-integration:
     executor: default-machine
     steps:
