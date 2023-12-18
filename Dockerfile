@@ -6,7 +6,7 @@ ARG NODE_VERSION=lts-alpine
 #  export NODE_VERSION="$(cat .nvmrc)-alpine" \
 #  docker build \
 #    --build-arg NODE_VERSION=$NODE_VERSION \
-#    -t mojaloop/sdk-scheme-adapter:local \
+#    -t mojaloop/simulator:local \
 #    . \
 #
 
@@ -27,7 +27,6 @@ RUN npm ci
 RUN apk del build-dependencies
 
 COPY src /opt/app/src
-COPY config /opt/app/config
 
 FROM node:${NODE_VERSION}
 
