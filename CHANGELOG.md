@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [12.1.0](https://github.com/mojaloop/simulator/compare/v12.0.0...v12.1.0) (2023-12-20)
+
+
+### Features
+
+* **mojaloop/#3445:** nodejs upgrade ([#252](https://github.com/mojaloop/simulator/issues/252)) ([3f16bb9](https://github.com/mojaloop/simulator/commit/3f16bb9d14ca0c6a05ea437316ffb7c6b27be563)), closes [mojaloop/#3445](https://github.com/mojaloop/project/issues/3445)
+
 ## [12.0.0](https://github.com/mojaloop/simulator/compare/v11.1.3...v12.0.0) (2022-07-12)
 
 
