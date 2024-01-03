@@ -16,8 +16,7 @@
  their names indented and be marked with a '-'. Email address can be added
  optionally within square brackets <email>.
  * Gates Foundation
- - Murthy Kakarlamudi murthy@modusbox.com
- - Steven Oderayi <steven.oderayi@modusbox.com>
+ - Aaron Reynoza <aaron.reynoza@infitx.com>
  --------------
  ******/
 

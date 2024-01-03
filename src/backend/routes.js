@@ -17,7 +17,7 @@
  optionally within square brackets <email>.
 
  * Gates Foundation
- - Rajiv Mothilal <rajiv.mothilal@modusbox.com>
+ - Aaron Reynoza <aaron.reynoza@infitx.com>
  --------------
  ******/
 
