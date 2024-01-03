@@ -4,7 +4,7 @@
     // Only use one of ["low": true, "moderate": true, "high": true, "critical": true]
     "moderate": true,
     "allowlist": [
-        // dev dependencies our third party dependencies use
+        // dev dependencies
         "GHSA-v88g-cgmw-v5xw",
         "GHSA-93q8-gq69-wqmw",
         "GHSA-phwq-j96m-2c2q",
