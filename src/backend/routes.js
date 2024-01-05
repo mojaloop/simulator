@@ -37,6 +37,16 @@ module.exports = [
     }
   },
   {
+    method: 'PUT',
+    path: '/backend/quotes/{id}',
+    handler: Handler.putQuotes,
+    options: {
+      id: `simulator_${__dirname.split('/').pop()}_putQuotes`,
+      tags,
+      description: 'Metadata'
+    }
+  },
+  {
     method: 'POST',
     path: '/backend/transfers',
     handler: Handler.postTransfers,
@@ -47,11 +57,31 @@ module.exports = [
     }
   },
   {
+    method: 'PUT',
+    path: '/backend/transfers/{id}',
+    handler: Handler.putTransfers,
+    options: {
+      id: `simulator_${__dirname.split('/').pop()}_putTransfers`,
+      tags,
+      description: 'Metadata'
+    }
+  },
+  {
     method: 'GET',
     path: '/backend/parties/{type}/{id}',
     handler: Handler.getPartiesByTypeAndId,
     options: {
       id: `simulator_${__dirname.split('/').pop()}_getParty`,
+      tags,
+      description: 'Metadata'
+    }
+  },
+  {
+    method: 'PUT',
+    path: '/backend/parties/{type}/{id}',
+    handler: Handler.putPartiesByTypeAndId,
+    options: {
+      id: `simulator_${__dirname.split('/').pop()}_putParty`,
       tags,
       description: 'Metadata'
     }

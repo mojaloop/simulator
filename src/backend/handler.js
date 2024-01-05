@@ -67,6 +67,10 @@ exports.postQuoteRequest = function (req, h) {
   return h.response(quotesResponse).code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
 }
 
+exports.putQuotes = function (req, h) {
+  return h.response().code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
+}
+
 exports.postTransfers = async function (req, h) {
   const histTimerEnd = Metrics.getHistogram(
     'sim_request',
@@ -115,8 +119,16 @@ exports.postTransfers = async function (req, h) {
   return h.response(quotesResponse).code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
 }
 
+exports.putTransfers = function (req, h) {
+  return h.response().code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
+}
+
 exports.getPartiesByTypeAndId = function (req, h) {
   return h.response({
     fspId: 'string'
   }).code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
+}
+
+exports.putPartiesByTypeAndId = function (req, h) {
+  return h.response().code(Enums.Http.ReturnCodes.ACCEPTED.CODE)
 }
