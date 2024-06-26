@@ -153,13 +153,13 @@ exports.getPartiesByTypeAndId = function (request, h) {
           // tracestate: request.headers.tracestate ? request.headers.tracestate : undefined
         },
         transformRequest: [(data, headers) => {
-          delete headers.common.Accept
-          return data
+          headers.delete('Accept')
+          return JSON.stringify(data)
         }],
         httpsAgent: new https.Agent({
           rejectUnauthorized: false
         }),
-        data: JSON.stringify(correlationCache.get(request.params.id))
+        data: correlationCache.get(request.params.id)
       }
 
       // Logger.isInfoEnabled && Logger.info((new Date().toISOString()), 'Executing PUT', url)
@@ -269,13 +269,13 @@ exports.postQuotes = function (request, h) {
           // tracestate: request.headers.tracestate ? request.headers.tracestate : undefined
         },
         transformRequest: [(data, headers) => {
-          delete headers.common.Accept
-          return data
+          headers.delete('Accept')
+          return JSON.stringify(data)
         }],
         httpsAgent: new https.Agent({
           rejectUnauthorized: false
         }),
-        data: JSON.stringify(quotesResponse)
+        data: quotesResponse
       }
       // Logger.isInfoEnabled && Logger.info((new Date().toISOString()), 'Executing PUT', url)
       const res = await sendRequest(url, opts, request.span)
@@ -359,13 +359,13 @@ exports.postTransfers = async function (request, h) {
           // tracestate: request.headers.tracestate ? request.headers.tracestate : undefined
         },
         transformRequest: [(data, headers) => {
-          delete headers.common.Accept
-          return data
+          headers.delete('Accept')
+          return JSON.stringify(data)
         }],
         httpsAgent: new https.Agent({
           rejectUnauthorized: false
         }),
-        data: JSON.stringify(transfersResponse)
+        data: transfersResponse
       }
 
       // Logger.isInfoEnabled && Logger.info(`Executing PUT: [${url}], HEADERS: [${JSON.stringify(opts.headers)}], BODY: [${JSON.stringify(transfersResponse)}]`)
@@ -564,13 +564,13 @@ exports.getQuotesById = function (request, h) {
             // tracestate: request.headers.tracestate ? request.headers.tracestate : undefined
           },
           transformRequest: [(data, headers) => {
-            delete headers.common.Accept
-            return data
+            headers.delete('Accept')
+            return JSON.stringify(data)
           }],
           httpsAgent: new https.Agent({
             rejectUnauthorized: false
           }),
-          data: JSON.stringify(responseData)
+          data: responseData
         }
         // Logger.isInfoEnabled && Logger.info((new Date().toISOString()), 'Executing PUT', url)
         const res = await sendRequest(url, opts, request.span)
@@ -632,13 +632,13 @@ const sendErrorCallback = async (fspiopError, quoteId, headers, span) => {
         'FSPIOP-URI': `/quotes/${quoteId}/error`
       },
       transformRequest: [(data, headers) => {
-        delete headers.common.Accept
-        return data
+        headers.delete('Accept')
+        return JSON.stringify(data)
       }],
       httpsAgent: new https.Agent({
         rejectUnauthorized: false
       }),
-      data: JSON.stringify(fspiopError.toApiErrorObject())
+      data: fspiopError.toApiErrorObject()
     }
     const res = await sendRequest(url, opts, span)
     if (res.status !== Enums.Http.ReturnCodes.OK.CODE) {

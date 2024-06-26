@@ -146,13 +146,13 @@ exports.postBulkQuotes = function (request, h) {
           'FSPIOP-URI': `/bulkQuotes/${bulkQuoteRequest.bulkQuoteId}`
         },
         transformRequest: [(data, headers) => {
-          delete headers.common.Accept
-          return data
+          headers.delete('Accept')
+          return JSON.stringify(data)
         }],
         httpsAgent: new https.Agent({
           rejectUnauthorized: false
         }),
-        data: JSON.stringify(bulkQuotesResponse)
+        data: bulkQuotesResponse
       }
       // Logger.isInfoEnabled && Logger.info((new Date().toISOString()), 'Executing PUT', url)
       const res = await sendRequest(url, opts, request.span)
@@ -268,13 +268,13 @@ exports.getBulkQuotesById = function (request, h) {
             'FSPIOP-URI': `/bulkQuotes/${request.params.id}`
           },
           transformRequest: [(data, headers) => {
-            delete headers.common.Accept
-            return data
+            headers.delete('Accept')
+            return JSON.stringify(data)
           }],
           httpsAgent: new https.Agent({
             rejectUnauthorized: false
           }),
-          data: JSON.stringify(responseData)
+          data: responseData
         }
         // Logger.isInfoEnabled && Logger.info((new Date().toISOString()), 'Executing PUT', url)
         const res = await sendRequest(url, opts, request.span)
@@ -336,13 +336,13 @@ const sendErrorCallback = async (fspiopError, bulkQuoteId, headers, span) => {
         'FSPIOP-URI': `/bulkQuotes/${bulkQuoteId}/error`
       },
       transformRequest: [(data, headers) => {
-        delete headers.common.Accept
-        return data
+        headers.delete('Accept')
+        return JSON.stringify(data)
       }],
       httpsAgent: new https.Agent({
         rejectUnauthorized: false
       }),
-      data: JSON.stringify(fspiopError.toApiErrorObject())
+      data: fspiopError.toApiErrorObject()
     }
     const res = await sendRequest(url, opts, span)
     if (res.status !== Enums.Http.ReturnCodes.OK.CODE) {
