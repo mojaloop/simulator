@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [12.2.0](https://github.com/mojaloop/simulator/compare/v12.1.0...v12.2.0) (2024-06-26)
+
+
+### Features
+
+* **csi-164:** parameterize switch id ([#260](https://github.com/mojaloop/simulator/issues/260)) ([d238f71](https://github.com/mojaloop/simulator/commit/d238f710500021ffe1e9e52eaff67fa62bb7c617))
+
 ## [12.1.0](https://github.com/mojaloop/simulator/compare/v12.0.0...v12.1.0) (2023-12-20)
 
 
