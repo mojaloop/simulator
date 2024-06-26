@@ -35,6 +35,7 @@ const Sdk = require('@mojaloop/sdk-standard-components')
 const ErrorHandler = require('@mojaloop/central-services-error-handling')
 const Metrics = require('../lib/metrics')
 const base64url = require('base64url')
+const Config = require('../lib/config')
 
 const quotesEndpoint = process.env.QUOTES_ENDPOINT || 'http://localhost:1080'
 const signature = process.env.MOCK_JWS_SIGNATURE || 'abcJjvNrkyK2KBieDUbGfhaBUn75aDUATNF4joqA8OLs4QgSD7i6EO8BIdy6Crph3LnXnTM20Ai1Z6nt0zliS_qPPLU9_vi6qLb15FOkl64DQs9hnfoGeo2tcjZJ88gm19uLY_s27AJqC1GH1B8E2emLrwQMDMikwQcYvXoyLrL7LL3CjaLMKdzR7KTcQi1tCK4sNg0noIQLpV3eA61kess'
@@ -314,7 +315,7 @@ const sendErrorCallback = async (fspiopError, bulkQuoteId, headers, span) => {
     const protectedHeader = {
       alg: 'RS256',
       'FSPIOP-Source': `${headers['fspiop-source']}`,
-      'FSPIOP-Destination': 'switch',
+      'FSPIOP-Destination': Config.HUB_NAME,
       'FSPIOP-URI': `/bulkQuotes/${bulkQuoteId}/error`,
       'FSPIOP-HTTP-Method': 'PUT',
       Date: ''
@@ -328,7 +329,7 @@ const sendErrorCallback = async (fspiopError, bulkQuoteId, headers, span) => {
       headers: {
         'Content-Type': 'application/vnd.interoperability.quotes+json;version=1.0',
         'FSPIOP-Source': headers['fspiop-source'],
-        'FSPIOP-Destination': 'switch',
+        'FSPIOP-Destination': Config.HUB_NAME,
         Date: new Date().toUTCString(),
         'FSPIOP-Signature': `${JSON.stringify(fspiopSignature)}`,
         'FSPIOP-HTTP-Method': 'PUT',
@@ -348,10 +349,10 @@ const sendErrorCallback = async (fspiopError, bulkQuoteId, headers, span) => {
       throw new Error(`Failed to send. Result: ${res}`)
     }
 
-    histTimerEnd({ success: true, fsp: 'payee', operation: 'sendErrorCallback', source: headers['fspiop-source'], destination: 'switch' })
+    histTimerEnd({ success: true, fsp: 'payee', operation: 'sendErrorCallback', source: headers['fspiop-source'], destination: Config.HUB_NAME })
   } catch (err) {
     Logger.isErrorEnabled && Logger.error(err)
-    histTimerEnd({ success: false, fsp: 'payee', operation: 'sendErrorCallback', source: headers['fspiop-source'], destination: 'switch' })
+    histTimerEnd({ success: false, fsp: 'payee', operation: 'sendErrorCallback', source: headers['fspiop-source'], destination: Config.HUB_NAME })
   }
 }
 
