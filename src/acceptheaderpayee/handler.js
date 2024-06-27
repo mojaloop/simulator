@@ -143,7 +143,7 @@ exports.getPartiesByTypeAndId = function (req, h) {
         httpsAgent: new https.Agent({
           rejectUnauthorized: false
         }),
-        data: JSON.stringify(correlationCache.get(req.params.id))
+        data: correlationCache.get(req.params.id)
       }
 
       // Logger.isInfoEnabled && Logger.info((new Date().toISOString()), 'Executing PUT', url)
@@ -232,7 +232,7 @@ exports.postQuotes = function (req, h) {
         httpsAgent: new https.Agent({
           rejectUnauthorized: false
         }),
-        data: JSON.stringify(quotesResponse)
+        data: quotesResponse
       }
       // Logger.isInfoEnabled && Logger.info((new Date().toISOString()), 'Executing PUT', url)
       const res = await request(url, opts, req.span)
@@ -314,7 +314,7 @@ exports.postTransfers = async function (req, h) {
         httpsAgent: new https.Agent({
           rejectUnauthorized: false
         }),
-        data: JSON.stringify(transfersResponse)
+        data: transfersResponse
       }
 
       // Logger.isInfoEnabled && Logger.info(`Executing PUT: [${url}], HEADERS: [${JSON.stringify(opts.headers)}], BODY: [${JSON.stringify(transfersResponse)}]`)

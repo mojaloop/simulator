@@ -54,7 +54,7 @@ module.exports = [
           'fspiop-http-method': Joi.string().optional(),
           traceparent: Joi.string().optional(),
           tracestate: Joi.string().optional()
-        }).unknown(false).options({ stripUnknown: true }),
+        }).unknown(true).options({ stripUnknown: true }),
         payload: Joi.object({
           bulkQuoteId: Joi.string().guid().required().description('Id of bulkQuote').label('@ BulkQuote Id must be in a valid GUID format. @'),
           payer: Joi.object().required().keys({
@@ -162,7 +162,7 @@ module.exports = [
           'fspiop-http-method': Joi.string().optional(),
           traceparent: Joi.string().optional(),
           tracestate: Joi.string().optional()
-        }).unknown(false).options({ stripUnknown: true }),
+        }).unknown(true).options({ stripUnknown: true }),
         params: Joi.object({
           id: Joi.string().guid().required().description('path')
         }),
@@ -195,7 +195,7 @@ module.exports = [
           'fspiop-http-method': Joi.string().optional(),
           traceparent: Joi.string().optional(),
           tracestate: Joi.string().optional()
-        }).unknown(false).options({ stripUnknown: true }),
+        }).unknown(true).options({ stripUnknown: true }),
         params: Joi.object({
           id: Joi.string().required().description('path')
         }),
@@ -282,7 +282,7 @@ module.exports = [
           'fspiop-http-method': Joi.string().optional(),
           traceparent: Joi.string().optional(),
           tracestate: Joi.string().optional()
-        }).unknown(false).options({ stripUnknown: true }),
+        }).unknown(true).options({ stripUnknown: true }),
         params: Joi.object({
           id: Joi.string().required().description('path')
         }),

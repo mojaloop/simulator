@@ -101,13 +101,13 @@ exports.postBulkTransfers = async function (req, h) {
           // tracestate: req.headers.tracestate ? req.headers.tracestate : undefined
         },
         transformRequest: [(data, headers) => {
-          delete headers.common.Accept
-          return data
+          headers.delete('Accept')
+          return JSON.stringify(data)
         }],
         httpsAgent: new https.Agent({
           rejectUnauthorized: false
         }),
-        data: JSON.stringify(bulkTransferResponse)
+        data: bulkTransferResponse
       }
       // Logger.isInfoEnabled && Logger.info(`Executing PUT: [${url}], HEADERS: [${JSON.stringify(opts.headers)}], BODY: [${JSON.stringify(bulkTransferResponse)}]`)
       const res = await request(url, opts, req.span)

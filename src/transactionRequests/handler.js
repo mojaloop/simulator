@@ -70,10 +70,10 @@ exports.getTransactionRequestById = function (request, h) {
           'FSPIOP-URI': `/transactionRequests/${request.params.ID}`
         },
         transformRequest: [(data, headers) => {
-          delete headers.common.Accept
-          return data
+          headers.delete('Accept')
+          return JSON.stringify(data)
         }],
-        data: JSON.stringify(transactionRequestResponse)
+        data: transactionRequestResponse
       }
       const res = await sendRequest(url, opts, request.span)
       Logger.isInfoEnabled && Logger.info(`response: ${res.status}`)
@@ -122,10 +122,10 @@ exports.postTransactionRequest = function (request, h) {
           'FSPIOP-URI': `/transactionRequests/${request.payload.transactionRequestId}`
         },
         transformRequest: [(data, headers) => {
-          delete headers.common.Accept
-          return data
+          headers.delete('Accept')
+          return JSON.stringify(data)
         }],
-        data: JSON.stringify(transactionRequestsResponse)
+        data: transactionRequestsResponse
       }
       const res = await sendRequest(url, opts, request.span)
       Logger.isInfoEnabled && Logger.info(`response: ${res.status}`)
@@ -194,10 +194,10 @@ const sendErrorCallback = async (fspiopError, transactionRequestId, headers, spa
         'FSPIOP-URI': fspiopUriHeader
       },
       transformRequest: [(data, headers) => {
-        delete headers.common.Accept
-        return data
+        headers.delete('Accept')
+        return JSON.stringify(data)
       }],
-      data: JSON.stringify(fspiopError.toApiErrorObject())
+      data: fspiopError.toApiErrorObject()
     }
     const res = await sendRequest(url, opts, span)
     if (res.status !== Enums.Http.ReturnCodes.OK.CODE) {

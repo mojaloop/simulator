@@ -84,7 +84,7 @@ module.exports = [
           'fspiop-http-method': Joi.string().optional(),
           traceparent: Joi.string().optional(),
           tracestate: Joi.string().optional()
-        }).unknown(false).options({ stripUnknown: true }),
+        }).unknown(true).options({ stripUnknown: true }),
         failAction: (request, h, err) => { throw err }
       }
     }
@@ -115,7 +115,7 @@ module.exports = [
           'fspiop-http-method': Joi.string().optional(),
           traceparent: Joi.string().optional(),
           tracestate: Joi.string().optional()
-        }).unknown(false).options({ stripUnknown: true }),
+        }).unknown(true).options({ stripUnknown: true }),
         payload: Joi.object({
           quoteId: Joi.string().guid().required().description('Id of quote').label('@ Quote Id must be in a valid GUID format. @'),
           transactionId: Joi.string().guid().required().description('Id of transaction').label('@ Transaction Id must be in a valid GUID format. @'),
@@ -208,7 +208,7 @@ module.exports = [
           'fspiop-http-method': Joi.string().optional(),
           traceparent: Joi.string().optional(),
           tracestate: Joi.string().optional()
-        }).unknown(false).options({ stripUnknown: true }),
+        }).unknown(true).options({ stripUnknown: true }),
         params: Joi.object({
           id: Joi.string().required().description('path')
         }),
@@ -244,7 +244,7 @@ module.exports = [
           'fspiop-http-method': Joi.string().optional(),
           traceparent: Joi.string().optional(),
           tracestate: Joi.string().optional()
-        }).unknown(false).options({ stripUnknown: true }),
+        }).unknown(true).options({ stripUnknown: true }),
         payload: Joi.object({
           transferId: Joi.string().guid().required().description('Id of transfer').label('@ Transfer Id must be in a valid GUID format. @'),
           payeeFsp: Joi.string().required().min(1).max(32).description('Financial Service Provider of Payee').label('@ A valid Payee FSP number must be supplied. @'),
@@ -292,7 +292,7 @@ module.exports = [
           'fspiop-http-method': Joi.string().optional(),
           traceparent: Joi.string().optional(),
           tracestate: Joi.string().optional()
-        }).unknown(false).options({ stripUnknown: true }),
+        }).unknown(true).options({ stripUnknown: true }),
         params: Joi.object({
           id: Joi.string().required().description('path')
         }),
@@ -351,7 +351,7 @@ module.exports = [
           'fspiop-http-method': Joi.string().optional(),
           traceparent: Joi.string().optional(),
           tracestate: Joi.string().optional()
-        }).unknown(false).options({ stripUnknown: true }),
+        }).unknown(true).options({ stripUnknown: true }),
         params: Joi.object({
           id: Joi.string().required().description('path')
         }),
@@ -395,7 +395,7 @@ module.exports = [
           'fspiop-http-method': Joi.string().optional(),
           traceparent: Joi.string().optional(),
           tracestate: Joi.string().optional()
-        }).unknown(false).options({ stripUnknown: true }),
+        }).unknown(true).options({ stripUnknown: true }),
         params: Joi.object({
           id: Joi.string().required().description('path')
         }),
@@ -437,7 +437,7 @@ module.exports = [
           'fspiop-http-method': Joi.string().optional(),
           traceparent: Joi.string().optional(),
           tracestate: Joi.string().optional()
-        }).unknown(false).options({ stripUnknown: true }),
+        }).unknown(true).options({ stripUnknown: true }),
         params: Joi.object({
           id: Joi.string().required().description('path')
         }),

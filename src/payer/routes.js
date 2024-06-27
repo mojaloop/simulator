@@ -72,7 +72,7 @@ module.exports = [
           'fspiop-http-method': Joi.string().optional(),
           traceparent: Joi.string().optional(),
           tracestate: Joi.string().optional()
-        }).unknown(false).options({ stripUnknown: true }),
+        }).unknown(true).options({ stripUnknown: true }),
         payload: Joi.object({
           party: Joi.object().keys({
             partyIdInfo: Joi.object().keys({
@@ -122,7 +122,7 @@ module.exports = [
           'fspiop-http-method': Joi.string().optional(),
           traceparent: Joi.string().optional(),
           tracestate: Joi.string().optional()
-        }).unknown(false).options({ stripUnknown: true }),
+        }).unknown(true).options({ stripUnknown: true }),
         params: Joi.object({
           type: Joi.string().required().description('path'),
           id: Joi.string().required().description('path')
@@ -167,7 +167,7 @@ module.exports = [
           'fspiop-http-method': Joi.string().optional(),
           traceparent: Joi.string().optional(),
           tracestate: Joi.string().optional()
-        }).unknown(false).options({ stripUnknown: true }),
+        }).unknown(true).options({ stripUnknown: true }),
         params: Joi.object({
           id: Joi.string().required().description('path')
         }),
@@ -226,7 +226,7 @@ module.exports = [
           'fspiop-http-method': Joi.string().optional(),
           traceparent: Joi.string().optional(),
           tracestate: Joi.string().optional()
-        }).unknown(false).options({ stripUnknown: true }),
+        }).unknown(true).options({ stripUnknown: true }),
         params: Joi.object({
           id: Joi.string().required().description('path')
         }),
@@ -269,7 +269,7 @@ module.exports = [
           'fspiop-http-method': Joi.string().optional(),
           traceparent: Joi.string().optional(),
           tracestate: Joi.string().optional()
-        }).unknown(false).options({ stripUnknown: true }),
+        }).unknown(true).options({ stripUnknown: true }),
         params: Joi.object({
           id: Joi.string().required().description('path')
         }),
@@ -312,7 +312,7 @@ module.exports = [
           'fspiop-http-method': Joi.string().optional(),
           traceparent: Joi.string().optional(),
           tracestate: Joi.string().optional()
-        }).unknown(false).options({ stripUnknown: true }),
+        }).unknown(true).options({ stripUnknown: true }),
         params: Joi.object({
           id: Joi.string().required().description('path')
         }),
