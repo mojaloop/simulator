@@ -56,7 +56,7 @@
     "@mojaloop/central-services-metrics": "12.0.8",
     "@mojaloop/central-services-shared": "18.5.0",
     "@mojaloop/event-sdk": "^14.1.1",
-    "@mojaloop/sdk-standard-components": "18.2.0",
+    "@mojaloop/sdk-standard-components": "18.2.1",
     "axios": "1.7.2",
     "base64url": "3.0.1",
     "blipp": "4.0.2",
