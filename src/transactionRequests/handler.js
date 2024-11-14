@@ -70,7 +70,6 @@ exports.getTransactionRequestById = function (request, h) {
           'FSPIOP-URI': `/transactionRequests/${request.params.ID}`
         },
         transformRequest: [(data, headers) => {
-          delete headers.common.Accept
           return data
         }],
         data: JSON.stringify(transactionRequestResponse)
@@ -122,7 +121,6 @@ exports.postTransactionRequest = function (request, h) {
           'FSPIOP-URI': `/transactionRequests/${request.payload.transactionRequestId}`
         },
         transformRequest: [(data, headers) => {
-          delete headers.common.Accept
           return data
         }],
         data: JSON.stringify(transactionRequestsResponse)
@@ -194,7 +192,6 @@ const sendErrorCallback = async (fspiopError, transactionRequestId, headers, spa
         'FSPIOP-URI': fspiopUriHeader
       },
       transformRequest: [(data, headers) => {
-        delete headers.common.Accept
         return data
       }],
       data: JSON.stringify(fspiopError.toApiErrorObject())
