@@ -73,7 +73,7 @@ module.exports = [
       validate: {
         headers: Joi.object({
           'content-type': Joi.string().required().regex(/application\/vnd.interoperability[.]/),
-          date: Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
+          date: Joi.date().required(),
           'x-forwarded-for': Joi.string().optional(),
           'fspiop-source': Joi.string().required(),
           'fspiop-destination': Joi.string().optional(),
@@ -82,8 +82,9 @@ module.exports = [
           'fspiop-uri': Joi.string().optional(),
           'fspiop-http-method': Joi.string().optional(),
           traceparent: Joi.string().optional(),
-          tracestate: Joi.string().optional()
-        }).unknown(false).options({ stripUnknown: true }),
+          tracestate: Joi.string().optional(),
+          'accept-encoding': Joi.string().optional()
+        }).unknown(true).options({ stripUnknown: false }),
         failAction: (request, h, err) => { throw err }
       }
     }
@@ -104,7 +105,7 @@ module.exports = [
           accept: Joi.string().optional().regex(/application\/vnd.interoperability[.]/),
           'content-type': Joi.string().required().regex(/application\/vnd.interoperability[.]/),
           'content-length': Joi.number().max(5242880),
-          date: Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
+          date: Joi.date().required(),
           'x-forwarded-for': Joi.string().optional(),
           'fspiop-source': Joi.string().required(),
           'fspiop-destination': Joi.string().required(),
@@ -113,8 +114,9 @@ module.exports = [
           'fspiop-uri': Joi.string().optional(),
           'fspiop-http-method': Joi.string().optional(),
           traceparent: Joi.string().optional(),
-          tracestate: Joi.string().optional()
-        }).unknown(false).options({ stripUnknown: true }),
+          tracestate: Joi.string().optional(),
+          'accept-encoding': Joi.string().optional()
+        }).unknown(true).options({ stripUnknown: false }),
         payload: Joi.object({
           quoteId: Joi.string().guid().required().description('Id of quote').label('@ Quote Id must be in a valid GUID format. @'),
           transactionId: Joi.string().guid().required().description('Id of transaction').label('@ Transaction Id must be in a valid GUID format. @'),
@@ -204,7 +206,7 @@ module.exports = [
           accept: Joi.string().optional().regex(/application\/vnd.interoperability[.]/),
           'content-type': Joi.string().required().regex(/application\/vnd.interoperability[.]/),
           'content-length': Joi.number().max(5242880),
-          date: Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
+          date: Joi.date().required(),
           'x-forwarded-for': Joi.string().optional(),
           'fspiop-source': Joi.string().required(),
           'fspiop-destination': Joi.string().required(),
@@ -213,8 +215,9 @@ module.exports = [
           'fspiop-uri': Joi.string().optional(),
           'fspiop-http-method': Joi.string().optional(),
           traceparent: Joi.string().optional(),
-          tracestate: Joi.string().optional()
-        }).unknown(false).options({ stripUnknown: true }),
+          tracestate: Joi.string().optional(),
+          'accept-encoding': Joi.string().optional()
+        }).unknown(true).options({ stripUnknown: false }),
         payload: Joi.object({
           transferId: Joi.string().guid().required().description('Id of transfer').label('@ Transfer Id must be in a valid GUID format. @'),
           payeeFsp: Joi.string().required().min(1).max(32).description('Financial Service Provider of Payee').label('@ A valid Payee FSP number must be supplied. @'),
@@ -251,7 +254,7 @@ module.exports = [
       validate: {
         headers: Joi.object({
           'content-type': Joi.string().required().regex(/application\/vnd.interoperability[.]/),
-          date: Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
+          date: Joi.date().required(),
           'x-forwarded-for': Joi.string().optional(),
           'fspiop-source': Joi.string().required(),
           'fspiop-destination': Joi.string().required(),
@@ -260,8 +263,9 @@ module.exports = [
           'fspiop-uri': Joi.string().optional(),
           'fspiop-http-method': Joi.string().optional(),
           traceparent: Joi.string().optional(),
-          tracestate: Joi.string().optional()
-        }).unknown(false).options({ stripUnknown: true }),
+          tracestate: Joi.string().optional(),
+          'accept-encoding': Joi.string().optional()
+        }).unknown(true).options({ stripUnknown: false }),
         params: Joi.object({
           id: Joi.string().required().description('path')
         }),
@@ -293,7 +297,7 @@ module.exports = [
       validate: {
         headers: Joi.object({
           'content-type': Joi.string().required().regex(/application\/vnd.interoperability[.]/),
-          date: Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
+          date: Joi.date().required(),
           'x-forwarded-for': Joi.string().optional(),
           'fspiop-source': Joi.string().required(),
           'fspiop-destination': Joi.string().optional(),
@@ -302,8 +306,9 @@ module.exports = [
           'fspiop-uri': Joi.string().optional(),
           'fspiop-http-method': Joi.string().optional(),
           traceparent: Joi.string().optional(),
-          tracestate: Joi.string().optional()
-        }).unknown(false).options({ stripUnknown: true }),
+          tracestate: Joi.string().optional(),
+          'accept-encoding': Joi.string().optional()
+        }).unknown(true).options({ stripUnknown: false }),
         params: Joi.object({
           id: Joi.string().required().description('path')
         }),

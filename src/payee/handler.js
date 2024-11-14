@@ -153,7 +153,6 @@ exports.getPartiesByTypeAndId = function (request, h) {
           // tracestate: request.headers.tracestate ? request.headers.tracestate : undefined
         },
         transformRequest: [(data, headers) => {
-          delete headers.common.Accept
           return data
         }],
         httpsAgent: new https.Agent({
@@ -269,7 +268,6 @@ exports.postQuotes = function (request, h) {
           // tracestate: request.headers.tracestate ? request.headers.tracestate : undefined
         },
         transformRequest: [(data, headers) => {
-          delete headers.common.Accept
           return data
         }],
         httpsAgent: new https.Agent({
@@ -349,6 +347,7 @@ exports.postTransfers = async function (request, h) {
         method: 'PUT',
         headers: {
           'Content-Type': request.headers['content-type'],
+          Accept: request.headers.accept,
           'FSPIOP-Source': request.headers['fspiop-destination'],
           'FSPIOP-Destination': request.headers['fspiop-source'],
           Date: new Date().toUTCString(),
@@ -359,7 +358,6 @@ exports.postTransfers = async function (request, h) {
           // tracestate: request.headers.tracestate ? request.headers.tracestate : undefined
         },
         transformRequest: [(data, headers) => {
-          delete headers.common.Accept
           return data
         }],
         httpsAgent: new https.Agent({
@@ -564,7 +562,6 @@ exports.getQuotesById = function (request, h) {
             // tracestate: request.headers.tracestate ? request.headers.tracestate : undefined
           },
           transformRequest: [(data, headers) => {
-            delete headers.common.Accept
             return data
           }],
           httpsAgent: new https.Agent({
@@ -632,7 +629,6 @@ const sendErrorCallback = async (fspiopError, quoteId, headers, span) => {
         'FSPIOP-URI': `/quotes/${quoteId}/error`
       },
       transformRequest: [(data, headers) => {
-        delete headers.common.Accept
         return data
       }],
       httpsAgent: new https.Agent({

@@ -101,7 +101,6 @@ exports.postBulkTransfers = async function (req, h) {
           // tracestate: req.headers.tracestate ? req.headers.tracestate : undefined
         },
         transformRequest: [(data, headers) => {
-          delete headers.common.Accept
           return data
         }],
         httpsAgent: new https.Agent({

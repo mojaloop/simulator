@@ -146,7 +146,6 @@ exports.postBulkQuotes = function (request, h) {
           'FSPIOP-URI': `/bulkQuotes/${bulkQuoteRequest.bulkQuoteId}`
         },
         transformRequest: [(data, headers) => {
-          delete headers.common.Accept
           return data
         }],
         httpsAgent: new https.Agent({
@@ -268,7 +267,6 @@ exports.getBulkQuotesById = function (request, h) {
             'FSPIOP-URI': `/bulkQuotes/${request.params.id}`
           },
           transformRequest: [(data, headers) => {
-            delete headers.common.Accept
             return data
           }],
           httpsAgent: new https.Agent({
@@ -336,7 +334,6 @@ const sendErrorCallback = async (fspiopError, bulkQuoteId, headers, span) => {
         'FSPIOP-URI': `/bulkQuotes/${bulkQuoteId}/error`
       },
       transformRequest: [(data, headers) => {
-        delete headers.common.Accept
         return data
       }],
       httpsAgent: new https.Agent({

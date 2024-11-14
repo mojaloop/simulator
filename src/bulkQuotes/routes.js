@@ -44,7 +44,7 @@ module.exports = [
           accept: Joi.string().optional().regex(/application\/vnd.interoperability[.]/),
           'content-type': Joi.string().required().regex(/application\/vnd.interoperability[.]/),
           'content-length': Joi.number().max(5242880),
-          date: Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
+          date: Joi.date().required(),
           'x-forwarded-for': Joi.string().optional(),
           'fspiop-source': Joi.string().required(),
           'fspiop-destination': Joi.string().required(),
@@ -53,10 +53,11 @@ module.exports = [
           'fspiop-uri': Joi.string().optional(),
           'fspiop-http-method': Joi.string().optional(),
           traceparent: Joi.string().optional(),
-          tracestate: Joi.string().optional()
-        }).unknown(false).options({ stripUnknown: true }),
+          tracestate: Joi.string().optional(),
+          'accept-encoding': Joi.string().optional()
+        }).unknown(true).options({ stripUnknown: false }),
         payload: Joi.object({
-          bulkQuoteId: Joi.string().guid().required().description('Id of bulkQuote').label('@ BulkQuote Id must be in a valid GUID format. @'),
+          bulkQuoteId: Joi.string().required().description('Id of bulkQuote').label('@ BulkQuote Id must be in a valid GUID format. @'),
           payer: Joi.object().required().keys({
             partyIdInfo: Joi.object().keys({
               partyIdType: Joi.string().required().valid('MSISDN', 'EMAIL', 'PERSONAL_ID', 'BUSINESS', 'DEVICE', 'ACCOUNT_ID', 'IBAN', 'ALIAS').description('Type of the identifier. ').label('@ Type of the identifier.  @'),
@@ -81,8 +82,8 @@ module.exports = [
           }),
           expiration: Joi.string().optional().regex(/^(?:[1-9]\d{3}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1\d|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[1-9]\d(?:0[48]|[2468][048]|[13579][26])|(?:[2468][048]|[13579][26])00)-02-29)T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:(\.\d{3}))(?:Z|[+-][01]\d:[0-5]\d)$/).description('When the transfer expires').label('@ A valid transfer expiry date must be supplied. @'),
           individualQuotes: Joi.array().required().items(Joi.object().keys({
-            quoteId: Joi.string().guid().required().description('Id of quote').label('@ Quote Id must be in a valid GUID format. @'),
-            transactionId: Joi.string().guid().required().description('Identifies transaction message.').label('Transaction Id must be in a valid GUID format.'),
+            quoteId: Joi.string().required().description('Id of quote').label('@ Quote Id must be in a valid GUID format. @'),
+            transactionId: Joi.string().required().description('Identifies transaction message.').label('Transaction Id must be in a valid GUID format.'),
             payee: Joi.object().required().keys({
               partyIdInfo: Joi.object().keys({
                 partyIdType: Joi.string().required().valid('MSISDN', 'EMAIL', 'PERSONAL_ID', 'BUSINESS', 'DEVICE', 'ACCOUNT_ID', 'IBAN', 'ALIAS').description('Type of the identifier. ').label('@ Type of the identifier.  @'),
@@ -116,7 +117,7 @@ module.exports = [
               initiator: Joi.any().valid('PAYER', 'PAYEE').required().description('Who is initiating the transaction: Payer or Payee'),
               initiatorType: Joi.any().valid('CONSUMER', 'AGENT', 'BUSINESS', 'DEVICE').required().description('Consumer, agent, business, …'),
               refundInfo: Joi.object({
-                originalTransactionId: Joi.string().guid().required().description('Reference to the original transaction ID that is requested to be refunded.').label('Original Transaction Id must be in a valid GUID format.'),
+                originalTransactionId: Joi.string().required().description('Reference to the original transaction ID that is requested to be refunded.').label('Original Transaction Id must be in a valid GUID format.'),
                 refundReason: Joi.string().regex(/^(?!\s*$)[\p{L}\p{Nd} .,'-]{1,128}$/u).optional().description('Free text indicating the reason for the refund.')
               }),
               balanceOfPayments: Joi.string().regex(/^[1-9]\d{2}$/u).optional()
@@ -152,7 +153,7 @@ module.exports = [
         headers: Joi.object({
           'content-type': Joi.string().required().regex(/application\/vnd.interoperability[.]/),
           'content-length': Joi.number().max(5242880),
-          date: Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
+          date: Joi.date().required(),
           'x-forwarded-for': Joi.string().optional(),
           'fspiop-source': Joi.string().required(),
           'fspiop-destination': Joi.string().required(),
@@ -161,10 +162,11 @@ module.exports = [
           'fspiop-uri': Joi.string().optional(),
           'fspiop-http-method': Joi.string().optional(),
           traceparent: Joi.string().optional(),
-          tracestate: Joi.string().optional()
-        }).unknown(false).options({ stripUnknown: true }),
+          tracestate: Joi.string().optional(),
+          'accept-encoding': Joi.string().optional()
+        }).unknown(true).options({ stripUnknown: false }),
         params: Joi.object({
-          id: Joi.string().guid().required().description('path')
+          id: Joi.string().required().description('path')
         }),
         failAction: (request, h, err) => { throw err }
       }
@@ -185,7 +187,7 @@ module.exports = [
         headers: Joi.object({
           'content-type': Joi.string().required().regex(/application\/vnd.interoperability[.]/),
           'content-length': Joi.number().max(5242880),
-          date: Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
+          date: Joi.date().required(),
           'x-forwarded-for': Joi.string().optional(),
           'fspiop-source': Joi.string().required(),
           'fspiop-destination': Joi.string().required(),
@@ -194,14 +196,15 @@ module.exports = [
           'fspiop-uri': Joi.string().optional(),
           'fspiop-http-method': Joi.string().optional(),
           traceparent: Joi.string().optional(),
-          tracestate: Joi.string().optional()
-        }).unknown(false).options({ stripUnknown: true }),
+          tracestate: Joi.string().optional(),
+          'accept-encoding': Joi.string().optional()
+        }).unknown(true).options({ stripUnknown: false }),
         params: Joi.object({
           id: Joi.string().required().description('path')
         }),
         payload: Joi.object({
           individualQuoteResults: Joi.array().items(Joi.object().keys({
-            quoteId: Joi.string().guid().required().description('Id of quote').label('@ Quote Id must be in a valid GUID format. @'),
+            quoteId: Joi.string().required().description('Id of quote').label('@ Quote Id must be in a valid GUID format. @'),
             payee: Joi.object({
               partyIdInfo: Joi.object().keys({
                 partyIdType: Joi.string().required().valid('MSISDN', 'EMAIL', 'PERSONAL_ID', 'BUSINESS', 'DEVICE', 'ACCOUNT_ID', 'IBAN', 'ALIAS').description('Type of the identifier. ').label('@ Type of the identifier.  @'),
@@ -272,7 +275,7 @@ module.exports = [
       validate: {
         headers: Joi.object({
           'content-type': Joi.string().required().regex(/application\/vnd.interoperability[.]/),
-          date: Joi.date().format('ddd, D MMM YYYY H:mm:ss [GMT]').required(),
+          date: Joi.date().required(),
           'x-forwarded-for': Joi.string().optional(),
           'fspiop-source': Joi.string().required(),
           'fspiop-destination': Joi.string().required(),
@@ -281,8 +284,9 @@ module.exports = [
           'fspiop-uri': Joi.string().optional(),
           'fspiop-http-method': Joi.string().optional(),
           traceparent: Joi.string().optional(),
-          tracestate: Joi.string().optional()
-        }).unknown(false).options({ stripUnknown: true }),
+          tracestate: Joi.string().optional(),
+          'accept-encoding': Joi.string().optional()
+        }).unknown(true).options({ stripUnknown: false }),
         params: Joi.object({
           id: Joi.string().required().description('path')
         }),

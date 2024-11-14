@@ -123,7 +123,6 @@ exports.getPartiesByTypeAndId = function (req, h) {
           // tracestate: req.headers.tracestate ? req.headers.tracestate : undefined
         },
         transformRequest: [(data, headers) => {
-          delete headers.common.Accept
           return data
         }],
         httpsAgent: new https.Agent({
@@ -270,7 +269,6 @@ exports.postQuotes = function (req, h) {
           // tracestate: req.headers.tracestate ? req.headers.tracestate : undefined
         },
         transformRequest: [(data, headers) => {
-          delete headers.common.Accept
           return data
         }],
         httpsAgent: new https.Agent({
@@ -400,7 +398,6 @@ exports.postTransfers = async function (req, h) {
           // tracestate: req.headers.tracestate ? req.headers.tracestate : undefined
         },
         transformRequest: [(data, headers) => {
-          delete headers.common.Accept
           return data
         }],
         httpsAgent: new https.Agent({
