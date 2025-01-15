@@ -5,22 +5,5 @@
     "moderate": true,
     "allowlist": [
         // dev dependencies our third party dependencies use
-        "GHSA-282f-qqgm-c34q", // https://github.com/advisories/GHSA-282f-qqgm-c34q
-        "GHSA-2p57-rm9w-gvfp", // https://github.com/advisories/GHSA-2p57-rm9w-gvfp
-        "GHSA-5f97-h2c2-826q", // https://github.com/advisories/GHSA-5f97-h2c2-826q
-        "GHSA-6vfc-qv3f-vr6c", // https://github.com/advisories/GHSA-6vfc-qv3f-vr6c
-        "GHSA-7fh5-64p2-3v2j", // https://github.com/advisories/GHSA-7fh5-64p2-3v2j
-        "GHSA-93q8-gq69-wqmw", // https://github.com/advisories/GHSA-93q8-gq69-wqmw
-        "GHSA-c2qf-rxjj-qqgw", // https://github.com/advisories/GHSA-c2qf-rxjj-qqgw
-        "GHSA-cgfm-xwp7-2cvr", // https://github.com/advisories/GHSA-cgfm-xwp7-2cvr
-        "GHSA-f5x3-32g6-xq36", // https://github.com/advisories/GHSA-f5x3-32g6-xq36
-        "GHSA-ghr5-ch3p-vcr6", // https://github.com/advisories/GHSA-ghr5-ch3p-vcr6
-        "GHSA-grv7-fg5c-xmjg", // https://github.com/advisories/GHSA-grv7-fg5c-xmjg
-        "GHSA-mjxr-4v3x-q3m4", // https://github.com/advisories/GHSA-mjxr-4v3x-q3m4
-        "GHSA-p9pc-299p-vxgp", // https://github.com/advisories/GHSA-p9pc-299p-vxgp
-        "GHSA-phwq-j96m-2c2q", // https://github.com/advisories/GHSA-phwq-j96m-2c2q
-        "GHSA-rjqq-98f6-6j3r", // https://github.com/advisories/GHSA-rjqq-98f6-6j3r
-        "GHSA-rm97-x556-q36h", // https://github.com/advisories/GHSA-rm97-x556-q36h
-        "GHSA-v88g-cgmw-v5xw"  // https://github.com/advisories/GHSA-v88g-cgmw-v5xw
      ]
   }
