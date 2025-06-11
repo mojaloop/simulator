@@ -27,6 +27,10 @@
     "lint:fix": "npm run standard -- --fix",
     "start": "node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "test:unit": "echo 'No tests defined'",
+    "test:xunit": "npm run test:unit",
+    "test:integration": "echo 'No tests defined'",
+    "test:functional": "echo 'No tests defined'",
     "audit:fix": "npm audit fix",
     "audit:check": "npx audit-ci --config ./audit-ci.jsonc",
     "dep:check": "npx ncu -e 2",
@@ -41,17 +45,17 @@
   "dependencies": {
     "@hapi/boom": "10.0.1",
     "@hapi/good": "9.0.1",
-    "@hapi/hapi": "21.3.12",
+    "@hapi/hapi": "21.4.0",
     "@hapi/inert": "7.1.0",
     "@hapi/joi-date": "2.0.1",
     "@hapi/vision": "7.0.3",
-    "@mojaloop/central-services-error-handling": "13.0.6",
-    "@mojaloop/central-services-logger": "11.5.5",
-    "@mojaloop/central-services-metrics": "12.4.5",
-    "@mojaloop/central-services-shared": "18.19.0",
-    "@mojaloop/event-sdk": "14.1.5",
+    "@mojaloop/central-services-error-handling": "13.1.0",
+    "@mojaloop/central-services-logger": "11.9.0",
+    "@mojaloop/central-services-metrics": "12.6.0",
+    "@mojaloop/central-services-shared": "18.28.1",
+    "@mojaloop/event-sdk": "14.6.0",
     "@mojaloop/sdk-standard-components": "18.2.0",
-    "axios": "1.7.9",
+    "axios": "1.9.0",
     "base64url": "3.0.1",
     "blipp": "4.0.2",
     "glob": "10.4.5",
@@ -64,13 +68,14 @@
   "devDependencies": {
     "audit-ci": "7.1.0",
     "npm-audit-resolver": "3.0.0-RC.0",
-    "npm-check-updates": "17.1.15",
+    "npm-check-updates": "18.0.1",
     "pre-commit": "1.2.2",
     "replace": "1.2.2",
     "standard": "17.1.2",
     "standard-version": "9.5.0"
   },
   "overrides": {
+    "@mojaloop/event-sdk": "14.6.0",
     "cross-spawn": "7.0.6",
     "glob": "10.4.5",
     "shins": {
@@ -86,7 +91,7 @@
       "markdown-it": "12.3.2",
       "swagger2openapi": "7.0.8"
     },
-    "undici": "6.21.1",
+    "undici": "6.21.2",
     "yargs-parser": "21.1.1"
   },
   "standard-version": {
