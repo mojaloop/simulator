@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [12.3.0](https://github.com/mojaloop/simulator/compare/v12.2.5...v12.3.0) (2025-06-12)
+
+
+### Features
+
+* bump up the node version to v22.15.1 ([#269](https://github.com/mojaloop/simulator/issues/269)) ([4b7b347](https://github.com/mojaloop/simulator/commit/4b7b3479d1edf5081880d1a10b11b1cbb724af49))
+
 ### [12.2.5](https://github.com/mojaloop/simulator/compare/v12.2.4...v12.2.5) (2025-02-25)
 
 ### [12.2.4](https://github.com/mojaloop/simulator/compare/v12.2.3...v12.2.4) (2025-01-31)
