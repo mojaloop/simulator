@@ -4,6 +4,7 @@
     // Only use one of ["low": true, "moderate": true, "high": true, "critical": true]
     "moderate": true,
     "allowlist": [
-        // dev dependencies our third party dependencies use
+        // Currently no fixes available for the following
+        "GHSA-9965-vmph-33xx" // validator.js URL validation bypass
      ]
   }
