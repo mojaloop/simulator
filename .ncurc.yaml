@@ -1,5 +1,6 @@
 ## Add a TODO comment indicating the reason for each rejected dependency upgrade added to this list, and what should be done to resolve it (i.e. handle it through a story, etc).
 reject: [
   '@mojaloop/sdk-standard-components', # skip having to refactor ilp since simulator will be replaced in future.
-  'glob'  # skip glob  10.4.5  →  11.0.1' because 11.0.1 required node version 20
+  'glob',  # skip glob  10.4.5  →  11.0.1' because 11.0.1 required node version 20
+  'joi'  # skip joi  17.13.3  →  18.0.1' because joi 18 is not supported by hapi-swagger 17.3.2
 ]
