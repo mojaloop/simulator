@@ -14,6 +14,8 @@ ARG NODE_VERSION=22.20.0-alpine3.22
 FROM node:${NODE_VERSION} as builder
 USER root
 
+ARG CACHEBUST=1
+
 WORKDIR /opt/app
 
 RUN apk --no-cache add git
