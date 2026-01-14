@@ -51,7 +51,7 @@
     "@hapi/joi-date": "2.0.1",
     "@hapi/vision": "7.0.3",
     "@mojaloop/central-services-error-handling": "13.1.5",
-    "@mojaloop/central-services-logger": "11.10.2",
+    "@mojaloop/central-services-logger": "11.10.3",
     "@mojaloop/central-services-metrics": "12.8.3",
     "@mojaloop/central-services-shared": "18.34.6",
     "@mojaloop/event-sdk": "14.8.2",
