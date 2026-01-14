@@ -12,6 +12,8 @@ ignore:
   - vulnerability: CVE-2025-56200
     include-aliases: true
     reason: "No fixes available as of 2025-10-16 on validator npm package"
+  - vulnerability: CVE-2025-60876
+    reason: "No fixes available as of 2026-01-14 on Dockerfile base image 22.21.1-alpine3.23"
 
 # Set output format defaults
 output:
