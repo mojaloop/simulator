@@ -53,7 +53,7 @@
     "@mojaloop/central-services-error-handling": "13.1.5",
     "@mojaloop/central-services-logger": "11.10.2",
     "@mojaloop/central-services-metrics": "12.8.3",
-    "@mojaloop/central-services-shared": "18.34.5",
+    "@mojaloop/central-services-shared": "18.34.6",
     "@mojaloop/event-sdk": "14.8.2",
     "@mojaloop/sdk-standard-components": "18.2.0",
     "axios": "1.13.2",
@@ -69,7 +69,7 @@
   "devDependencies": {
     "audit-ci": "7.1.0",
     "npm-audit-resolver": "3.0.0-RC.0",
-    "npm-check-updates": "19.1.2",
+    "npm-check-updates": "19.3.1",
     "pre-commit": "1.2.2",
     "replace": "1.2.2",
     "standard": "17.1.2",
