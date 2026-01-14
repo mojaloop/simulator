@@ -5,6 +5,5 @@
     "moderate": true,
     "allowlist": [
         // Currently no fixes available for the following
-        "GHSA-9965-vmph-33xx" // validator.js URL validation bypass
      ]
   }
