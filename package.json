@@ -1,6 +1,6 @@
 {
   "name": "sims",
-  "version": "12.3.4",
+  "version": "12.3.3",
   "description": "A super-simple fsp simulator",
   "main": "src/index.js",
   "author": "ModusBox",
@@ -51,9 +51,9 @@
     "@hapi/joi-date": "2.0.1",
     "@hapi/vision": "7.0.3",
     "@mojaloop/central-services-error-handling": "13.1.5",
-    "@mojaloop/central-services-logger": "11.10.2",
+    "@mojaloop/central-services-logger": "11.10.3",
     "@mojaloop/central-services-metrics": "12.8.3",
-    "@mojaloop/central-services-shared": "18.34.5",
+    "@mojaloop/central-services-shared": "18.34.6",
     "@mojaloop/event-sdk": "14.8.2",
     "@mojaloop/sdk-standard-components": "18.2.0",
     "axios": "1.13.2",
@@ -69,18 +69,16 @@
   "devDependencies": {
     "audit-ci": "7.1.0",
     "npm-audit-resolver": "3.0.0-RC.0",
-    "npm-check-updates": "19.1.2",
+    "npm-check-updates": "19.3.1",
     "pre-commit": "1.2.2",
     "replace": "1.2.2",
     "standard": "17.1.2",
     "standard-version": "9.5.0"
   },
   "overrides": {
-    "@mojaloop/event-sdk": "14.8.2",
     "form-data": "3.0.4",
     "on-headers": "1.1.0",
     "cross-spawn": "7.0.6",
-    "glob": "10.5.0",
     "shins": {
       "ajv": "6.12.3",
       "ejs": "3.1.10",
@@ -96,9 +94,9 @@
     },
     "undici": "6.21.2",
     "yargs-parser": "21.1.1",
+    "qs": "6.14.1",
     "jws": "4.0.1",
-    "validator": "13.15.22",
-    "js-yaml": "4.1.1"
+    "glob": "10.5.0"
   },
   "standard-version": {
     "scripts": {
