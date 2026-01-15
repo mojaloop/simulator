@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [12.3.6](https://github.com/mojaloop/simulator/compare/v12.3.4...v12.3.6) (2026-01-15)
+
 ### [12.3.4](https://github.com/mojaloop/simulator/compare/v12.3.3...v12.3.4) (2025-12-10)
 
 ### [12.3.3](https://github.com/mojaloop/simulator/compare/v12.3.2...v12.3.3) (2025-10-20)
