@@ -63,7 +63,7 @@
     "hapi-swagger": "17.3.2",
     "joi": "17.13.3",
     "joi-currency-code": "3.0.2",
-    "lodash": "4.17.21",
+    "lodash": "4.17.23",
     "node-cache": "5.1.2"
   },
   "devDependencies": {
