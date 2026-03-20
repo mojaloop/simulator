@@ -47,17 +47,17 @@
   "dependencies": {
     "@hapi/boom": "10.0.1",
     "@hapi/good": "9.0.1",
-    "@hapi/hapi": "21.4.6",
+    "@hapi/hapi": "21.4.7",
     "@hapi/inert": "7.1.0",
     "@hapi/joi-date": "2.0.1",
     "@hapi/vision": "7.0.3",
     "@mojaloop/central-services-error-handling": "13.1.6",
     "@mojaloop/central-services-logger": "11.10.4",
     "@mojaloop/central-services-metrics": "12.8.5",
-    "@mojaloop/central-services-shared": "18.35.5",
+    "@mojaloop/central-services-shared": "18.35.6",
     "@mojaloop/event-sdk": "14.8.3",
     "@mojaloop/sdk-standard-components": "18.2.0",
-    "axios": "1.13.5",
+    "axios": "1.13.6",
     "base64url": "3.0.1",
     "blipp": "4.0.2",
     "glob": "10.5.0",
@@ -70,7 +70,7 @@
   "devDependencies": {
     "audit-ci": "7.1.0",
     "npm-audit-resolver": "3.0.0-RC.0",
-    "npm-check-updates": "19.4.1",
+    "npm-check-updates": "19.6.5",
     "pre-commit": "1.2.2",
     "replace": "1.2.2",
     "standard": "17.1.2",
@@ -93,13 +93,15 @@
       "markdown-it": "12.3.2",
       "swagger2openapi": "7.0.8"
     },
-    "undici": "6.23.0",
+    "undici": "6.24.1",
     "yargs-parser": "21.1.1",
     "qs": "6.14.2",
     "jws": "4.0.1",
     "glob": "10.5.0",
-    "minimatch": "9.0.6",
-    "fast-xml-parser": "5.3.6"
+    "minimatch": "9.0.9",
+    "fast-xml-parser": "5.5.7",
+    "immutable": "5.1.5",
+    "ajv@8.17.1": "8.18.0"
   },
   "standard-version": {
     "scripts": {
