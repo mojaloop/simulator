@@ -80,7 +80,7 @@ exports.createParticipantsByTypeAndId = function (request, h) {
             errorDescription: `ID:${request.params.ID} and partySubIdOrType:${partySubIdOrType} already exists`
           }
           histTimerEnd({ success: false, operation: 'postParticipants', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
-          return h.response({ errorInformation: buildErrorObject(errorObject, { extension: [] })}).code(409)
+          return h.response({ errorInformation: buildErrorObject(errorObject, { extension: [] }) }).code(409)
         }
       } else { // partySubIdOrType is null throw error if ID exists
         const errorObject = {
@@ -88,7 +88,7 @@ exports.createParticipantsByTypeAndId = function (request, h) {
           errorDescription: `Party already exists: ID:${request.params.ID}`
         }
         histTimerEnd({ success: false, operation: 'postParticipants', source: request.headers['fspiop-source'], destination: request.headers['fspiop-destination'] })
-        return h.response({ errorInformation: buildErrorObject(errorObject, { extension: [] })}).code(409)
+        return h.response({ errorInformation: buildErrorObject(errorObject, { extension: [] }) }).code(409)
       }
     } else { // new record - add
       idMap.set(request.params.ID, record)
