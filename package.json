@@ -28,7 +28,7 @@
     "lint:fix": "npm run standard -- --fix",
     "start": "node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "test:unit": "echo 'No tests defined'",
+    "test:unit": "npx tape test/unit/**/*.test.js",
     "test:xunit": "npm run test:unit",
     "test:coverage-check": "echo 'No tests defined'",
     "test:integration": "echo 'No tests defined'",
@@ -73,8 +73,11 @@
     "npm-check-updates": "19.6.5",
     "pre-commit": "1.2.2",
     "replace": "1.2.2",
+    "sinon": "^22.1.0",
     "standard": "17.1.2",
-    "standard-version": "9.5.0"
+    "standard-version": "9.5.0",
+    "tape": "^5.10.2",
+    "tapes": "^4.1.0"
   },
   "overrides": {
     "form-data": "3.0.4",
