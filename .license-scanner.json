@@ -1,0 +1,8 @@
+{
+  "exceptions": {
+    "seq-queue@0.0.5": {
+      "reason": "MIT per LICENSE file; empty license field in package.json (via mysql2)",
+      "expires": "2027-01-01"
+    }
+  }
+}
