@@ -77,18 +77,15 @@
     "standard-version": "9.5.0"
   },
   "overrides": {
-    "form-data": "3.0.5",
     "cross-spawn": "7.0.6",
     "undici": "8.11.2",
-    "yargs-parser": "20.2.9",
     "qs": "6.16.0",
     "jws": "4.0.1",
     "glob": "10.5.0",
     "minimatch": "9.0.9",
-    "immutable": "5.1.8",
     "ajv@8.17.1": "8.18.0",
     "handlebars": "4.7.10",
-    "protobufjs": "7.6.5",
+    "protobufjs@7": "7.6.5",
     "convict": "6.2.5",
     "@grpc/grpc-js": "1.14.5",
     "@hapi/content": "6.0.2",
@@ -98,7 +95,6 @@
     "js-yaml@5": "5.4.3",
     "mysql2": "3.23.1",
     "@hapi/wreck": "18.1.2",
-    "yaml": "2.8.3",
     "follow-redirects": "1.16.0",
     "moment": "2.31.0"
   },
