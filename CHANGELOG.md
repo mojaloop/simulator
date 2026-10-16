@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [12.3.7](https://github.com/mojaloop/simulator/compare/v12.3.6...v12.3.7) (2026-10-16)
+
+
+### Bug Fixes
+
+* **release:** scope the minimatch override so the Release job can run ([#296](https://github.com/mojaloop/simulator/issues/296)) ([9317a04](https://github.com/mojaloop/simulator/commit/9317a049ac8d56d457ed21ae3584e7efa627dc48))
+* **security:** patch all vulnerabilities, retire vestigial suppressions ([#295](https://github.com/mojaloop/simulator/issues/295)) ([4a3067c](https://github.com/mojaloop/simulator/commit/4a3067c9aa57826101b1341f43d182076e648756))
+
 ### [12.3.6](https://github.com/mojaloop/simulator/compare/v12.3.4...v12.3.6) (2026-01-15)
 
 ### [12.3.4](https://github.com/mojaloop/simulator/compare/v12.3.3...v12.3.4) (2025-12-10)
